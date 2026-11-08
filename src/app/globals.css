@@ -1,1 +1,201 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+/* Tailwind auto-detects sources; keep the spec's example classes (incl. forbidden ones) out of the CSS. */
+@source not "../../docs";
+
+/* ───────────────────────────── 1. Raw tokens (runtime CSS variables) ───────────────────────────── */
+:root {
+  /* Achromatic ramp — chroma 0 guarantees zero hue cast next to coloured ink */
+  --neutral-0: oklch(1 0 0);
+  --neutral-25: oklch(0.985 0 0);
+  --neutral-50: oklch(0.97 0 0);
+  --neutral-100: oklch(0.945 0 0);
+  --neutral-200: oklch(0.905 0 0);
+  --neutral-300: oklch(0.85 0 0);
+  --neutral-400: oklch(0.7 0 0);
+  --neutral-500: oklch(0.55 0 0);
+  --neutral-600: oklch(0.45 0 0);
+  --neutral-700: oklch(0.36 0 0);
+  --neutral-800: oklch(0.27 0 0);
+  --neutral-900: oklch(0.2 0 0);
+  --neutral-950: oklch(0.15 0 0);
+
+  /* Semantic roles */
+  --canvas: var(--neutral-25); /* page background */
+  --surface: var(--neutral-0); /* panels, inputs, lightbox aside */
+  --ink: var(--neutral-950); /* primary text  (~17.8:1 on canvas) */
+  --ink-muted: var(--neutral-600); /* secondary text (~7.4:1) */
+  --ink-subtle: var(--neutral-500); /* tertiary/eyebrows (~4.9:1, AA) */
+  --rule: var(--neutral-200);
+  --rule-strong: var(--neutral-300);
+  --focus: var(--neutral-950);
+  --scrim: oklch(0.12 0 0 / 0.94);
+
+  /* Mat (artwork backdrop) — default for thumbnails */
+  --mat: var(--neutral-50);
+  --mat-ink: var(--neutral-950);
+
+  /* Functional (forms only) */
+  --danger: oklch(0.5 0.16 27);
+  --success: oklch(0.48 0.09 155);
+
+  /* Layout */
+  --header-h: 4rem;
+}
+
+/* Mat by ink profile (set on <dialog data-ink> / detail view wrapper) */
+[data-ink="mono"] {
+  --mat: var(--neutral-0);
+  --mat-ink: var(--neutral-950);
+}
+[data-ink="color"] {
+  --mat: var(--neutral-900);
+  --mat-ink: var(--neutral-50);
+}
+
+/* Viewer override — declared AFTER [data-ink] so equal specificity resolves in its favour */
+[data-mat="light"] {
+  --mat: var(--neutral-0);
+  --mat-ink: var(--neutral-950);
+}
+[data-mat="dark"] {
+  --mat: var(--neutral-950);
+  --mat-ink: var(--neutral-50);
+}
+
+/* ───────────────────────────── 2. Tailwind theme mapping ───────────────────────────── */
+@theme inline {
+  /* Remove Tailwind's default palette → raw colours like bg-gray-100 / text-blue-500 cannot be used */
+  --color-*: initial;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-focus: var(--focus);
+  --color-scrim: var(--scrim);
+  --color-mat: var(--mat);
+  --color-mat-ink: var(--mat-ink);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+
+  /* Families */
+  --font-serif: var(--font-garamond), "EB Garamond", ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale (fluid) — utilities: text-display, text-title, text-lede, text-body, text-caption, text-eyebrow */
+  --text-display: clamp(2.75rem, 1.6rem + 4.6vw, 5.5rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.02em;
+  --text-title: clamp(1.75rem, 1.35rem + 1.6vw, 2.75rem);
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.01em;
+  --text-lede: clamp(1.1875rem, 1.05rem + 0.55vw, 1.5rem);
+  --text-lede--line-height: 1.45;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.7;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0.01em;
+  --text-eyebrow: 0.6875rem;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.14em;
+
+  /* Named spacing — utilities: p-gutter, gap-gutter, py-section, gap-stack, … */
+  --spacing-gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --spacing-stack: clamp(1.5rem, 1rem + 2vw, 3rem);
+  --spacing-section: clamp(4rem, 2rem + 8vw, 9rem);
+
+  /* Containers — utilities: max-w-prose-archive, max-w-wide, max-w-gallery */
+  --container-prose-archive: 38rem;
+  --container-wide: 90rem;
+  --container-gallery: 112rem;
+
+  /* Radii — square by default */
+  --radius-*: initial;
+  --radius-xs: 2px;
+  --radius-full: 9999px;
+
+  /* Motion */
+  --ease-archive: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-fade-in: fade-in 250ms var(--ease-archive) both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* Ink-profile variants: ink-mono:… / ink-color:… */
+@custom-variant ink-mono (&:where([data-ink="mono"], [data-ink="mono"] *));
+@custom-variant ink-color (&:where([data-ink="color"], [data-ink="color"] *));
+
+/* ───────────────────────────── 3. Base ───────────────────────────── */
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+  }
+  body {
+    font-feature-settings: "kern", "liga", "calt";
+    font-optical-sizing: auto;
+  }
+  ::selection {
+    background: var(--ink);
+    color: var(--canvas);
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+  dialog :focus-visible {
+    outline-color: var(--mat-ink);
+  }
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+  dialog::backdrop {
+    background: var(--scrim);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ───────────────────────────── 4. Components (minimal, prose only) ───────────────────────────── */
+@layer components {
+  .prose-archive {
+    max-width: var(--container-prose-archive);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    hyphens: auto; /* effective for Icelandic long compounds with lang="is" */
+    overflow-wrap: break-word;
+  }
+  .prose-archive > p + p {
+    margin-top: 1.25em;
+  }
+  .prose-archive > p:first-of-type::first-letter {
+    font-family: var(--font-serif);
+    float: left;
+    font-size: 3.4em;
+    line-height: 0.85;
+    padding: 0.06em 0.08em 0 0;
+  }
+}

@@ -25,14 +25,15 @@ A permanent, low-maintenance, bilingual digital archive of a deceased pen-and-in
 |---|---|---|
 | Framework | Next.js **16.x** App Router, RSC | On 15.x, see §2.2 note on `middleware.ts` |
 | UI runtime | React **19.x** | `useActionState`, `<Context value>` provider syntax |
-| Language | TypeScript 5.x, `strict: true`, `noUncheckedIndexedAccess: true` | |
+| Language | TypeScript **6.x**, `strict: true`, `noUncheckedIndexedAccess: true` | Not 7.x: the native port has no JS API, which `next build` needs. `package.json` has `"type": "module"` |
 | Styling | Tailwind CSS **4.x** (CSS-first `@theme`) | v3 fallback config in §6.6 |
 | Validation | Zod **4.x** | `z.email()`, `z.flattenError()`, `{ error }` param |
-| Email | `resend` (latest) + `@react-email/components` | `react-email` dev server for previews |
+| Email | `resend` (latest) + `react-email` **6.x** | Components are imported from `react-email` (`@react-email/components` is deprecated on npm). `@react-email/ui` (dev) powers the `email dev` preview server |
 | Images | `next/image` (Vercel Image Optimization) + Bunny.net masters | Bunny Storage Zone → Pull Zone (`*.b-cdn.net`); Bunny Optimizer for email/OG thumbnails only |
 | Class utils | `clsx` + `tailwind-merge` v3 | |
 | Icons | `simple-icons` (Facebook only) | |
-| Tooling | pnpm, ESLint (flat config), Prettier + `prettier-plugin-tailwindcss`, Vitest, `tsx`, `sharp` (scripts only) | `next lint` is removed in Next 16; call `eslint` directly |
+| Tooling | pnpm, ESLint (flat config), Prettier + `prettier-plugin-tailwindcss`, Vitest 5 + `vite` (required peer), `tsx`, `sharp` (scripts only) | `next lint` is removed in Next 16; call `eslint` directly. pnpm blocks dependency build scripts: `pnpm-workspace.yaml` `allowBuilds` allows `esbuild` only |
+| Next.js flags | `cacheComponents`, `partialPrefetching` and `reactCompiler` are **off** | create-next-app 16.4 enables all three by default. This spec targets the classic static-generation model (`generateStaticParams`, Suspense fallbacks for `useSearchParams`) |
 
 ### 0.3 Non-goals
 
@@ -90,8 +91,8 @@ Set all variables in Vercel for **Production, Preview and Development**.
 .
 ├── .env.example
 ├── eslint.config.mjs
-├── next.config.ts
-├── postcss.config.mjs                 # { plugins: { "@tailwindcss/postcss": {} } }
+├── next.config.ts                     # includes the `@tailwindcss/turbopack` CSS loader rule (no postcss.config.mjs)
+├── pnpm-workspace.yaml                # allowBuilds (pnpm 12 blocks dependency build scripts by default)
 ├── prettier.config.mjs
 ├── tsconfig.json
 ├── vitest.config.ts
@@ -232,7 +233,7 @@ Set all variables in Vercel for **Production, Preview and Development**.
 
 | Decision | Rationale |
 |---|---|
-| Root layout lives at `src/app/[locale]/layout.tsx` | Allows `<html lang={locale}>` to be correct at SSR time for both locales. There is no `src/app/layout.tsx`. |
+| Root layout lives at `src/app/[locale]/layout.tsx` | Allows `<html lang={locale}>` to be correct at SSR time for both locales. There is no `src/app/layout.tsx` (Phases 0–1 use a temporary `src/app/layout.tsx` + `page.tsx` token smoke page; Phase 2 deletes both). |
 | `src/proxy.ts` guarantees every request has a valid locale prefix | Makes a global (locale-less) 404 unreachable; `[...rest]` + `not-found.tsx` cover the rest. |
 | `(portfolio)` and `(legacy)` route groups | Organisational boundaries; `(legacy)` scopes the About layout without affecting URLs. |
 | `@modal` + `(.)works/[slug]` | Lightbox has a real, shareable URL; direct loads render the full page; back button closes the modal. |
@@ -1076,6 +1077,10 @@ const csp = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Tailwind v4 under Turbopack (create-next-app 16.4 default; replaces postcss.config.mjs).
+  turbopack: {
+    rules: { '*.css': { loaders: ['@tailwindcss/turbopack'], as: '*.css' } },
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
@@ -2172,6 +2177,8 @@ export async function sendInquiry(_prev: InquiryState, formData: FormData): Prom
 }
 ```
 
+> **Resend + React rendering:** `resend` 6.x renders the `react:` option through `@react-email/render`, which it declares as an *optional* peer. Under pnpm's strict layout the copy nested inside `react-email` may not be visible to `resend`. If sending fails with a missing-module error in Phase 6, render explicitly with `render()` from `react-email` and pass `html` (and `text`) instead of `react` — no new dependency needed.
+
 **Security checklist**
 
 | Threat | Mitigation |
@@ -2191,7 +2198,7 @@ export async function sendInquiry(_prev: InquiryState, formData: FormData): Prom
 import { Fragment } from 'react';
 import {
   Body, Column, Container, Head, Heading, Hr, Html, Img, Link, Preview, Row, Section, Text,
-} from '@react-email/components';
+} from 'react-email';
 import type { Locale } from '@/lib/i18n/config';
 
 export interface ReprintInquiryEmailProps {
@@ -2937,6 +2944,9 @@ export const sans = Inter({
 ```css
 @import "tailwindcss";
 
+/* Tailwind auto-detects sources; keep the spec's example classes (incl. forbidden ones) out of the CSS. */
+@source not "../../docs";
+
 /* ───────────────────────────── 1. Raw tokens (runtime CSS variables) ───────────────────────────── */
 :root {
   /* Achromatic ramp — chroma 0 guarantees zero hue cast next to coloured ink */
@@ -3250,8 +3260,8 @@ Each phase ends with `pnpm typecheck && pnpm lint && pnpm test && pnpm build` pa
 
 | # | Phase | Deliverables | Acceptance |
 |---|---|---|---|
-| 0 | Scaffold | `create-next-app` (TS, App Router, `src/`, Tailwind, ESLint); install `zod resend @react-email/components clsx tailwind-merge simple-icons server-only`; dev: `react-email vitest tsx sharp prettier prettier-plugin-tailwindcss`; tsconfig strict + `noUncheckedIndexedAccess`; `.env.example` | Clean build of empty app |
-| 1 | Design system | `globals.css` (§6.3), `fonts.ts`, `cn.ts` | `bg-gray-100` produces no CSS; tokens render |
+| 0 | Scaffold | `create-next-app` (TS, App Router, `src/`, Tailwind, ESLint); install `zod resend react-email clsx tailwind-merge simple-icons server-only`; dev: `@react-email/ui vitest vite tsx sharp prettier prettier-plugin-tailwindcss typescript@^6`; tsconfig strict + `noUncheckedIndexedAccess`; `.env.example` | Clean build of empty app |
+| 1 | Design system | `globals.css` (§6.3), `fonts.ts`, `cn.ts` | `bg-gray-100` produces no CSS; tokens render (regression-tested in `src/app/globals.test.ts`) |
 | 2 | i18n & routing | `config.ts`, `proxy.ts`, `[locale]/layout.tsx`, dictionaries + `satisfies`, `I18nProvider`, Header, LanguageToggle, Footer, `not-found`, `[...rest]` | `/` → `/is`; cookie `en` → `/en`; `/IS/x` → 308; toggle preserves path + query; `<html lang>` correct; unknown path shows localized 404 |
 | 3 | Data layer | All schemas, sample JSON, loaders, `validate-data.ts`, blur script | Invalid JSON (e.g. duplicate slug, `instagram` key) fails build |
 | 4 | Gallery | `filters.ts` + tests, `Gallery`, `GalleryFilters`, `SegmentedControl`, `ArtworkGrid`, `ArtworkCard`, Suspense fallback | 6 filter combinations correct; URL reflects state; no CLS; server HTML contains all artworks |
