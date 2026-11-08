@@ -1,0 +1,49 @@
+{
+  "portrait": {
+    "src": "https://brynja.b-cdn.net/brynja-2008-05-29.jpg",
+    "width": 2592,
+    "height": 3872,
+    "alt": {
+      "is": "Litljósmynd af Brynju Árnadóttur með stutt dökkt hár, í blárri mynstraðri flík, með appelsínugula rós í forgrunni.",
+      "en": "Colour photograph of Brynja Árnadóttir with short dark hair, wearing a blue patterned top, with an orange rose in the foreground."
+    },
+    "year": 2008,
+    "blurDataURL": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoLABAAA4BaJZgCdAEQXKVtwyrwAP7M+AiUK/xxcwI32bvrNZ6kU0FefEp1g64w+cWOLygnheveaLMcBnhzYs9r/XeWrpnObzrtAZfZKRVO0ESnlLlNaEgIIG6VIIzHMv0kAA=="
+  },
+  "born": {
+    "date": "1942",
+    "place": {
+      "is": "[Sýnishorn] Fæðingarstaður",
+      "en": "[Sample] Place of birth"
+    }
+  },
+  "died": {
+    "date": "2025",
+    "place": {
+      "is": "[Sýnishorn] Dánarstaður",
+      "en": "[Sample] Place of death"
+    }
+  },
+  "lede": {
+    "is": "[Sýnishorn] Inngangstexti æviágripsins kemur hér.",
+    "en": "[Sample] The biography's opening paragraph goes here."
+  },
+  "body": {
+    "is": [
+      "[Sýnishorn] Fyrsta málsgrein æviágripsins.",
+      "[Sýnishorn] Önnur málsgrein æviágripsins.",
+      "[Sýnishorn] Þriðja málsgrein æviágripsins."
+    ],
+    "en": [
+      "[Sample] First paragraph of the biography.",
+      "[Sample] Second paragraph of the biography.",
+      "[Sample] Third paragraph of the biography."
+    ]
+  },
+  "pullQuote": {
+    "text": {
+      "is": "„[Sýnishorn] Tilvitnun.“",
+      "en": "“[Sample] Quotation.”"
+    }
+  }
+}

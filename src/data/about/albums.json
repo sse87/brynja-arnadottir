@@ -1,0 +1,33 @@
+[
+  {
+    "id": "sample-opening-2008",
+    "title": {
+      "is": "[Sýnishorn] Opnun 2008",
+      "en": "[Sample] Opening 2008"
+    },
+    "date": "2008-05-29",
+    "description": {
+      "is": "[Sýnishorn] Sýnialbúm. Skiptið út fyrir raunverulegar ljósmyndir.",
+      "en": "[Sample] Sample album. Replace with real photographs."
+    },
+    "exhibitionId": "EXH-2008-01",
+    "coverPhotoId": "p01",
+    "photos": [
+      {
+        "id": "p01",
+        "src": "https://brynja.b-cdn.net/brynja-2008-05-29.jpg",
+        "width": 2592,
+        "height": 3872,
+        "alt": {
+          "is": "Litljósmynd af Brynju Árnadóttur með stutt dökkt hár, í blárri mynstraðri flík, með appelsínugula rós í forgrunni.",
+          "en": "Colour photograph of Brynja Árnadóttir with short dark hair, wearing a blue patterned top, with an orange rose in the foreground."
+        },
+        "caption": {
+          "is": "[Sýnishorn] Myndatexti, 29. maí 2008.",
+          "en": "[Sample] Caption, 29 May 2008."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoLABAAA4BaJZgCdAEQXKVtwyrwAP7M+AiUK/xxcwI32bvrNZ6kU0FefEp1g64w+cWOLygnheveaLMcBnhzYs9r/XeWrpnObzrtAZfZKRVO0ESnlLlNaEgIIG6VIIzHMv0kAA=="
+      }
+    ]
+  }
+]

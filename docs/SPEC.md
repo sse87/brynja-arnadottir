@@ -70,7 +70,7 @@ Set all variables in Vercel for **Production, Preview and Development**.
 {
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm data:validate && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
@@ -82,6 +82,8 @@ Set all variables in Vercel for **Production, Preview and Development**.
   }
 }
 ```
+
+`build` runs `data:validate` first. Loaders only parse the files that some page imports, and the about pages arrive late (Phase 7). This way every data file and cross-reference is checked on every build, Vercel included.
 
 ---
 
@@ -104,8 +106,9 @@ Set all variables in Vercel for **Production, Preview and Development**.
 │   ├── icon.svg
 │   └── og-default.jpg                 # 1200×630 static Open Graph fallback
 ├── scripts/
+│   ├── lib/is-main.ts                 # Entry-point guard so scripts can be imported by tests
 │   ├── generate-blur-placeholders.ts  # Writes blurDataURL into JSON (§3.3)
-│   └── validate-data.ts               # Parses every JSON with Zod; CI gate
+│   └── validate-data.ts               # Parses every JSON with Zod + cross-refs; runs before `next build`
 └── src/
     ├── proxy.ts                       # Locale detection + redirect (Next 16 “proxy”, ex-middleware)
     ├── app/
@@ -729,6 +732,19 @@ export const cdnImage = z.strictObject({
   alt: localizedString,
 });
 export type CdnImage = z.infer<typeof cdnImage>;
+
+/** superRefine callback for arrays: `Duplicate <key>: <value>` at `[index, key]`. */
+export function uniqueKeys<T, K extends keyof T & string>(...keys: K[]) {
+  return (list: readonly T[], ctx: z.RefinementCtx) => {
+    for (const key of keys) {
+      const seen = new Set<unknown>();
+      list.forEach((item, i) => {
+        if (seen.has(item[key])) ctx.addIssue({ code: 'custom', path: [i, key], message: `Duplicate ${key}: ${String(item[key])}` });
+        seen.add(item[key]);
+      });
+    }
+  };
+}
 ```
 
 ```ts
@@ -940,7 +956,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
 ```ts
 // src/data/schema/artwork.ts
 import { z } from 'zod';
-import { cdnImage, localizedString, type CdnImage, type Localized } from './shared';
+import { cdnImage, localizedString, uniqueKeys, type CdnImage, type Localized } from './shared';
 
 export const STYLE_CATEGORIES = ['black-and-white', 'colorful'] as const;
 export type StyleCategory = (typeof STYLE_CATEGORIES)[number];
@@ -989,15 +1005,7 @@ export const artworkSchema = z.strictObject({
   sortOrder: z.int().optional(),
 }) satisfies z.ZodType<Artwork>;
 
-export const artworkListSchema = z.array(artworkSchema).superRefine((list, ctx) => {
-  const seen = { id: new Set<string>(), slug: new Set<string>() };
-  list.forEach((a, i) => {
-    for (const key of ['id', 'slug'] as const) {
-      if (seen[key].has(a[key])) ctx.addIssue({ code: 'custom', path: [i, key], message: `Duplicate ${key}: ${a[key]}` });
-      seen[key].add(a[key]);
-    }
-  });
-});
+export const artworkListSchema = z.array(artworkSchema).superRefine(uniqueKeys('id', 'slug'));
 
 /** Lean, localized projection sent to Client Components. */
 export interface GalleryItem {
@@ -1176,25 +1184,32 @@ async function toBlur(src: string): Promise<string> {
 }
 
 /** Walks any JSON tree; fills `blurDataURL` on objects that have `src` + `width` + `height`. */
-async function walk(node: unknown, force: boolean): Promise<void> {
-  if (Array.isArray(node)) { for (const n of node) await walk(n, force); return; }
+export async function walk(node: unknown, force: boolean, blur: (src: string) => Promise<string>): Promise<void> {
+  if (Array.isArray(node)) { for (const n of node) await walk(n, force, blur); return; }
   if (node && typeof node === 'object') {
     const o = node as Record<string, unknown>;
-    if (typeof o.src === 'string' && typeof o.width === 'number' && (force || !o.blurDataURL)) {
-      o.blurDataURL = await toBlur(o.src);
+    if (typeof o.src === 'string' && typeof o.width === 'number' && typeof o.height === 'number' && (force || !o.blurDataURL)) {
+      o.blurDataURL = await blur(o.src);
       console.log('✓', o.src);
     }
-    for (const v of Object.values(o)) await walk(v, force);
+    for (const v of Object.values(o)) await walk(v, force, blur);
   }
 }
 
-const force = process.argv.includes('--force');
-for (const file of FILES) {
-  const json = JSON.parse(await readFile(file, 'utf8'));
-  await walk(json, force);
-  await writeFile(file, `${JSON.stringify(json, null, 2)}\n`);
+if (isMain(import.meta.url)) {           // scripts/lib/is-main.ts — lets tests import `walk`
+  const force = process.argv.includes('--force');
+  const blur = memoize(toBlur);          // the same src (e.g. portrait reused in an album) is fetched once
+  for (const file of FILES) {
+    const before = await readFile(file, 'utf8');
+    const json = JSON.parse(before);
+    await walk(json, force, blur);
+    const after = `${JSON.stringify(json, null, 2)}\n`;
+    if (after !== before) await writeFile(file, after);   // no churn when nothing changed
+  }
 }
 ```
+
+Data JSON is committed in `JSON.stringify(…, null, 2)` layout (Prettier keeps it), so running the script only adds `blurDataURL` lines.
 
 When `blurDataURL` is absent, components fall back to `placeholder="empty"` and the `bg-mat` box reserves space (no CLS either way because `width`/`height` are always present).
 
@@ -2583,7 +2598,7 @@ export default async function AboutLayout({ children, params }: { children: Reac
 
 ```ts
 import { z } from 'zod';
-import { cdnImage, localizedString, localizedStringList, partialDate } from './shared';
+import { cdnImage, localizedString, localizedStringList, partialDate, uniqueKeys } from './shared';
 
 /* ---------- Biography ---------- */
 export const biographySchema = z.strictObject({
@@ -2610,7 +2625,7 @@ export const exhibitionSchema = z.strictObject({
   type: z.enum(['solo', 'group']),
   albumId: z.string().optional(),   // links to a photo album from the opening
 });
-export const exhibitionListSchema = z.array(exhibitionSchema);
+export const exhibitionListSchema = z.array(exhibitionSchema).superRefine(uniqueKeys('id'));
 export type Exhibition = z.infer<typeof exhibitionSchema>;
 
 /* ---------- Albums ---------- */
@@ -2626,9 +2641,9 @@ export const albumSchema = z.strictObject({
   description: localizedString.optional(),
   exhibitionId: z.string().optional(),
   coverPhotoId: z.string(),
-  photos: z.array(albumPhotoSchema).min(1),
-}).refine((a) => a.photos.some((p) => p.id === a.coverPhotoId), { message: 'coverPhotoId must reference a photo in the album' });
-export const albumListSchema = z.array(albumSchema);
+  photos: z.array(albumPhotoSchema).min(1).superRefine(uniqueKeys('id')),
+}).refine((a) => a.photos.some((p) => p.id === a.coverPhotoId), { message: 'coverPhotoId must reference a photo in the album', path: ['coverPhotoId'] });
+export const albumListSchema = z.array(albumSchema).superRefine(uniqueKeys('id'));
 export type Album = z.infer<typeof albumSchema>;
 export type AlbumPhoto = z.infer<typeof albumPhotoSchema>;
 
@@ -2648,11 +2663,20 @@ export const pressItemSchema = z.strictObject({
     z.strictObject({ kind: z.literal('image'), href: z.string().regex(/^\/press\/.+\.(jpe?g|png|webp)$/), width: z.int().positive(), height: z.int().positive(), bytes: z.int().positive() }),
   ]),
 });
-export const pressListSchema = z.array(pressItemSchema);
+export const pressListSchema = z.array(pressItemSchema).superRefine(uniqueKeys('id'));
 export type PressItem = z.infer<typeof pressItemSchema>;
+
+/* ---------- Cross-file integrity ---------- */
+/** Exhibition ↔ album links must resolve, and a two-way link must point back at the same record. */
+export function aboutCrossRefIssues(
+  exhibitions: readonly Pick<Exhibition, 'id' | 'albumId'>[],
+  albums: readonly Pick<Album, 'id' | 'exhibitionId'>[],
+): string[];   // human-readable issues; empty = valid
 ```
 
-Loaders in `src/lib/data/about.ts` (`server-only`) parse each file once and return:
+`scripts/validate-data.ts` (runs before `next build`, §0.6) parses all six data files with these schemas, runs `aboutCrossRefIssues`, and checks every press asset: the file exists under `public/`, `bytes` equals the file size, and for `kind: 'image'` the declared `width`×`height` matches the file (sharp metadata). It imports schemas only, never the `server-only` loaders.
+
+Loaders in `src/lib/data/about.ts` (`server-only`) parse each file once (and throw on cross-ref issues) and return:
 
 - `getBiography()`
 - `getExhibitions()` — sorted ascending by `date` (string compare is correct for partial ISO dates), tie-break by `id`
@@ -3318,6 +3342,6 @@ Each phase ends with `pnpm typecheck && pnpm lint && pnpm test && pnpm build` pa
 ## Appendix D — Testing
 
 - **Vitest unit**: `lib/gallery/filters.ts`, `lib/i18n/format.ts` (partial dates in both locales incl. UTC edge at midnight, plural forms incl. Icelandic `21 → one`), `lib/i18n/localize.ts` fallback, `inquirySchema` (each error code reachable; whitespace trimming; email lowercasing).
-- **Data validation**: `pnpm data:validate` in CI before `next build`.
+- **Data validation**: `pnpm data:validate`, chained into `pnpm build` (§0.6). `scripts/validate-data.test.ts` runs it against the committed data and against a deliberately broken copy.
 - **Server Action**: unit-test `sendInquiry` with `vi.mock('@/lib/email/resend')` covering honeypot, validation failure, `too_fast`, unknown artwork, non-reprint artwork, Resend error, success.
 - **Optional E2E (Playwright)**: locale redirect, toggle, filter + lightbox + prev/next within filter, inquiry happy path against a mocked action.

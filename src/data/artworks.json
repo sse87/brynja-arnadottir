@@ -1,0 +1,89 @@
+[
+  {
+    "id": "ART-0001",
+    "slug": "brjost",
+    "title": {
+      "is": "Brjóst",
+      "en": "Bust"
+    },
+    "image": {
+      "src": "https://brynja.b-cdn.net/Brj%C3%B3st%2050x35.jpg",
+      "width": 8260,
+      "height": 11907,
+      "alt": {
+        "is": "Litrík pennateikning af konu með lokuð augu og barðastóran hatt skreyttan rauðum perlum, á grænum sporöskjulaga fleti á dökkrauðum grunni.",
+        "en": "Colourful pen drawing of a woman with closed eyes in a wide-brimmed hat decorated with red beads, set against a green oval on a dark red ground."
+      },
+      "blurDataURL": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoLABAAA4BaJZAC7ADdj78JSKAA/hTM7qxJpEPut6GyzTG5guYIGSh6yEIknaeJEYUDW3VGldnSK1Qm+1OeNQAA"
+    },
+    "dimensions": {
+      "widthCm": 35,
+      "heightCm": 50
+    },
+    "year": null,
+    "styleCategory": "colorful",
+    "available-as-reprint": true,
+    "medium": {
+      "is": "Litaður tússpenni á pappír",
+      "en": "Coloured ink pen on paper"
+    }
+  },
+  {
+    "id": "ART-0002",
+    "slug": "brynja",
+    "title": {
+      "is": "Brynja",
+      "en": "Brynja"
+    },
+    "image": {
+      "src": "https://brynja.b-cdn.net/Brynja%2070x25.jpg",
+      "width": 2875,
+      "height": 8208,
+      "alt": {
+        "is": "Mjó og há pennateikning af standandi veru með fjaðraskreyttan hjálm í síðri brynju, á þéttskyggðum dökkum grunni með litlu tungli.",
+        "en": "Tall, narrow pen drawing of a standing figure in a plumed helmet and a long coat of chain mail, against densely hatched darkness with a small moon."
+      },
+      "blurDataURL": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAADQAQCdASoGABAAA4BaJZwAAlnDcZpqIAD2t8JUoxn647/5ASEqjWCtvjLykEGw6geAAA=="
+    },
+    "dimensions": {
+      "widthCm": 25,
+      "heightCm": 70
+    },
+    "year": null,
+    "styleCategory": "black-and-white",
+    "available-as-reprint": false,
+    "medium": {
+      "is": "Tússpenni á pappír",
+      "en": "Ink pen on paper"
+    }
+  },
+  {
+    "id": "ART-0003",
+    "slug": "upprisa",
+    "title": {
+      "is": "Upprisa",
+      "en": "Resurrection"
+    },
+    "image": {
+      "src": "https://brynja.b-cdn.net/Upprisa%2070x25.jpg",
+      "width": 8288,
+      "height": 2952,
+      "alt": {
+        "is": "Breið pennateikning af fimm naktum konum í hæðóttu landslagi sem rísa smám saman úr krjúpandi stöðu og ganga af stað, undir sveigðum himinlínum með hálfmána og fullu tungli.",
+        "en": "Wide pen drawing of five nude female figures across a hilly landscape, rising in sequence from crouching to striding, beneath sweeping sky lines with a crescent moon and a full moon."
+      },
+      "blurDataURL": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADwAQCdASoQAAYAA4BaJZQCdAEPC5lb46AA/pdwyYmyRVMi/li6CikXzX7gaxyzwqlb/+VpkAA="
+    },
+    "dimensions": {
+      "widthCm": 70,
+      "heightCm": 25
+    },
+    "year": 2012,
+    "styleCategory": "black-and-white",
+    "available-as-reprint": true,
+    "medium": {
+      "is": "Tússpenni á pappír",
+      "en": "Ink pen on paper"
+    }
+  }
+]

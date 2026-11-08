@@ -1,0 +1,45 @@
+[
+  {
+    "id": "EXH-1968-01",
+    "date": "1968-03-15",
+    "endDate": "1968-03-30",
+    "title": {
+      "is": "[Sýnishorn] Teikningar",
+      "en": "[Sample] Drawings"
+    },
+    "location": {
+      "venue": {
+        "is": "[Sýnishorn] Sýningarsalur",
+        "en": "[Sample] Gallery"
+      },
+      "city": {
+        "is": "[Sýnishorn] Borg",
+        "en": "[Sample] City"
+      },
+      "countryCode": "IS"
+    },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2008-01",
+    "date": "2008-05-29",
+    "endDate": "2008-06-15",
+    "title": {
+      "is": "[Sýnishorn] Samsýning",
+      "en": "[Sample] Group exhibition"
+    },
+    "location": {
+      "venue": {
+        "is": "[Sýnishorn] Listasafn",
+        "en": "[Sample] Art museum"
+      },
+      "city": {
+        "is": "[Sýnishorn] Borg",
+        "en": "[Sample] City"
+      },
+      "countryCode": "IS"
+    },
+    "type": "group",
+    "albumId": "sample-opening-2008"
+  }
+]

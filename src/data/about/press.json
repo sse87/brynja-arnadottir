@@ -1,0 +1,41 @@
+[
+  {
+    "id": "PRESS-1974-001",
+    "publishedAt": "1974-05-18",
+    "publication": "[Sample] Publication A",
+    "headline": "[Sýnishorn] Línan sem lifir",
+    "headlineLanguage": "is",
+    "headlineTranslation": {
+      "en": "[Sample] The Line That Lives"
+    },
+    "author": "[Sample] Author",
+    "page": "14",
+    "summary": {
+      "is": "[Sýnishorn] Stutt lýsing á greininni.",
+      "en": "[Sample] Short summary of the article."
+    },
+    "asset": {
+      "kind": "pdf",
+      "href": "/press/sample-1974-05-18.pdf",
+      "bytes": 668,
+      "pages": 1
+    }
+  },
+  {
+    "id": "PRESS-1991-002",
+    "publishedAt": "1991-11",
+    "publication": "[Sample] Publication B",
+    "headline": "[Sýnishorn] Teiknarinn",
+    "headlineLanguage": "is",
+    "headlineTranslation": {
+      "en": "[Sample] The Draughtsman"
+    },
+    "asset": {
+      "kind": "image",
+      "href": "/press/sample-1991-11.jpg",
+      "width": 600,
+      "height": 860,
+      "bytes": 12664
+    }
+  }
+]
