@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "siteTitle": "Brynja Árnadóttir",
+    "siteDescription": "Stafrænt safn penna­teikninga eftir Brynju Árnadóttur (1942–2025)."
+  },
+  "languageToggle": { "label": "English", "ariaLabel": "View this page in English" },
+  "nav": {
+    "works": "Verk",
+    "about": "Um listamanninn",
+    "biography": "Æviágrip",
+    "exhibitions": "Sýningar",
+    "albums": "Myndaalbúm",
+    "press": "Fjölmiðlar",
+    "skipToContent": "Fara beint í efni",
+    "primary": "Aðalvalmynd",
+    "aboutSections": "Kaflar um listamanninn"
+  },
+  "hero": { "eyebrow": "Pennateikningar", "tagline": "Ævistarf í bleki — svarthvítt og í lit." },
+  "gallery": {
+    "heading": "Verk",
+    "filtersLegend": "Sía verk",
+    "color": {
+      "label": "Litur",
+      "all": "Öll",
+      "black-and-white": "Svarthvít",
+      "colorful": "Í lit"
+    },
+    "availability": { "label": "Framboð", "all": "Öll verk", "reprints": "Aðeins eftirprent" },
+    "resultCount": { "one": "{count} verk", "other": "{count} verk" },
+    "empty": "Engin verk passa við valda síu.",
+    "reset": "Hreinsa síu"
+  },
+  "lightbox": {
+    "close": "Loka",
+    "previous": "Fyrra verk",
+    "next": "Næsta verk",
+    "year": "Ár",
+    "medium": "Efni",
+    "dimensions": "Stærð",
+    "catalogueId": "Skráningarnúmer",
+    "circa": "um",
+    "undated": "Ódagsett",
+    "reprintAvailable": "Fáanlegt sem eftirprent",
+    "buyReprint": "Kaupa eftirprent",
+    "mat": { "label": "Bakgrunnur", "light": "Ljós", "dark": "Dökkur" },
+    "openFullPage": "Opna sem síðu"
+  },
+  "inquiry": {
+    "heading": "Fyrirspurn um eftirprent",
+    "intro": "Fylltu út formið og við höfum samband með upplýsingar um stærðir, pappír og verð.",
+    "regarding": "Varðandi verkið",
+    "name": "Nafn",
+    "email": "Netfang",
+    "message": "Skilaboð",
+    "messagePlaceholder": "Til dæmis óskastærð eða spurningar um innrömmun.",
+    "submit": "Senda fyrirspurn",
+    "submitting": "Sendi…",
+    "back": "Til baka",
+    "successTitle": "Takk fyrir!",
+    "successBody": "Fyrirspurnin hefur verið send. Við svörum eins fljótt og auðið er.",
+    "privacyNote": "Upplýsingarnar eru eingöngu notaðar til að svara fyrirspurninni.",
+    "errors": {
+      "name_required": "Vinsamlegast sláðu inn nafn.",
+      "name_too_short": "Nafn þarf að vera að minnsta kosti 2 stafir.",
+      "name_too_long": "Nafn má ekki vera lengra en 120 stafir.",
+      "email_required": "Vinsamlegast sláðu inn netfang.",
+      "email_too_long": "Netfangið er of langt.",
+      "email_invalid": "Netfangið virðist ekki vera gilt.",
+      "message_required": "Vinsamlegast skrifaðu skilaboð.",
+      "message_too_short": "Skilaboð þurfa að vera að minnsta kosti 10 stafir.",
+      "message_too_long": "Skilaboð mega ekki vera lengri en 4000 stafir.",
+      "artwork_invalid": "Ekki tókst að tengja fyrirspurnina við verk. Endurhladdu síðuna og reyndu aftur.",
+      "artwork_unavailable": "Þetta verk er því miður ekki lengur fáanlegt sem eftirprent.",
+      "submission_too_fast": "Vinsamlegast bíddu augnablik og reyndu aftur.",
+      "send_failed": "Ekki tókst að senda fyrirspurnina. Reyndu aftur síðar eða hafðu samband í gegnum Facebook.",
+      "unknown": "Ógilt gildi."
+    }
+  },
+  "about": {
+    "heading": "Um listamanninn",
+    "biography": { "portraitCredit": "Ljósmynd", "born": "Fædd(ur)", "died": "Dáin(n)" },
+    "exhibitions": {
+      "heading": "Sýningarferill",
+      "intro": "Einka- og samsýningar í tímaröð.",
+      "solo": "Einkasýning",
+      "group": "Samsýning"
+    },
+    "albums": {
+      "heading": "Myndaalbúm",
+      "intro": "Ljósmyndir frá sýningaropnunum og vinnustofu.",
+      "photoCount": { "one": "{count} mynd", "other": "{count} myndir" },
+      "close": "Loka",
+      "previous": "Fyrri mynd",
+      "next": "Næsta mynd"
+    },
+    "press": {
+      "heading": "Fjölmiðlar",
+      "intro": "Úrklippur og greinar úr blöðum og tímaritum.",
+      "page": "bls.",
+      "open": "Opna úrklippu",
+      "fileTypes": { "pdf": "PDF", "image": "Mynd" },
+      "translatedHeadline": "Þýðing fyrirsagnar"
+    }
+  },
+  "footer": {
+    "facebook": "Opinber Facebook-síða",
+    "opensInNewTab": "(opnast í nýjum flipa)",
+    "rights": "© Allur réttur áskilinn."
+  },
+  "notFound": {
+    "title": "Síða fannst ekki",
+    "body": "Síðan sem þú leitar að er ekki til eða hefur verið færð.",
+    "home": "Aftur á forsíðu"
+  },
+  "error": { "title": "Eitthvað fór úrskeiðis", "retry": "Reyna aftur" }
+}

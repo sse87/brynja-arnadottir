@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "siteTitle": "Brynja Árnadóttir",
+    "siteDescription": "A digital archive of pen drawings by Brynja Árnadóttir (1942–2025)."
+  },
+  "languageToggle": { "label": "Íslenska", "ariaLabel": "Skoða þessa síðu á íslensku" },
+  "nav": {
+    "works": "Works",
+    "about": "About the artist",
+    "biography": "Biography",
+    "exhibitions": "Exhibitions",
+    "albums": "Photo albums",
+    "press": "Press",
+    "skipToContent": "Skip to content",
+    "primary": "Primary navigation",
+    "aboutSections": "About sections"
+  },
+  "hero": { "eyebrow": "Pen drawings", "tagline": "A lifetime in ink — monochrome and colour." },
+  "gallery": {
+    "heading": "Works",
+    "filtersLegend": "Filter works",
+    "color": {
+      "label": "Colour",
+      "all": "All",
+      "black-and-white": "Black & white",
+      "colorful": "Colour"
+    },
+    "availability": { "label": "Availability", "all": "All works", "reprints": "Only reprints" },
+    "resultCount": { "one": "{count} work", "other": "{count} works" },
+    "empty": "No works match the selected filters.",
+    "reset": "Clear filters"
+  },
+  "lightbox": {
+    "close": "Close",
+    "previous": "Previous work",
+    "next": "Next work",
+    "year": "Year",
+    "medium": "Medium",
+    "dimensions": "Dimensions",
+    "catalogueId": "Catalogue no.",
+    "circa": "c.",
+    "undated": "Undated",
+    "reprintAvailable": "Available as a reprint",
+    "buyReprint": "Buy a Reprint",
+    "mat": { "label": "Background", "light": "Light", "dark": "Dark" },
+    "openFullPage": "Open as page"
+  },
+  "inquiry": {
+    "heading": "Reprint inquiry",
+    "intro": "Fill in the form and we will get back to you with sizes, paper options and pricing.",
+    "regarding": "Regarding",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "messagePlaceholder": "For example a preferred size or framing questions.",
+    "submit": "Send inquiry",
+    "submitting": "Sending…",
+    "back": "Back",
+    "successTitle": "Thank you!",
+    "successBody": "Your inquiry has been sent. We will reply as soon as possible.",
+    "privacyNote": "Your details are used only to respond to this inquiry.",
+    "errors": {
+      "name_required": "Please enter your name.",
+      "name_too_short": "Name must be at least 2 characters.",
+      "name_too_long": "Name must be at most 120 characters.",
+      "email_required": "Please enter your email address.",
+      "email_too_long": "That email address is too long.",
+      "email_invalid": "That email address doesn't look valid.",
+      "message_required": "Please write a message.",
+      "message_too_short": "Message must be at least 10 characters.",
+      "message_too_long": "Message must be at most 4000 characters.",
+      "artwork_invalid": "We couldn't link your inquiry to an artwork. Please reload and try again.",
+      "artwork_unavailable": "Sorry — this work is no longer available as a reprint.",
+      "submission_too_fast": "Please wait a moment and try again.",
+      "send_failed": "We couldn't send your inquiry. Please try again later or contact us via Facebook.",
+      "unknown": "Invalid value."
+    }
+  },
+  "about": {
+    "heading": "About the artist",
+    "biography": { "portraitCredit": "Photo", "born": "Born", "died": "Died" },
+    "exhibitions": {
+      "heading": "Exhibition history",
+      "intro": "Solo and group exhibitions in chronological order.",
+      "solo": "Solo exhibition",
+      "group": "Group exhibition"
+    },
+    "albums": {
+      "heading": "Photo albums",
+      "intro": "Photographs from exhibition openings and the studio.",
+      "photoCount": { "one": "{count} photo", "other": "{count} photos" },
+      "close": "Close",
+      "previous": "Previous photo",
+      "next": "Next photo"
+    },
+    "press": {
+      "heading": "Press",
+      "intro": "Clippings and articles from newspapers and magazines.",
+      "page": "p.",
+      "open": "Open clipping",
+      "fileTypes": { "pdf": "PDF", "image": "Image" },
+      "translatedHeadline": "Translated headline"
+    }
+  },
+  "footer": {
+    "facebook": "Official Facebook Page",
+    "opensInNewTab": "(opens in a new tab)",
+    "rights": "© All rights reserved."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you are looking for doesn't exist or has moved.",
+    "home": "Back to home"
+  },
+  "error": { "title": "Something went wrong", "retry": "Try again" }
+}

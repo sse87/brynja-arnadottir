@@ -73,7 +73,7 @@ Set all variables in Vercel for **Production, Preview and Development**.
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "format": "prettier --write .",
     "data:validate": "tsx scripts/validate-data.ts",
@@ -233,7 +233,8 @@ Set all variables in Vercel for **Production, Preview and Development**.
 
 | Decision | Rationale |
 |---|---|
-| Root layout lives at `src/app/[locale]/layout.tsx` | Allows `<html lang={locale}>` to be correct at SSR time for both locales. There is no `src/app/layout.tsx` (Phases 0–1 use a temporary `src/app/layout.tsx` + `page.tsx` token smoke page; Phase 2 deletes both). |
+| Root layout lives at `src/app/[locale]/layout.tsx` | Allows `<html lang={locale}>` to be correct at SSR time for both locales. There is no `src/app/layout.tsx`. |
+| `not-found.tsx` and `error.tsx` are Client Components reading `useI18n()` | Next 16 passes **no props** to `not-found.js`, so it cannot read `params`; both render inside the `[locale]` layout's `I18nProvider` and take their copy from `ClientMessages.notFound` / `.error`. |
 | `src/proxy.ts` guarantees every request has a valid locale prefix | Makes a global (locale-less) 404 unreachable; `[...rest]` + `not-found.tsx` cover the rest. |
 | `(portfolio)` and `(legacy)` route groups | Organisational boundaries; `(legacy)` scopes the About layout without affecting URLs. |
 | `@modal` + `(.)works/[slug]` | Lightbox has a real, shareable URL; direct loads render the full page; back button closes the modal. |
@@ -414,6 +415,8 @@ export default function CatchAll() {
 
 > Leaf pages with `generateStaticParams` (`works/[slug]`, `albums/[albumId]`) keep the default `dynamicParams = true` and call `notFound()` explicitly for unknown params. This guarantees the localized `[locale]/not-found.tsx` renders rather than the framework default 404.
 
+> **Next 16.4 behaviour (verified):** a `notFound()` thrown from a page responds `404` + `noindex`, but the server HTML is Next's minimal error shell (`<html id="__next_error__">`); the localized `not-found.tsx` (inside the full layout, with correct `<html lang>`) is rendered client-side from the RSC payload on hydration. The same happens in a minimal control app with a conventional `app/layout.js` + `app/not-found.js`, so it is framework behaviour, not this architecture. Only URLs matching *no* route get a server-rendered 404, and `proxy.ts` + `[...rest]` make that unreachable by design.
+
 ### 2.4 Dictionaries
 
 ```ts
@@ -481,11 +484,21 @@ export function getDictionary(locale: Locale): Dictionary {
   return dictionaries[locale];
 }
 
-/** Only the namespaces Client Components need are serialized to the browser. */
-export type ClientMessages = Pick<Dictionary, 'languageToggle' | 'nav' | 'gallery' | 'lightbox' | 'inquiry' | 'about'>;
+/**
+ * Only the namespaces Client Components need are serialized to the browser.
+ * `notFound` / `error` are included because not-found.tsx receives no params and error.tsx must be
+ * a Client Component — both read their copy from the I18nProvider.
+ */
+export type ClientMessages = Pick<
+  Dictionary,
+  'languageToggle' | 'nav' | 'gallery' | 'lightbox' | 'inquiry' | 'about' | 'notFound' | 'error'
+>;
 
 export function pickClientMessages(d: Dictionary): ClientMessages {
-  return { languageToggle: d.languageToggle, nav: d.nav, gallery: d.gallery, lightbox: d.lightbox, inquiry: d.inquiry, about: d.about };
+  return {
+    languageToggle: d.languageToggle, nav: d.nav, gallery: d.gallery, lightbox: d.lightbox,
+    inquiry: d.inquiry, about: d.about, notFound: d.notFound, error: d.error,
+  };
 }
 ```
 
@@ -687,7 +700,7 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
       "translatedHeadline": "Translated headline"
     }
   },
-  "footer": { "facebook": "Official Facebook Page", "opensInNewTab": "(opens in a new tab)", "rights": "©  All rights reserved." },
+  "footer": { "facebook": "Official Facebook Page", "opensInNewTab": "(opens in a new tab)", "rights": "© All rights reserved." },
   "notFound": { "title": "Page not found", "body": "The page you are looking for doesn't exist or has moved.", "home": "Back to home" },
   "error": { "title": "Something went wrong", "retry": "Try again" }
 }
@@ -812,7 +825,7 @@ Requirements:
 
 - Rendered as a real `<Link>` (crawlable), with `hrefLang` and `lang` set to the target locale and the label written in the target language ("English" on `/is/*`, "Íslenska" on `/en/*`).
 - `scroll={false}` so the reader keeps their position.
-- `useSearchParams()` requires a `<Suspense>` boundary on statically rendered routes. The Header wraps the toggle in `<Suspense>` whose fallback is the same link **without** search params.
+- `useSearchParams()` requires a `<Suspense>` boundary on statically rendered routes. The Header wraps the toggle in `<Suspense>` whose fallback (`LanguageToggleStatic`) is the same link **without** search params.
 
 ```tsx
 // src/components/layout/LanguageToggle.tsx
@@ -820,31 +833,32 @@ Requirements:
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { locales, LOCALE_COOKIE, type Locale } from '@/lib/i18n/config';
 import { useI18n } from '@/components/providers/I18nProvider';
 
+/** `/is/about/press` → `/en/about/press`. */
 export function swapLocale(pathname: string, target: Locale): string {
   const segments = pathname.split('/');
   segments[1] = target;
   return segments.join('/') || `/${target}`;
 }
 
+/** Target URL: current path with the locale swapped, plus the current query (filters survive). */
+export function toggleHref(pathname: string, target: Locale, query = ''): string {
+  return `${swapLocale(pathname, target)}${query ? `?${query}` : ''}`;
+}
+
 function persist(locale: Locale) {
   document.cookie = `${LOCALE_COOKIE}=${locale}; Path=/; Max-Age=31536000; SameSite=Lax`;
 }
 
-export function LanguageToggle({ withSearch = true }: { withSearch?: boolean }) {
-  const { locale, messages } = useI18n();
-  const target = locales.find((l) => l !== locale) as Locale;
-  const pathname = usePathname();
-  const searchParams = withSearch ? useSearchParams() : null; // eslint-disable-line react-hooks/rules-of-hooks -- `withSearch` is a constant per mount
+function useTarget(): Locale {
+  const { locale } = useI18n();
+  return locales.find((l) => l !== locale) as Locale;
+}
 
-  const href = useMemo(() => {
-    const qs = searchParams?.toString();
-    return `${swapLocale(pathname, target)}${qs ? `?${qs}` : ''}`;
-  }, [pathname, searchParams, target]);
-
+function ToggleLink({ href, target }: { href: string; target: Locale }) {
+  const { messages } = useI18n();
   return (
     <Link
       href={href}
@@ -853,21 +867,38 @@ export function LanguageToggle({ withSearch = true }: { withSearch?: boolean }) 
       scroll={false}
       onClick={() => persist(target)}
       aria-label={messages.languageToggle.ariaLabel}
-      className="text-caption uppercase tracking-[0.14em] text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
+      className="text-caption tracking-[0.14em] text-ink-muted uppercase underline-offset-4 transition-colors hover:text-ink hover:underline"
     >
       {messages.languageToggle.label}
     </Link>
   );
 }
+
+/** Preserves the query string. Reads `useSearchParams()`, so it must sit inside `<Suspense>`. */
+export function LanguageToggle() {
+  const target = useTarget();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  return (
+    <ToggleLink href={toggleHref(pathname, target, searchParams.toString())} target={target} />
+  );
+}
+
+/** Suspense fallback / static render: same link without the query string. */
+export function LanguageToggleStatic() {
+  const target = useTarget();
+  const pathname = usePathname();
+  return <ToggleLink href={toggleHref(pathname, target)} target={target} />;
+}
 ```
 
-> Implementation note for Claude Code: if the conditional hook trips the linter, split into two components — `LanguageToggleWithSearch` (calls `useSearchParams`) and `LanguageToggleStatic` (fallback) — sharing a presentational `<ToggleLink href>`.
+> Split into `LanguageToggle` (calls `useSearchParams`) and `LanguageToggleStatic` (Suspense fallback) sharing a presentational `<ToggleLink>`, so no hook is called conditionally.
 
 ```tsx
 // src/components/layout/Header.tsx (excerpt)
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { LanguageToggle } from './LanguageToggle';
+import { LanguageToggle, LanguageToggleStatic } from './LanguageToggle';
 import { NavLinks } from './NavLinks';
 import { localizedPath } from '@/lib/i18n/route';
 import type { Locale } from '@/lib/i18n/config';
@@ -888,7 +919,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             ]}
           />
           <span aria-hidden className="h-4 w-px bg-rule-strong" />
-          <Suspense fallback={<LanguageToggle withSearch={false} />}>
+          <Suspense fallback={<LanguageToggleStatic />}>
             <LanguageToggle />
           </Suspense>
         </nav>
@@ -2867,6 +2898,19 @@ export const siteSchema = z.strictObject({
     facebook: z.strictObject({ url: z.url().regex(/^https:\/\/(www\.)?facebook\.com\//) }),
   }),
 });
+export type Site = z.infer<typeof siteSchema>;
+```
+
+```ts
+// src/lib/data/site.ts
+import 'server-only';
+import raw from '@/data/site.json';
+import { siteSchema, type Site } from '@/data/schema/site';
+
+// Parsed once at module load → invalid JSON (e.g. an `instagram` key) fails `next build`.
+const site: Site = siteSchema.parse(raw);
+
+export const getSite = (): Site => site;
 ```
 
 ```tsx
@@ -3262,7 +3306,7 @@ Each phase ends with `pnpm typecheck && pnpm lint && pnpm test && pnpm build` pa
 |---|---|---|---|
 | 0 | Scaffold | `create-next-app` (TS, App Router, `src/`, Tailwind, ESLint); install `zod resend react-email clsx tailwind-merge simple-icons server-only`; dev: `@react-email/ui vitest vite tsx sharp prettier prettier-plugin-tailwindcss typescript@^6`; tsconfig strict + `noUncheckedIndexedAccess`; `.env.example` | Clean build of empty app |
 | 1 | Design system | `globals.css` (§6.3), `fonts.ts`, `cn.ts` | `bg-gray-100` produces no CSS; tokens render (regression-tested in `src/app/globals.test.ts`) |
-| 2 | i18n & routing | `config.ts`, `proxy.ts`, `[locale]/layout.tsx`, dictionaries + `satisfies`, `I18nProvider`, Header, LanguageToggle, Footer, `not-found`, `[...rest]` | `/` → `/is`; cookie `en` → `/en`; `/IS/x` → 308; toggle preserves path + query; `<html lang>` correct; unknown path shows localized 404 |
+| 2 | i18n & routing | `config.ts`, `proxy.ts`, `[locale]/layout.tsx`, dictionaries + `satisfies`, `I18nProvider`, Header, LanguageToggle, Footer, `not-found`, `error`, `[...rest]`, `@modal/default`, placeholder `(portfolio)/page.tsx`. Pulled forward because these depend on them: `schema/inquiry.ts` (error codes), `site.json` + `schema/site.ts` + `lib/data/site.ts`, `FacebookIcon`, `SocialLink` | `/` → `/is`; cookie `en` → `/en`; `/IS/x` → 308; toggle preserves path + query; `<html lang>` correct; unknown path shows localized 404 |
 | 3 | Data layer | All schemas, sample JSON, loaders, `validate-data.ts`, blur script | Invalid JSON (e.g. duplicate slug, `instagram` key) fails build |
 | 4 | Gallery | `filters.ts` + tests, `Gallery`, `GalleryFilters`, `SegmentedControl`, `ArtworkGrid`, `ArtworkCard`, Suspense fallback | 6 filter combinations correct; URL reflects state; no CLS; server HTML contains all artworks |
 | 5 | Lightbox | `@modal` slot, intercepted + full-page routes, `LightboxDialog`, `LightboxNav`, `ArtworkDetailView`, `ReprintPanel` | Criteria in §3.7 |
