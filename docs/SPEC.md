@@ -608,7 +608,7 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
   },
   "about": {
     "heading": "Um listamanninn",
-    "biography": { "portraitCredit": "Ljósmynd", "born": "Fædd(ur)", "died": "Dáin(n)" },
+    "biography": { "portraitCredit": "Ljósmynd", "born": "Fædd", "died": "Dáin" },
     "exhibitions": { "heading": "Sýningarferill", "intro": "Einka- og samsýningar í tímaröð.", "solo": "Einkasýning", "group": "Samsýning", "photoAlbum": "Myndaalbúm" },
     "albums": {
       "heading": "Myndaalbúm",

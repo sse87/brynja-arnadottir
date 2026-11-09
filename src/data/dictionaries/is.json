@@ -79,7 +79,7 @@
   },
   "about": {
     "heading": "Um listamanninn",
-    "biography": { "portraitCredit": "Ljósmynd", "born": "Fædd(ur)", "died": "Dáin(n)" },
+    "biography": { "portraitCredit": "Ljósmynd", "born": "Fædd", "died": "Dáin" },
     "exhibitions": {
       "heading": "Sýningarferill",
       "intro": "Einka- og samsýningar í tímaröð.",
