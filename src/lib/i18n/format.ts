@@ -34,3 +34,13 @@ export function formatCm(value: number, locale: Locale): string {
 export function formatDimensions(w: number, h: number, locale: Locale): string {
   return `${formatCm(w, locale)} × ${formatCm(h, locale)} cm`;
 }
+
+/** Artwork year label: "1978" | "c. 1978" / "um 1978" | "Undated" / "Ódagsett". */
+export function formatArtworkYear(
+  year: number | null,
+  circa: boolean | undefined,
+  t: { circa: string; undated: string },
+): string {
+  if (year === null) return t.undated;
+  return circa ? `${t.circa} ${year}` : String(year);
+}

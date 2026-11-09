@@ -1,5 +1,14 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { formatCm, formatDimensions, formatPartialDate, interpolate, plural } from './format';
+import {
+  formatArtworkYear,
+  formatCm,
+  formatDimensions,
+  formatPartialDate,
+  interpolate,
+  plural,
+} from './format';
+import en from '@/data/dictionaries/en.json';
+import is from '@/data/dictionaries/is.json';
 
 describe('interpolate', () => {
   it('replaces known keys and leaves unknown placeholders intact', () => {
@@ -85,5 +94,16 @@ describe('formatCm / formatDimensions', () => {
   it('formats width × height in cm', () => {
     expect(formatDimensions(35, 50, 'en')).toBe('35 × 50 cm');
     expect(formatDimensions(29.7, 42, 'is')).toBe('29,7 × 42 cm');
+  });
+});
+
+describe('formatArtworkYear', () => {
+  it('renders plain, circa and undated years in both locales', () => {
+    expect(formatArtworkYear(1978, false, en.lightbox)).toBe('1978');
+    expect(formatArtworkYear(1978, undefined, is.lightbox)).toBe('1978');
+    expect(formatArtworkYear(1972, true, en.lightbox)).toBe('c. 1972');
+    expect(formatArtworkYear(1972, true, is.lightbox)).toBe('um 1972');
+    expect(formatArtworkYear(null, true, en.lightbox)).toBe('Undated');
+    expect(formatArtworkYear(null, false, is.lightbox)).toBe('Ódagsett');
   });
 });

@@ -32,7 +32,7 @@ A permanent, low-maintenance, bilingual digital archive of a deceased pen-and-in
 | Images | `next/image` (Vercel Image Optimization) + Bunny.net masters | Bunny Storage Zone → Pull Zone (`*.b-cdn.net`); Bunny Optimizer for email/OG thumbnails only |
 | Class utils | `clsx` + `tailwind-merge` v3 | |
 | Icons | `simple-icons` (Facebook only) | |
-| Tooling | pnpm, ESLint (flat config), Prettier + `prettier-plugin-tailwindcss`, Vitest 5 + `vite` (required peer), `tsx`, `sharp` (scripts only) | `next lint` is removed in Next 16; call `eslint` directly. pnpm blocks dependency build scripts: `pnpm-workspace.yaml` `allowBuilds` allows `esbuild` only |
+| Tooling | pnpm, ESLint (flat config), Prettier + `prettier-plugin-tailwindcss`, Vitest 5 + `vite` (required peer), `@playwright/test` (E2E, Chromium only), `tsx`, `sharp` (scripts only) | `next lint` is removed in Next 16; call `eslint` directly. pnpm blocks dependency build scripts: `pnpm-workspace.yaml` `allowBuilds` allows `esbuild` only |
 | Next.js flags | `cacheComponents`, `partialPrefetching` and `reactCompiler` are **off** | create-next-app 16.4 enables all three by default. This spec targets the classic static-generation model (`generateStaticParams`, Suspense fallbacks for `useSearchParams`) |
 
 ### 0.3 Non-goals
@@ -78,10 +78,13 @@ Set all variables in Vercel for **Production, Preview and Development**.
     "format": "prettier --write .",
     "data:validate": "tsx scripts/validate-data.ts",
     "images:blur": "tsx scripts/generate-blur-placeholders.ts",
-    "email": "email dev --dir src/components/emails --port 3001"
+    "email": "email dev --dir src/components/emails --port 3001",
+    "test:e2e": "playwright test"
   }
 }
 ```
+
+`test:e2e` runs against the production build (`pnpm build && pnpm test:e2e`), and it is not part of the per-phase gate. One-time setup: `pnpm exec playwright install chromium`.
 
 `build` runs `data:validate` first. Loaders only parse the files that some page imports, and the about pages arrive late (Phase 7). This way every data file and cross-reference is checked on every build, Vercel included.
 
@@ -98,6 +101,9 @@ Set all variables in Vercel for **Production, Preview and Development**.
 ├── prettier.config.mjs
 ├── tsconfig.json
 ├── vitest.config.ts
+├── playwright.config.ts               # E2E against `next start` on :3210 (never reuses a running server)
+├── e2e/
+│   └── lightbox.spec.ts               # §3.7 acceptance criteria
 ├── package.json
 ├── public/
 │   ├── press/                         # Locally hosted scanned clippings (PDF / JPG / PNG)
@@ -126,7 +132,7 @@ Set all variables in Vercel for **Production, Preview and Development**.
     │       │   └── page.tsx           # Catch-all → notFound() so unknown URLs get localized 404
     │       ├── @modal/                # Parallel route slot for the Lightbox
     │       │   ├── default.tsx        # → null
-    │       │   ├── [...catchAll]/
+    │       │   ├── [...rest]/         # Same param name as children's [...rest] (see §3.7)
     │       │   │   └── page.tsx       # → null (closes modal on navigation elsewhere)
     │       │   └── (.)works/
     │       │       └── [slug]/
@@ -167,9 +173,7 @@ Set all variables in Vercel for **Production, Preview and Development**.
     │   │   ├── ArtworkCard.tsx        # Shared
     │   │   └── EmptyState.tsx
     │   ├── artwork/
-    │   │   ├── ArtworkDetailView.tsx  # Server — shared by modal + full page
-    │   │   ├── ArtworkImage.tsx       # Server — high-quality next/image
-    │   │   ├── ArtworkMeta.tsx        # Server — <dl> of metadata
+    │   │   ├── ArtworkDetailView.tsx  # Server — shared by modal + full page (image + <dl> inline)
     │   │   ├── LightboxDialog.tsx     # 'use client' — native <dialog>
     │   │   ├── LightboxNav.tsx        # 'use client' — prev/next + keyboard
     │   │   └── ReprintPanel.tsx       # 'use client' — CTA ↔ form view switch
@@ -1631,24 +1635,27 @@ Grid rules:
 |---|---|
 | Soft nav from gallery card → `/[locale]/works/[slug]?ink=…` | `@modal/(.)works/[slug]` intercepts → `<LightboxDialog>` over the gallery |
 | Hard load / shared link / refresh | `(portfolio)/works/[slug]/page.tsx` → full-page view |
-| Close (✕, `Esc`, backdrop click) | `router.back()` → gallery URL with filters intact |
+| Close (✕, `Esc`, click on the mat around the artwork) | `router.back()` → gallery URL with filters intact |
 | Prev / next (buttons, ← / →) | `router.replace()` within the modal — no history spam, back still closes |
-| Any navigation elsewhere | `@modal/[...catchAll]` renders `null` → modal unmounts |
+| Any navigation elsewhere | `@modal/[...rest]` renders `null` → modal unmounts |
 
 ```tsx
 // src/app/[locale]/@modal/default.tsx
 export default function Default() { return null; }
 
-// src/app/[locale]/@modal/[...catchAll]/page.tsx
+// src/app/[locale]/@modal/[...rest]/page.tsx
 export default function CatchAll() { return null; }
 ```
+
+> The slot's catch-all **must** use the same param name as `children`'s `[locale]/[...rest]`.
+> Next 16.4 fails the build with "Ambiguous route pattern `/[*]/[...*]`" when a slot and
+> `children` declare catch-alls with different names (`[...catchAll]` vs `[...rest]`).
 
 ```tsx
 // src/app/[locale]/@modal/(.)works/[slug]/page.tsx
 import { resolveLocale } from '@/lib/i18n/route';
 import { getAllArtworks, getArtworkBySlug, getNavIndex } from '@/lib/data/artworks';
 import { locales } from '@/lib/i18n/config';
-import { localize } from '@/lib/i18n/localize';
 import { LightboxDialog } from '@/components/artwork/LightboxDialog';
 import { ArtworkDetailView } from '@/components/artwork/ArtworkDetailView';
 
@@ -1656,7 +1663,11 @@ export function generateStaticParams() {
   return locales.flatMap((locale) => getAllArtworks().map((a) => ({ locale, slug: a.slug })));
 }
 
-export default async function ArtworkModal({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+export default async function ArtworkModal({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
   const locale = await resolveLocale(params);
   const { slug } = await params;
   const artwork = getArtworkBySlug(slug);
@@ -1669,7 +1680,6 @@ export default async function ArtworkModal({ params }: { params: Promise<{ local
       titleId="artwork-title"
       navIndex={getNavIndex()}
       fullPageHref={`/${locale}/works/${artwork.slug}`}
-      title={localize(artwork.title, locale)}
     >
       <ArtworkDetailView artwork={artwork} locale={locale} variant="modal" />
     </LightboxDialog>
@@ -1705,9 +1715,8 @@ prev/next become a bottom bar; ✕ fixed top-right with 44×44px hit area.
 // src/components/artwork/LightboxDialog.tsx
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import type { NavIndexEntry } from '@/data/schema/artwork';
 import { useI18n } from '@/components/providers/I18nProvider';
 import { LightboxNav } from './LightboxNav';
@@ -1719,11 +1728,13 @@ interface Props {
   slug: string;
   ink: 'mono' | 'color';
   titleId: string;
-  title: string;
   navIndex: NavIndexEntry[];
   fullPageHref: string;
   children: React.ReactNode;
 }
+
+/** Elements marked with this attribute count as backdrop: clicking them closes the lightbox. */
+export const BACKDROP_ATTR = 'data-lightbox-backdrop';
 
 export function LightboxDialog({ slug, ink, titleId, navIndex, fullPageHref, children }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -1736,9 +1747,12 @@ export function LightboxDialog({ slug, ink, titleId, navIndex, fullPageHref, chi
     const dialog = ref.current;
     if (dialog && !dialog.open) dialog.showModal();
     return () => {
-      // Restore focus to the originating card after close.
+      // Restore focus to the card of the work shown last. While another lightbox is open (prev/next
+      // remounts this component) the grid is inert, so this is a no-op until the final close.
       requestAnimationFrame(() => {
-        document.querySelector<HTMLElement>(`[data-artwork-card="${slug}"] a`)?.focus({ preventScroll: true });
+        document
+          .querySelector<HTMLElement>(`[data-artwork-card="${slug}"] a`)
+          ?.focus({ preventScroll: true });
       });
     };
   }, [slug]);
@@ -1751,15 +1765,27 @@ export function LightboxDialog({ slug, ink, titleId, navIndex, fullPageHref, chi
       aria-labelledby={titleId}
       data-ink={ink}
       data-mat={mat === 'auto' ? undefined : mat}
-      onCancel={(e) => { e.preventDefault(); close(); }}
-      onClick={(e) => { if (e.target === e.currentTarget) close(); }}
+      onCancel={(e) => {
+        e.preventDefault();
+        close();
+      }}
+      onClick={(e) => {
+        // The dialog fills the viewport, so the native ::backdrop is never hit. The mat around the
+        // artwork (marked with BACKDROP_ATTR) plays that role instead.
+        const target = e.target as HTMLElement;
+        if (target === e.currentTarget || target.hasAttribute(BACKDROP_ATTR)) close();
+      }}
       className={cn(
         'fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none overflow-hidden p-0',
         'bg-mat text-mat-ink backdrop:bg-scrim open:animate-fade-in',
       )}
     >
-      <div className="absolute right-3 top-3 z-10 flex items-center gap-2 lg:right-[calc(26rem+0.75rem)]">
-        <div role="group" aria-label={t.mat.label} className="hidden items-center gap-1 text-caption sm:flex">
+      <div className="absolute top-3 right-3 z-10 flex items-center gap-2 lg:right-[calc(26rem+0.75rem)]">
+        <div
+          role="group"
+          aria-label={t.mat.label}
+          className="hidden items-center gap-1 text-caption sm:flex"
+        >
           {(['light', 'dark'] as const).map((m) => (
             <button
               key={m}
@@ -1772,15 +1798,33 @@ export function LightboxDialog({ slug, ink, titleId, navIndex, fullPageHref, chi
             </button>
           ))}
         </div>
-        <Link href={fullPageHref} className="sr-only focus:not-sr-only">{t.openFullPage}</Link>
-        <button type="button" onClick={close} aria-label={t.close} className="grid size-11 place-items-center text-mat-ink">
-          <svg aria-hidden viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+        {/* Plain <a>: a soft <Link> to this URL would be intercepted again and stay in the modal. */}
+        <a href={fullPageHref} className="sr-only focus:not-sr-only focus:px-2 focus:py-1">
+          {t.openFullPage}
+        </a>
+        <button
+          type="button"
+          onClick={close}
+          aria-label={t.close}
+          className="grid size-11 place-items-center text-mat-ink"
+        >
+          <svg
+            aria-hidden
+            viewBox="0 0 24 24"
+            className="size-5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
             <path d="M5 5l14 14M19 5L5 19" />
           </svg>
         </button>
       </div>
 
-      <LightboxNav currentSlug={slug} index={navIndex} />
+      {/* useSearchParams() in a prerendered route must sit under a Suspense boundary. */}
+      <Suspense fallback={null}>
+        <LightboxNav currentSlug={slug} index={navIndex} />
+      </Suspense>
       {children}
     </dialog>
   );
@@ -1797,56 +1841,97 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import type { NavIndexEntry } from '@/data/schema/artwork';
 import { filterItems, parseFilters, serializeFilters } from '@/lib/gallery/filters';
 import { useI18n } from '@/components/providers/I18nProvider';
+import { cn } from '@/lib/cn';
 
-export function LightboxNav({ currentSlug, index }: { currentSlug: string; index: NavIndexEntry[] }) {
+export function LightboxNav({
+  currentSlug,
+  index,
+}: {
+  currentSlug: string;
+  index: NavIndexEntry[];
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { locale, messages } = useI18n();
 
-  const { prev, next, qs } = useMemo(() => {
+  const { prevHref, nextHref } = useMemo(() => {
     const filters = parseFilters(searchParams);
     const filtered = filterItems(index, filters);
     // If the current work isn't in the filtered set (e.g. deep link), navigate the full set.
     const list = filtered.some((e) => e.slug === currentSlug) ? filtered : index;
     const i = list.findIndex((e) => e.slug === currentSlug);
     const n = list.length;
+    const qs = serializeFilters(filters);
+    const hrefFor = (slug: string) => `/${locale}/works/${slug}${qs ? `?${qs}` : ''}`;
+    const prev = n > 1 ? list[(i - 1 + n) % n] : undefined;
+    const next = n > 1 ? list[(i + 1) % n] : undefined;
     return {
-      prev: n > 1 ? list[(i - 1 + n) % n] : undefined,
-      next: n > 1 ? list[(i + 1) % n] : undefined,
-      qs: serializeFilters(filters),
+      prevHref: prev && hrefFor(prev.slug),
+      nextHref: next && hrefFor(next.slug),
     };
-  }, [searchParams, index, currentSlug]);
-
-  const hrefFor = (slug: string) => `/${locale}/works/${slug}${qs ? `?${qs}` : ''}`;
+  }, [searchParams, index, currentSlug, locale]);
 
   useEffect(() => {
-    if (prev) router.prefetch(hrefFor(prev.slug));
-    if (next) router.prefetch(hrefFor(next.slug));
-  }); // eslint-disable-line react-hooks/exhaustive-deps
+    if (prevHref) router.prefetch(prevHref);
+    if (nextHref) router.prefetch(nextHref);
+  }, [router, prevHref, nextHref]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
-      if (target?.closest('input, textarea, select, [contenteditable="true"]')) return; // never hijack form typing
-      if (e.key === 'ArrowLeft' && prev) router.replace(hrefFor(prev.slug), { scroll: false });
-      if (e.key === 'ArrowRight' && next) router.replace(hrefFor(next.slug), { scroll: false });
+      // Never hijack typing in a form field.
+      if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+      if (e.key === 'ArrowLeft' && prevHref) router.replace(prevHref, { scroll: false });
+      if (e.key === 'ArrowRight' && nextHref) router.replace(nextHref, { scroll: false });
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [router, prevHref, nextHref]);
 
-  if (!prev || !next) return null;
+  if (!prevHref || !nextHref) return null;
 
-  const btn = 'absolute top-1/2 z-10 grid size-12 -translate-y-1/2 place-items-center text-mat-ink/70 hover:text-mat-ink';
+  // <lg: fixed bottom bar; ≥lg: arrows centred on the image pane's edges.
+  const btn =
+    'z-10 grid size-12 place-items-center text-mat-ink/70 hover:text-mat-ink lg:absolute lg:top-1/2 lg:-translate-y-1/2';
   return (
-    <>
-      <Link replace scroll={false} href={hrefFor(prev.slug)} aria-label={messages.lightbox.previous} className={`${btn} left-2`}>
-        <svg aria-hidden viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.25"><path d="M15 4l-8 8 8 8" /></svg>
+    <div className="fixed inset-x-0 bottom-0 z-10 flex justify-between border-t border-rule bg-mat lg:contents">
+      <Link
+        replace
+        scroll={false}
+        href={prevHref}
+        aria-label={messages.lightbox.previous}
+        className={cn(btn, 'lg:left-2')}
+      >
+        <svg
+          aria-hidden
+          viewBox="0 0 24 24"
+          className="size-6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.25"
+        >
+          <path d="M15 4l-8 8 8 8" />
+        </svg>
       </Link>
-      <Link replace scroll={false} href={hrefFor(next.slug)} aria-label={messages.lightbox.next} className={`${btn} right-2 lg:right-[calc(26rem+0.5rem)]`}>
-        <svg aria-hidden viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.25"><path d="M9 4l8 8-8 8" /></svg>
+      <Link
+        replace
+        scroll={false}
+        href={nextHref}
+        aria-label={messages.lightbox.next}
+        className={cn(btn, 'lg:right-[calc(26rem+0.5rem)]')}
+      >
+        <svg
+          aria-hidden
+          viewBox="0 0 24 24"
+          className="size-6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.25"
+        >
+          <path d="M9 4l8 8-8 8" />
+        </svg>
       </Link>
-    </>
+    </div>
   );
 }
 ```
@@ -1858,18 +1943,38 @@ import type { Artwork } from '@/data/schema/artwork';
 import type { Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { localize } from '@/lib/i18n/localize';
-import { formatDimensions } from '@/lib/i18n/format';
+import { formatArtworkYear, formatDimensions } from '@/lib/i18n/format';
 import { ReprintPanel } from './ReprintPanel';
 import { cn } from '@/lib/cn';
 
-export function ArtworkDetailView({ artwork, locale, variant }: { artwork: Artwork; locale: Locale; variant: 'modal' | 'page' }) {
+/** Server Component shared by the lightbox (`modal`) and the full work page (`page`). */
+export function ArtworkDetailView({
+  artwork,
+  locale,
+  variant,
+}: {
+  artwork: Artwork;
+  locale: Locale;
+  variant: 'modal' | 'page';
+}) {
   const t = getDictionary(locale).lightbox;
   const title = localize(artwork.title, locale);
-  const yearLabel = artwork.year === null ? t.undated : `${artwork.yearCirca ? `${t.circa} ` : ''}${artwork.year}`;
+  const modal = variant === 'modal';
 
   return (
-    <div className={cn('grid lg:grid-cols-[1fr_26rem]', variant === 'modal' ? 'h-dvh' : 'min-h-[calc(100dvh-4rem)]')}>
-      <div className="flex min-h-0 items-center justify-center bg-mat p-gutter lg:p-12">
+    <div
+      className={cn(
+        'grid lg:grid-cols-[1fr_26rem]',
+        modal
+          ? 'h-dvh grid-rows-[auto_minmax(0,1fr)] lg:grid-rows-1'
+          : 'min-h-[calc(100dvh-var(--header-h))]',
+      )}
+    >
+      <div
+        // In the lightbox, the mat around the artwork acts as the backdrop (click closes).
+        data-lightbox-backdrop={modal ? '' : undefined}
+        className="flex min-h-0 items-center justify-center bg-mat p-gutter lg:p-12"
+      >
         <Image
           src={artwork.image.src}
           alt={localize(artwork.image.alt, locale)}
@@ -1885,16 +1990,27 @@ export function ArtworkDetailView({ artwork, locale, variant }: { artwork: Artwo
         />
       </div>
 
-      <aside className="overflow-y-auto border-t border-rule bg-surface p-gutter text-ink lg:border-l lg:border-t-0 lg:p-10">
-        <p className="text-eyebrow uppercase text-ink-subtle">{artwork.id}</p>
-        <h1 id="artwork-title" className="mt-2 font-serif text-title">{title}</h1>
-        <p className="mt-1 text-caption tabular-nums text-ink-muted">{yearLabel}</p>
+      <aside
+        className={cn(
+          'overflow-y-auto border-t border-rule bg-surface p-gutter text-ink lg:border-t-0 lg:border-l lg:p-10',
+          modal && 'pb-20 lg:pb-10', // clears the mobile prev/next bar
+        )}
+      >
+        <p className="text-eyebrow text-ink-subtle uppercase">{artwork.id}</p>
+        <h1 id="artwork-title" className="mt-2 font-serif text-title">
+          {title}
+        </h1>
+        <p className="mt-1 text-caption text-ink-muted tabular-nums">
+          {formatArtworkYear(artwork.year, artwork.yearCirca, t)}
+        </p>
 
         <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 border-y border-rule py-6 text-caption">
           <dt className="text-ink-subtle">{t.medium}</dt>
           <dd>{localize(artwork.medium, locale)}</dd>
           <dt className="text-ink-subtle">{t.dimensions}</dt>
-          <dd className="tabular-nums">{formatDimensions(artwork.dimensions.widthCm, artwork.dimensions.heightCm, locale)}</dd>
+          <dd className="tabular-nums">
+            {formatDimensions(artwork.dimensions.widthCm, artwork.dimensions.heightCm, locale)}
+          </dd>
           <dt className="text-ink-subtle">{t.catalogueId}</dt>
           <dd className="tabular-nums">{artwork.id}</dd>
         </dl>
@@ -1918,19 +2034,38 @@ export function ArtworkDetailView({ artwork, locale, variant }: { artwork: Artwo
 
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '@/components/providers/I18nProvider';
-import { ReprintInquiryForm } from '@/components/inquiry/ReprintInquiryForm';
+// Phase 6 swaps this for ReprintInquiryForm (same props).
+import { ReprintInquiryPlaceholder as ReprintInquiryForm } from '@/components/inquiry/ReprintInquiryPlaceholder';
 
-export function ReprintPanel({ artworkId, artworkTitle }: { artworkId: string; artworkTitle: string }) {
+export function ReprintPanel({
+  artworkId,
+  artworkTitle,
+}: {
+  artworkId: string;
+  artworkTitle: string;
+}) {
   const { messages } = useI18n();
   const [view, setView] = useState<'cta' | 'form'>('cta');
   const ctaRef = useRef<HTMLButtonElement>(null);
+  const returning = useRef(false);
 
-  useEffect(() => { if (view === 'cta') ctaRef.current?.focus({ preventScroll: true }); }, [view]);
+  // Refocus the CTA only when coming back from the form — never on first mount.
+  useEffect(() => {
+    if (view === 'form') returning.current = true;
+    else if (returning.current) {
+      returning.current = false;
+      ctaRef.current?.focus({ preventScroll: true });
+    }
+  }, [view]);
 
   if (view === 'form') {
     return (
       <section id="reprint-inquiry" className="mt-8 animate-fade-in">
-        <ReprintInquiryForm artworkId={artworkId} artworkTitle={artworkTitle} onBack={() => setView('cta')} />
+        <ReprintInquiryForm
+          artworkId={artworkId}
+          artworkTitle={artworkTitle}
+          onBack={() => setView('cta')}
+        />
       </section>
     );
   }
@@ -1947,7 +2082,7 @@ export function ReprintPanel({ artworkId, artworkTitle }: { artworkId: string; a
         aria-expanded={false}
         aria-controls="reprint-inquiry"
         onClick={() => setView('form')}
-        className="mt-4 w-full bg-ink px-6 py-3.5 text-caption uppercase tracking-[0.14em] text-canvas transition-opacity hover:opacity-90"
+        className="mt-4 w-full bg-ink px-6 py-3.5 text-caption tracking-[0.14em] text-canvas uppercase transition-opacity hover:opacity-90"
       >
         {messages.lightbox.buyReprint}
       </button>
@@ -1956,15 +2091,26 @@ export function ReprintPanel({ artworkId, artworkTitle }: { artworkId: string; a
 }
 ```
 
-**Full-page route** `(portfolio)/works/[slug]/page.tsx`: same `generateStaticParams` as the modal, `generateMetadata` (title, description from `medium` + year, `openGraph.images` from the artwork via `/_next/image` URL is not allowed — use the Bunny Optimizer URL from `lib/images/cdn.ts` at 1200 px), `alternatesFor(locale, '/works/' + slug)`, JSON-LD `VisualArtwork` (Appendix A), renders `<ArtworkDetailView variant="page" />` plus a "← Works" back link to `/${locale}`. Unknown slug → `notFound()`.
+**Full-page route** `(portfolio)/works/[slug]/page.tsx`: same `generateStaticParams` as the modal, `generateMetadata` (title, description from `medium` + year, `openGraph.images` from the artwork via `/_next/image` URL is not allowed — use the Bunny Optimizer URL from `lib/images/cdn.ts` at 1200 px), `alternatesFor(locale, '/works/' + slug)`, JSON-LD `VisualArtwork` (Appendix A), renders `<ArtworkDetailView variant="page" />` plus a "← Works" back link to `/${locale}`. Unknown slug → `notFound()`. The page wraps everything in `<article data-ink>` so `bg-mat` follows the ink profile, and the `VisualArtwork` `creator.name` comes from `getSite().artist.name`. The year label (in the detail view and in the meta description) comes from `formatArtworkYear()` in `lib/i18n/format.ts`.
 
-**Lightbox acceptance criteria**
+**Implementation notes** (things the code above does on purpose; don't "simplify" them away)
 
-- `Esc`, ✕, and backdrop click all close via `router.back()`; focus returns to the originating card.
+- **Backdrop = the mat.** The `<dialog>` fills the viewport and the detail view covers it, so the native `::backdrop` can never be clicked. The image pane carries `data-lightbox-backdrop` in the modal variant, and a click on it, or on the dialog itself, closes the lightbox. Clicks on the image or the aside do not.
+- **`LightboxNav` sits in `<Suspense fallback={null}>`.** It calls `useSearchParams()` inside a prerendered (`generateStaticParams`) route, and without a boundary `next build` fails.
+- **"Open as page" is a plain `<a>`.** A soft `<Link>` to the same URL would be intercepted again and stay in the modal.
+- **`ReprintPanel` refocuses the CTA only after "Back" from the form**, never on mount. Focusing on mount would steal focus on full-page loads.
+- **Mobile:** the modal grid uses `grid-rows-[auto_minmax(0,1fr)]` so the aside scrolls inside `h-dvh`. Below `lg`, prev/next form a fixed bottom bar (the wrapper is `lg:contents`, so at `lg` and up the links are absolutely positioned against the dialog), and the aside gets `pb-20` to clear the bar.
+- **Focus return after prev/next:** the dialog remounts per slug, so closing returns focus to the card of the work *shown last*. That card is where the user's attention is, and it is always in the filtered grid.
+- Until Phase 6, `ReprintPanel` imports `ReprintInquiryPlaceholder` under the `ReprintInquiryForm` name (same props). Phase 6 swaps the import and deletes the placeholder.
+
+**Lightbox acceptance criteria** (covered by `e2e/lightbox.spec.ts`)
+
+- `Esc`, ✕, and a click on the mat all close via `router.back()`; focus returns to the originating card (after prev/next: the card of the work shown last).
 - `html:has(dialog[open])` locks page scroll (CSS in §6).
 - ←/→ do nothing while focus is in the inquiry form.
 - Prev/next respect the active filter combination.
 - Lightbox image never upscales beyond its intrinsic size and never crops.
+- A hard load or refresh of a work URL renders the full page, never the modal.
 
 ---
 
@@ -3348,4 +3494,4 @@ Each phase ends with `pnpm typecheck && pnpm lint && pnpm test && pnpm build` pa
 - **Vitest unit**: `lib/gallery/filters.ts`, `lib/i18n/format.ts` (partial dates in both locales incl. UTC edge at midnight, plural forms incl. Icelandic `21 → one`), `lib/i18n/localize.ts` fallback, `inquirySchema` (each error code reachable; whitespace trimming; email lowercasing).
 - **Data validation**: `pnpm data:validate`, chained into `pnpm build` (§0.6). `scripts/validate-data.test.ts` runs it against the committed data and against a deliberately broken copy.
 - **Server Action**: unit-test `sendInquiry` with `vi.mock('@/lib/email/resend')` covering honeypot, validation failure, `too_fast`, unknown artwork, non-reprint artwork, Resend error, success.
-- **Optional E2E (Playwright)**: locale redirect, toggle, filter + lightbox + prev/next within filter, inquiry happy path against a mocked action.
+- **E2E (Playwright)**, `pnpm test:e2e`, in `e2e/`. It exists since Phase 5 (`lightbox.spec.ts`: every §3.7 criterion + hard refresh). Still to add: locale redirect, toggle, inquiry happy path against a mocked action. Phase 6 re-runs the "←/→ in form" test against the real form (Phase 5 injects fields into the placeholder).
