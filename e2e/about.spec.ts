@@ -3,10 +3,12 @@ import { expect, test, type Page } from '@playwright/test';
 /*
  * Phase 7 acceptance (SPEC §5, Appendix C): sorting and date formatting in both locales,
  * archival photos never upscaled, press file links name the right type and size.
- * Fixture data: src/data/about/*.json (sample content).
+ * Fixture data: src/data/about/*.json (exhibitions and albums are real; biography and press are sample content).
  */
 
-const ALBUM = 'sample-opening-2008';
+const ALBUM = '2008-05-29-hafnarfjordur-100-ara';
+const PHOTO = `${ALBUM}-01`; // landscape, first in the album
+const PORTRAIT = `${ALBUM}-05`; // 2592 px wide
 
 const copy = {
   is: {
@@ -24,8 +26,8 @@ const copy = {
     },
     norway: 'Sandefjord, Noregur',
     groupTag: 'Samsýning',
-    albumMeta: '29. maí 2008 · 1 mynd',
-    photoOf: '1 af 1',
+    albumMeta: '29. maí 2008 · 7 myndir',
+    photoOf: '1 af 7',
     close: 'Loka',
     pressDates: ['nóvember 1991', '18. maí 1974'],
     pressFiles: ['Mynd · 12,7 kB', 'PDF · 0,7 kB'],
@@ -50,8 +52,8 @@ const copy = {
     },
     norway: 'Sandefjord, Norway',
     groupTag: 'Group exhibition',
-    albumMeta: '29 May 2008 · 1 photo',
-    photoOf: '1 of 1',
+    albumMeta: '29 May 2008 · 7 photos',
+    photoOf: '1 of 7',
     close: 'Close',
     pressDates: ['November 1991', '18 May 1974'],
     pressFiles: ['Image · 12.7 kB', 'PDF · 0.7 kB'],
@@ -167,24 +169,37 @@ for (const locale of ['is', 'en'] as const) {
       await expect(
         page.locator('[data-exhibition="EXH-2011-01"] [data-exhibition-place]'),
       ).toHaveText(t.norway);
+
+      await page.locator('[data-exhibition="EXH-2008-01"] a').click();
+      await expect(page).toHaveURL(new RegExp(`/${locale}/about/albums/${ALBUM}$`));
     });
 
-    test('albums: index card shows date + photo count', async ({ page }) => {
+    test('albums: index card shows date + photo count; back-link to exhibition anchor', async ({
+      page,
+    }) => {
       await page.goto(`/${locale}/about/albums`);
       await expect(page.locator(`[data-album="${ALBUM}"] p`)).toHaveText(t.albumMeta);
 
       await page.locator(`[data-album="${ALBUM}"] a`).click();
       await expect(page).toHaveURL(new RegExp(`/about/albums/${ALBUM}$`));
+      // No title on the exhibition, so the link names its venue (verbatim).
+      const back = page.locator('[data-exhibition-link]');
+      await expect(back).toContainText('Hafnafjörður 100 ára');
+      await back.click();
+      await expect(page).toHaveURL(new RegExp(`/${locale}/about/exhibitions#EXH-2008-01$`));
+      await expect(page.locator('#EXH-2008-01')).toBeInViewport();
     });
 
     test('album dialog: opens, counts, arrows are harmless at the ends, Esc restores focus', async ({
       page,
     }) => {
       await page.goto(`/${locale}/about/albums/${ALBUM}`);
-      const thumb = page.locator('[data-album-photo="p01"]');
+      const thumb = page.locator(`[data-album-photo="${PHOTO}"]`);
       await thumb.click();
       const dialog = page.locator('dialog[open]');
       await expect(dialog).toBeVisible();
+      await expect(dialog.getByText(t.photoOf)).toBeVisible();
+      await page.keyboard.press('ArrowLeft'); // already at the first photo: stays put
       await expect(dialog.getByText(t.photoOf)).toBeVisible();
       await page.keyboard.press('ArrowRight');
       await page.keyboard.press('ArrowLeft');
@@ -251,7 +266,7 @@ test.describe('archival photos are never upscaled', () => {
 
   test('album dialog image is capped at the intrinsic width', async ({ page }) => {
     await page.goto(`/is/about/albums/${ALBUM}`);
-    await page.locator('[data-album-photo="p01"]').click();
+    await page.locator(`[data-album-photo="${PORTRAIT}"]`).click();
     const img = page.locator('dialog[open] img');
     await expect(img).toBeVisible();
     await expect(img).toHaveCSS('max-width', '2592px');

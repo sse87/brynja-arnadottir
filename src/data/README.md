@@ -14,7 +14,7 @@ The schemas are strict, so files cannot carry a "sample" flag. Placeholder text 
 | `site.json`              | Real                                                                                                                                                   |
 | `about/biography.json`   | Portrait and birth/death years are real; places, lede, body and pull quote are **sample**                                                              |
 | `about/exhibitions.json` | Real, from the previous website: venue and city copied verbatim (Icelandic, as written there), year/month/season only, no titles                       |
-| `about/albums.json`      | **Sample** (the one photo is the biography portrait, used as a stand-in)                                                                               |
+| `about/albums.json`      | Real photos; alt text drafted from the photos — to be reviewed by the estate. Hólmaröst `-12` and `-13` are damaged at source (bottom half grey)       |
 | `about/press.json`       | **Sample**, with placeholder files `public/press/sample-*`                                                                                             |
 
 After adding or replacing images, run `pnpm images:blur` to fill `blurDataURL`. For the full

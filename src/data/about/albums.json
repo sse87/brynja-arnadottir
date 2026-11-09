@@ -1,29 +1,188 @@
 [
   {
-    "id": "sample-opening-2008",
+    "id": "2005-05-21-holmarost",
     "title": {
-      "is": "[Sýnishorn] Opnun 2008",
-      "en": "[Sample] Opening 2008"
+      "is": "Hólmaröst",
+      "en": "Hólmaröst"
     },
-    "date": "2008-05-29",
-    "description": {
-      "is": "[Sýnishorn] Sýnialbúm. Skiptið út fyrir raunverulegar ljósmyndir.",
-      "en": "[Sample] Sample album. Replace with real photographs."
-    },
-    "coverPhotoId": "p01",
+    "date": "2005-05-21",
+    "exhibitionId": "EXH-2005-01",
+    "coverPhotoId": "2005-05-21-holmarost-09",
     "photos": [
       {
-        "id": "p01",
-        "src": "https://brynja.b-cdn.net/brynja-2008-05-29.jpg",
+        "id": "2005-05-21-holmarost-07",
+        "src": "https://brynja.b-cdn.net/photo-albums/2005-05-21-holmarost/07.jpg",
+        "width": 1792,
+        "height": 1200,
+        "alt": {
+          "is": "Litljósmynd frá opnun sýningarinnar: gestir standa og spjalla, þar á meðal kona í hvítum jakka og maður í dökkum fötum með glas, en eldri maður í jakkafötum situr við dúkað borð; á hvítum veggnum hanga þrjár litríkar teikningar í römmum.",
+          "en": "Colour photograph from the exhibition opening: guests stand and talk, among them a woman in a white jacket and a man in dark clothes holding a glass, while an older man in a suit sits at a covered table; three colourful framed drawings hang on the white wall."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAABQAgCdASoQAAsAA4BaJQBOgMYi4KxZtev3wwAA4mIbYQ9z0nVSxXIDaNvsi/JsyOTAGGk0T38mmEeu0kjWq5cWo8pnKLV+XGYAypOVG6AcrpLD/N4jYct5NK9nZoi6nbs/5J4lELq4FAAA"
+      },
+      {
+        "id": "2005-05-21-holmarost-08",
+        "src": "https://brynja.b-cdn.net/photo-albums/2005-05-21-holmarost/08.jpg",
+        "width": 1792,
+        "height": 1200,
+        "alt": {
+          "is": "Litljósmynd af ljóshærðri konu í svörtum leðurjakka sem leggur rauðan klút og tösku á borð; fyrir aftan hana stendur kona í blárri peysu hjá fiðluleikara og á veggnum til vinstri hanga fimm litríkar teikningar.",
+          "en": "Colour photograph of a fair-haired woman in a black leather jacket laying a red scarf and a handbag on a table; behind her a woman in a blue cardigan stands by a violinist, and five colourful drawings hang on the wall to the left."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABQAgCdASoQAAsAA4BaJagCdAYvXuP/fVrdSAAA/uekRypPJAFQQPdrBoAcQv/NcwxLu0ZS1ucZkna70g2SliuAl8Xt3J1eV1s6AjaTKRbWLCEY3XGfz3R4PUJv4GPnTmBAAA=="
+      },
+      {
+        "id": "2005-05-21-holmarost-09",
+        "src": "https://brynja.b-cdn.net/photo-albums/2005-05-21-holmarost/09.jpg",
+        "width": 1792,
+        "height": 1200,
+        "alt": {
+          "is": "Litljósmynd af fiðluleikara í dökkum teinóttum jakkafötum sem leikur í sýningarsalnum, fyrir framan fimm litríkar teikningar í römmum og auð borð með blúndudúkum og rauðum stólum.",
+          "en": "Colour photograph of a violinist in a dark pinstripe suit playing in the exhibition room, in front of five colourful framed drawings and empty tables with lace cloths and red chairs."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADQAQCdASoQAAsAA4BaJQBOgB0ixH+EIAD+6SJKUVO0EQTEN51HWlUhOCVDI75jMzWefCG7wgo0GxAog3y8e9V1xghPVZQlEghRSkh39XEDbaKbTBev2n38ETaIMAAA"
+      },
+      {
+        "id": "2005-05-21-holmarost-10",
+        "src": "https://brynja.b-cdn.net/photo-albums/2005-05-21-holmarost/10.jpg",
+        "width": 1792,
+        "height": 1200,
+        "alt": {
+          "is": "Litljósmynd af gestum sem sitja við borð með kaffi og kökur og spjalla; í bakgrunni er afgreiðsluborð með drykkjarkæli.",
+          "en": "Colour photograph of guests seated at tables with coffee and cake, talking; a serving counter with a drinks fridge is in the background."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoQAAsAA4BaJYwCdAELz+rDhKn8YAD+5iI+/oWqNmbStluMxIFd6vIwuXCLrGjpb+wpBGuTkSKRm2BLcla5Gj5nZmjZ08cW5vJsUwBLWuWDy/L8YdNuaNoYAAA="
+      },
+      {
+        "id": "2005-05-21-holmarost-11",
+        "src": "https://brynja.b-cdn.net/photo-albums/2005-05-21-holmarost/11.jpg",
+        "width": 1792,
+        "height": 1200,
+        "alt": {
+          "is": "Litljósmynd af fiðluleikara sem leikur við hlið fatahengis á meðan gestir sitja við kaffiborð og aðrir standa og hlusta.",
+          "en": "Colour photograph of a violinist playing beside a coat rack while guests sit at a coffee table and others stand and listen."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwAgCdASoQAAsAA4BaJZgCdAD7ZpNSVvB6AAD2d9M95Hq/OUE1B2WvndK0X8TZtNf8cyS49EvDsb+aNYHO6YdQyaDFoVvgAzvyDrT3w9ljRfv5UuKZMMKePI/iYvpUMNg9jANkOkaeSn78wAAAAA=="
+      },
+      {
+        "id": "2005-05-21-holmarost-12",
+        "src": "https://brynja.b-cdn.net/photo-albums/2005-05-21-holmarost/12.jpg",
+        "width": 1792,
+        "height": 1200,
+        "alt": {
+          "is": "Litljósmynd af hópi gesta við borð með blómvöndum, sumir með sýningarskrá í hendi, í hvítum sal þar sem teikningar hanga á veggjum.",
+          "en": "Colour photograph of a crowd of guests around a table with bouquets of flowers, some holding exhibition leaflets, in a white room hung with drawings."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAABwAQCdASoQAAsAA4BaJZwAAaAkAAD7opgXeZ1BOzBage/9ixt3ha+wo/an1mgFKrKv6zMgtNBwAAAA"
+      },
+      {
+        "id": "2005-05-21-holmarost-13",
+        "src": "https://brynja.b-cdn.net/photo-albums/2005-05-21-holmarost/13.jpg",
+        "width": 1792,
+        "height": 1200,
+        "alt": {
+          "is": "Litljósmynd af sex konum sem standa saman og brosa fyrir framan svarthvítar teikningar í römmum.",
+          "en": "Colour photograph of six women standing together and smiling in front of framed black-and-white drawings."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAACwAQCdASoQAAsAA4BaJZwAAxYfCdkAAP7YdZyb00BxHF9XN5ANpYQ9pGz+JQ09kB2O2EAA"
+      },
+      {
+        "id": "2005-05-21-holmarost-14",
+        "src": "https://brynja.b-cdn.net/photo-albums/2005-05-21-holmarost/14.jpg",
+        "width": 1792,
+        "height": 1200,
+        "alt": {
+          "is": "Litljósmynd af fimm gestum sem sitja í röð og lyfta glösum, með svarthvítar pennateikningar á veggnum fyrir aftan sig.",
+          "en": "Colour photograph of five guests sitting in a row and raising their glasses, with black-and-white pen drawings on the wall behind them."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAABQAgCdASoQAAsAA4BaJQBOgMYO7WnhAq9XIAAA/kVtPhJYXDoJYJpmBn9Hu5awrSHbgedzTzZBnoRi4pxgH5d3bAbjuOWCa9m7IyolPk5ZPFcb6IxAY1v2xlqDG+AA"
+      }
+    ]
+  },
+  {
+    "id": "2008-05-29-hafnarfjordur-100-ara",
+    "title": {
+      "is": "Hafnarfjörður 100 ára",
+      "en": "Hafnarfjörður at 100"
+    },
+    "date": "2008-05-29",
+    "exhibitionId": "EXH-2008-01",
+    "coverPhotoId": "2008-05-29-hafnarfjordur-100-ara-07",
+    "photos": [
+      {
+        "id": "2008-05-29-hafnarfjordur-100-ara-01",
+        "src": "https://brynja.b-cdn.net/photo-albums/2008-05-29-hafnarfjordur-100-ara/DSC_3818.jpg",
+        "width": 3872,
+        "height": 2592,
+        "alt": {
+          "is": "Litljósmynd af gestum við borð í björtum sal með háum gluggum; ljóshærð kona í ljósum jakka stendur og spjallar og á veggnum í bakgrunni hanga teikningar í römmum.",
+          "en": "Colour photograph of guests at tables in a bright room with tall windows; a fair-haired woman in a light jacket stands talking, and framed drawings hang on the wall in the background."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoQAAsAA4BaJYgCdADO3siyUINQAP7MAe5xgpVTMWfQ3MkcwJiIItduY5RWAZEtZREC+0O7LbH4AZGCd8MlHMsbtAXeK0oEKDVO5mzFhCiAAA=="
+      },
+      {
+        "id": "2008-05-29-hafnarfjordur-100-ara-02",
+        "src": "https://brynja.b-cdn.net/photo-albums/2008-05-29-hafnarfjordur-100-ara/DSC_3819.jpg",
+        "width": 3872,
+        "height": 2592,
+        "alt": {
+          "is": "Litljósmynd af rúmgóðum sal með hvítum súlum og rauðum vegg, þar sem gestir sitja við borð og röð teikninga í römmum hangir á bakveggnum.",
+          "en": "Colour photograph of a spacious hall with white columns and a red wall, where guests sit at tables and a row of framed drawings hangs on the far wall."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAQAgCdASoQAAsAA4BaJaACdADwwVszCZQAAP6JQckG/vPG/rhrg5khDDdFO//CGJVXTCxjKDTJEBfc+I2C/jQfmyDe0hv8GuzdueYTJU1316Qg87f6/4SZ5LceINr9ygX+EbZQfqZiYUYGkh4AAA=="
+      },
+      {
+        "id": "2008-05-29-hafnarfjordur-100-ara-03",
+        "src": "https://brynja.b-cdn.net/photo-albums/2008-05-29-hafnarfjordur-100-ara/DSC_3820.jpg",
+        "width": 3872,
+        "height": 2592,
+        "alt": {
+          "is": "Litljósmynd af Brynju Árnadóttur í blárri mynstraðri flík, arm í arm við mann í dökkblárri peysu og unga ljóshærða konu með sólgleraugu uppi í hárinu.",
+          "en": "Colour photograph of Brynja Árnadóttir in a blue patterned top, arm in arm with a man in a navy jumper and a young fair-haired woman with sunglasses pushed up in her hair."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABwAgCdASoQAAsAA4BaJaACdAYuly9ExutpwiYAAP7CRjBtsnAAe+W/MiO9hW28fjgE0Y1E4g3El3ILm0cl+EuUhcIld9abOfsxP4Kw7ZluWMOMQEMS9PG13kE8wytiTgEbVhQ9C+QeyFegQGBAAAAA"
+      },
+      {
+        "id": "2008-05-29-hafnarfjordur-100-ara-04",
+        "src": "https://brynja.b-cdn.net/photo-albums/2008-05-29-hafnarfjordur-100-ara/DSC_3822.jpg",
+        "width": 3872,
+        "height": 2592,
+        "alt": {
+          "is": "Litljósmynd af Brynju Árnadóttur með þremur gestum fyrir framan rauðan vegg: hvíthærðum manni með gleraugu, konu í gallajakka og ljóshærðri konu í ljósum jakka.",
+          "en": "Colour photograph of Brynja Árnadóttir with three guests in front of a red wall: a white-haired man in glasses, a woman in a denim jacket and a fair-haired woman in a light jacket."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQAgCdASoQAAsAA4BaJaACdACpjaB+YXkAAP7CacNbqB65WTUa4AEk+gfadkNEruE5S7i7B6Of5856Mngpp0fK5gR3fEt+sOdUqIhTsSP5+Q2DZCgxNo5bm0E7s688W2pumUrOlGFwMTilhlZDjNgG9tHyQAAA"
+      },
+      {
+        "id": "2008-05-29-hafnarfjordur-100-ara-05",
+        "src": "https://brynja.b-cdn.net/photo-albums/2008-05-29-hafnarfjordur-100-ara/DSC_3823.jpg",
+        "width": 2592,
+        "height": 3872,
+        "alt": {
+          "is": "Litljósmynd af litlu barni í grænni húfu og blárri flíspeysu með kex í hendi, fyrir framan tvær svarthvítar pennateikningar.",
+          "en": "Colour photograph of a small child in a green hat and a blue fleece jacket holding a biscuit, in front of two black-and-white pen drawings."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADwAQCdASoLABAAA4BaJZQAAxYNOWqzk/AA4AAe5/fZ8AewXBnmZPgP3cK85DF8AaTOPoduzM9a7a7V94EX7xrFXxQXMREJcUGw/VwAAAA="
+      },
+      {
+        "id": "2008-05-29-hafnarfjordur-100-ara-06",
+        "src": "https://brynja.b-cdn.net/photo-albums/2008-05-29-hafnarfjordur-100-ara/DSC_3828.jpg",
+        "width": 2592,
+        "height": 3872,
+        "alt": {
+          "is": "Litljósmynd af Brynju Árnadóttur með stutt dökkt hár, í blárri mynstraðri flík, sem horfir til hliðar á bak við appelsínugula rós.",
+          "en": "Colour photograph of Brynja Árnadóttir with short dark hair, in a blue patterned top, looking to one side behind an orange rose."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoLABAAA4BaJZgCdAECpdrvG+AA/rpP2lVCO9fTwF68qqcBfjUwr0OT3igg3nSqnM3Wulw1/ftQoTBVszwgnlR4HTYjkPh8HgJSXb0DR87AnSiARAA="
+      },
+      {
+        "id": "2008-05-29-hafnarfjordur-100-ara-07",
+        "src": "https://brynja.b-cdn.net/photo-albums/2008-05-29-hafnarfjordur-100-ara/DSC_3829.jpg",
         "width": 2592,
         "height": 3872,
         "alt": {
           "is": "Litljósmynd af Brynju Árnadóttur með stutt dökkt hár, í blárri mynstraðri flík, með appelsínugula rós í forgrunni.",
           "en": "Colour photograph of Brynja Árnadóttir with short dark hair, wearing a blue patterned top, with an orange rose in the foreground."
-        },
-        "caption": {
-          "is": "[Sýnishorn] Myndatexti, 29. maí 2008.",
-          "en": "[Sample] Caption, 29 May 2008."
         },
         "blurDataURL": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoLABAAA4BaJZgCdAEQXKVtwyrwAP7M+AiUK/xxcwI32bvrNZ6kU0FefEp1g64w+cWOLygnheveaLMcBnhzYs9r/XeWrpnObzrtAZfZKRVO0ESnlLlNaEgIIG6VIIzHMv0kAA=="
       }

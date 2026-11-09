@@ -5,7 +5,7 @@ import { expect, test, type Page } from '@playwright/test';
  * console errors or CSP violations on the main routes and interactions under the production CSP.
  */
 
-const ALBUM = 'sample-opening-2008';
+const ALBUM = '2008-05-29-hafnarfjordur-100-ara';
 
 /** Collects console errors, uncaught exceptions and CSP violation events for one page. */
 async function watchForErrors(page: Page) {
@@ -96,7 +96,7 @@ test.describe('no console errors or CSP violations', () => {
   test('album photo dialog', async ({ page }) => {
     const errors = await watchForErrors(page);
     await page.goto(`/en/about/albums/${ALBUM}`);
-    await page.locator('[data-album-photo="p01"]').click();
+    await page.locator(`[data-album-photo="${ALBUM}-01"]`).click();
     await expect(page.locator('dialog[open]')).toBeVisible();
     await settle(page);
     expect(errors).toEqual([]);
