@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import '../globals.css';
-import { serif, sans } from '../fonts';
+import { serif, serifItalic, sans } from '../fonts';
 import { locales, localeMeta } from '@/lib/i18n/config';
 import { resolveLocale, alternatesFor, type LocaleParams } from '@/lib/i18n/route';
 import { getDictionary, pickClientMessages } from '@/lib/i18n/dictionaries';
@@ -40,7 +40,10 @@ export default async function LocaleLayout({
   const dict = getDictionary(locale);
 
   return (
-    <html lang={localeMeta[locale].htmlLang} className={`${serif.variable} ${sans.variable}`}>
+    <html
+      lang={localeMeta[locale].htmlLang}
+      className={`${serif.variable} ${serifItalic.variable} ${sans.variable}`}
+    >
       <body className="min-h-dvh bg-canvas font-sans text-body text-ink antialiased">
         <I18nProvider locale={locale} messages={pickClientMessages(dict)}>
           <SkipLink label={dict.nav.skipToContent} />

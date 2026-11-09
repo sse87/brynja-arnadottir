@@ -61,7 +61,7 @@ export function Biography({
         </div>
 
         {bio.pullQuote && (
-          <blockquote className="my-stack max-w-prose-archive border-y border-rule py-6 font-serif text-lede italic">
+          <blockquote className="my-stack max-w-prose-archive border-y border-rule py-6 font-serif-italic text-lede italic">
             <p>{localize(bio.pullQuote.text, locale)}</p>
             {bio.pullQuote.attribution && (
               <footer className="mt-2 font-sans text-caption text-ink-muted not-italic">

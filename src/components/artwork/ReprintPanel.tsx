@@ -9,7 +9,7 @@ import {
 } from '@/data/schema/inquiry';
 import { useI18n } from '@/components/providers/I18nProvider';
 import { ReprintInquiryForm } from '@/components/inquiry/ReprintInquiryForm';
-import { cn } from '@/lib/cn';
+import { clsx } from 'clsx';
 
 const SECTION_ID = 'reprint-inquiry';
 
@@ -77,7 +77,7 @@ export function ReprintPanel({
     <div className="mt-8">
       <section
         id={SECTION_ID}
-        className={cn('peer', showForm ? 'animate-fade-in' : 'hidden target:block')}
+        className={clsx('peer', showForm ? 'animate-fade-in' : 'hidden target:block')}
       >
         <ReprintInquiryForm
           artworkId={artworkId}

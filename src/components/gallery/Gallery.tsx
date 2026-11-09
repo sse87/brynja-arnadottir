@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import type { GalleryItem } from '@/data/schema/artwork';
 import {
@@ -38,9 +38,21 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
     [filters, pathname],
   );
 
+  // "Clear filters" unmounts its own button; hand focus to the filters instead of <body> (2.4.3).
+  const filtersRef = useRef<HTMLDivElement>(null);
+  const focusFiltersAfterReset = useRef(false);
+  useEffect(() => {
+    if (!focusFiltersAfterReset.current) return;
+    focusFiltersAfterReset.current = false;
+    filtersRef.current?.querySelector<HTMLInputElement>('input:checked')?.focus();
+  }, [filters]);
+
   return (
     <div className="flex flex-col gap-stack">
-      <div className="flex flex-col gap-4 border-y border-rule py-4 md:flex-row md:items-center md:justify-between">
+      <div
+        ref={filtersRef}
+        className="flex flex-col gap-4 border-y border-rule py-4 md:flex-row md:items-center md:justify-between"
+      >
         <Filters filters={filters} counts={counts} onChange={update} />
         <p role="status" aria-live="polite" className="text-caption text-ink-muted tabular-nums">
           {plural(locale, visible.length, messages.gallery.resultCount)}
@@ -53,7 +65,14 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
         <EmptyState
           message={messages.gallery.empty}
           actionLabel={messages.gallery.reset}
-          onReset={isDefaultFilters(filters) ? undefined : () => update(DEFAULT_FILTERS)}
+          onReset={
+            isDefaultFilters(filters)
+              ? undefined
+              : () => {
+                  focusFiltersAfterReset.current = true;
+                  update(DEFAULT_FILTERS);
+                }
+          }
         />
       )}
     </div>

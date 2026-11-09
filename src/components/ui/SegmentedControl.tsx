@@ -1,7 +1,7 @@
 'use client';
 
 import { useId } from 'react';
-import { cn } from '@/lib/cn';
+import { clsx } from 'clsx';
 
 interface Option<T extends string> {
   value: T;
@@ -37,7 +37,7 @@ export function SegmentedControl<T extends string>({
           return (
             <label
               key={o.value}
-              className={cn(
+              className={clsx(
                 'relative cursor-pointer px-3 py-1.5 text-caption transition-colors',
                 'border-r border-rule-strong last:border-r-0',
                 'has-checked:bg-ink has-checked:text-canvas',

@@ -66,7 +66,9 @@ export function AlbumPhotoGrid({ photos }: { photos: AlbumPhotoView[] }) {
     <>
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
         {photos.map((p, i) => (
-          <li key={p.id} className="[contain-intrinsic-size:auto_220px] [content-visibility:auto]">
+          // content-visibility sits on the image wrapper, not the <li>: its paint containment
+          // would clip the button's outset focus ring.
+          <li key={p.id}>
             <button
               ref={(el) => {
                 thumbRefs.current[i] = el;
@@ -76,19 +78,21 @@ export function AlbumPhotoGrid({ photos }: { photos: AlbumPhotoView[] }) {
               onClick={() => setOpenIndex(i)}
               className="block w-full cursor-zoom-in focus-visible:outline-offset-4"
             >
-              <Image
-                src={p.src}
-                alt={p.alt}
-                width={p.width}
-                height={p.height}
-                sizes="(min-width: 1024px) 22vw, (min-width: 640px) 33vw, 50vw"
-                quality={70}
-                loading={i < EAGER_THUMBNAILS ? 'eager' : 'lazy'}
-                placeholder={p.blurDataURL ? 'blur' : 'empty'}
-                blurDataURL={p.blurDataURL}
-                style={{ maxWidth: maxCoverWidth(p.width, p.height) }}
-                className="aspect-4/3 h-auto w-full bg-mat object-cover"
-              />
+              <span className="block [contain-intrinsic-size:auto_220px] [content-visibility:auto]">
+                <Image
+                  src={p.src}
+                  alt={p.alt}
+                  width={p.width}
+                  height={p.height}
+                  sizes="(min-width: 1024px) 22vw, (min-width: 640px) 33vw, 50vw"
+                  quality={70}
+                  loading={i < EAGER_THUMBNAILS ? 'eager' : 'lazy'}
+                  placeholder={p.blurDataURL ? 'blur' : 'empty'}
+                  blurDataURL={p.blurDataURL}
+                  style={{ maxWidth: maxCoverWidth(p.width, p.height) }}
+                  className="aspect-4/3 h-auto w-full bg-mat object-cover"
+                />
+              </span>
             </button>
           </li>
         ))}

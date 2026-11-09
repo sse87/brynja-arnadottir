@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { PressItem } from '@/data/schema/about';
 import en from '@/data/dictionaries/en.json';
 import is from '@/data/dictionaries/is.json';
-import { pressFileMeta, pressLinkLabel, translationFor, yearAnchors } from './press';
+import { pressFileMeta, pressLinkDetails, translationFor, yearAnchors } from './press';
 
 const copy = {
   is: { press: is.about.press, footer: is.footer },
@@ -37,14 +37,10 @@ describe('pressFileMeta', () => {
   });
 });
 
-describe('pressLinkLabel', () => {
-  it('starts with the visible text and names headline, type, size and new tab', () => {
-    expect(pressLinkLabel(pdf, 'is', copy.is)).toBe(
-      'Opna úrklippu: Línan sem lifir (PDF, 2,3 MB) (opnast í nýjum flipa)',
-    );
-    expect(pressLinkLabel(image, 'en', copy.en)).toBe(
-      'Open clipping: Teiknarinn (Image, 12.7 kB) (opens in a new tab)',
-    );
+describe('pressLinkDetails', () => {
+  it('names the localized file type, size and new tab', () => {
+    expect(pressLinkDetails(pdf, 'is', copy.is)).toBe('(PDF, 2,3 MB) (opnast í nýjum flipa)');
+    expect(pressLinkDetails(image, 'en', copy.en)).toBe('(Image, 12.7 kB) (opens in a new tab)');
   });
 });
 

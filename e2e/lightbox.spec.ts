@@ -72,7 +72,7 @@ test.describe('close: Esc, ✕ and backdrop all go back and restore focus', () =
     await openCard(page, 'brjost');
     await openDialog(page).locator('img').click();
     await openDialog(page)
-      .locator('aside')
+      .locator('[data-details-panel]')
       .click({ position: { x: 20, y: 200 } });
     await expect(openDialog(page)).toBeVisible();
   });
@@ -85,6 +85,18 @@ test.describe('close: Esc, ✕ and backdrop all go back and restore focus', () =
     await page.keyboard.press('Escape');
     await expect(openDialog(page)).toHaveCount(0);
     await expect.poll(() => focusedCardSlug(page)).toBe(shown);
+  });
+
+  test('activating Next from the keyboard keeps focus on Next (2.4.3)', async ({ page }) => {
+    await gotoGallery(page);
+    await openCard(page, 'brjost');
+    await openDialog(page).locator('[data-nav="next"]').focus();
+    const before = page.url();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => page.url()).not.toBe(before);
+    await expect
+      .poll(() => page.evaluate(() => document.activeElement?.getAttribute('data-nav')))
+      .toBe('next');
   });
 });
 

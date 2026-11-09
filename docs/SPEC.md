@@ -77,6 +77,7 @@ Set all variables in Vercel for **Production, Preview and Development**.
     "test": "vitest run",
     "format": "prettier --write .",
     "data:validate": "tsx scripts/validate-data.ts",
+    "bundle:stats": "tsx scripts/bundle-stats.ts",
     "images:blur": "tsx scripts/generate-blur-placeholders.ts",
     "email": "email dev --dir src/components/emails --port 3001",
     "test:e2e": "playwright test"
@@ -103,6 +104,7 @@ Set all variables in Vercel for **Production, Preview and Development**.
 ├── vitest.config.ts
 ├── playwright.config.ts               # E2E against `next start` on :3210 (never reuses a running server)
 ├── e2e/
+│   ├── a11y.spec.ts                   # Appendix B WCAG 2.2 AA checks (Phase 9)
 │   ├── lightbox.spec.ts               # §3.7 acceptance criteria
 │   ├── inquiry.spec.ts                # §4.6 form, incl. JavaScript disabled
 │   ├── about.spec.ts                  # §5 legacy sections (sorting, dates, no upscaling, press links)
@@ -112,10 +114,10 @@ Set all variables in Vercel for **Production, Preview and Development**.
 │   ├── press/                         # Locally hosted scanned clippings (PDF / JPG / PNG)
 │   │   ├── 1974-05-18-morgunbladid.pdf
 │   │   └── 1991-11-02-dv-clipping.jpg
-│   ├── icon.svg
 │   └── og-default.jpg                 # 1200×630 static Open Graph fallback
 ├── scripts/
 │   ├── lib/is-main.ts                 # Entry-point guard so scripts can be imported by tests
+│   ├── bundle-stats.ts                # First-load JS per route, gzipped, vs Appendix B budget
 │   ├── generate-blur-placeholders.ts  # Writes blurDataURL into JSON (§3.3)
 │   └── validate-data.ts               # Parses every JSON with Zod + cross-refs; runs before `next build`
 └── src/
@@ -123,6 +125,7 @@ Set all variables in Vercel for **Production, Preview and Development**.
     ├── app/
     │   ├── globals.css                # Tailwind v4 entry + design tokens (§6)
     │   ├── fonts.ts                   # next/font declarations
+    │   ├── icon.svg                   # Favicon (file convention → <link rel="icon">); placeholder mark
     │   ├── sitemap.ts
     │   ├── robots.ts
     │   ├── actions/
@@ -231,7 +234,7 @@ Set all variables in Vercel for **Production, Preview and Development**.
         │   └── archival.ts            # maxCoverWidth / noUpscaleSizes — never upscale (§5.5)
         ├── about/
         │   ├── timeline.ts            # groupByDecade, decadeLabel (§5.4)
-        │   └── press.ts               # file meta, link label, translationFor, yearAnchors (§5.6)
+        │   └── press.ts               # file meta, link details, translationFor, yearAnchors (§5.6)
         ├── data/                      # server-only loaders (parse JSON with Zod)
         │   ├── artworks.ts
         │   ├── about.ts
@@ -444,7 +447,7 @@ import type { InquiryErrorCode } from './inquiry';
 
 export interface Dictionary {
   meta: { siteTitle: string; siteDescription: string };
-  languageToggle: { label: string; ariaLabel: string };   // Text is in the TARGET language
+  languageToggle: { label: string; ariaLabel: string };   // Text is in the TARGET language; ariaLabel starts with label (WCAG 2.5.3)
   nav: { works: string; about: string; biography: string; exhibitions: string; albums: string; press: string; skipToContent: string; primary: string; aboutSections: string };
   hero: { eyebrow: string; tagline: string };
   gallery: {
@@ -466,7 +469,7 @@ export interface Dictionary {
   };
   inquiry: {
     heading: string; intro: string; regarding: string;
-    name: string; email: string; message: string; messagePlaceholder: string;
+    name: string; email: string; message: string; messagePlaceholder: string; allRequired: string;
     submit: string; submitting: string; back: string;
     successTitle: string; successBody: string;
     privacyNote: string;
@@ -532,7 +535,7 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
     "siteTitle": "Brynja Árnadóttir",
     "siteDescription": "Stafrænt safn penna­teikninga eftir Brynju Árnadóttur (1942–2025)."
   },
-  "languageToggle": { "label": "English", "ariaLabel": "View this page in English" },
+  "languageToggle": { "label": "English", "ariaLabel": "English – view this page in English" },
   "nav": {
     "works": "Verk",
     "about": "Um listamanninn",
@@ -577,6 +580,7 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
     "email": "Netfang",
     "message": "Skilaboð",
     "messagePlaceholder": "Til dæmis óskastærð eða spurningar um innrömmun.",
+    "allRequired": "Fylla þarf út alla reiti.",
     "submit": "Senda fyrirspurn",
     "submitting": "Sendi…",
     "back": "Til baka",
@@ -637,7 +641,7 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
     "siteTitle": "Brynja Árnadóttir",
     "siteDescription": "A digital archive of pen drawings by Brynja Árnadóttir (1942–2025)."
   },
-  "languageToggle": { "label": "Íslenska", "ariaLabel": "Skoða þessa síðu á íslensku" },
+  "languageToggle": { "label": "Íslenska", "ariaLabel": "Íslenska – skoða þessa síðu á íslensku" },
   "nav": {
     "works": "Works",
     "about": "About the artist",
@@ -682,6 +686,7 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
     "email": "Email",
     "message": "Message",
     "messagePlaceholder": "For example a preferred size or framing questions.",
+    "allRequired": "All fields are required.",
     "submit": "Send inquiry",
     "submitting": "Sending…",
     "back": "Back",
@@ -1530,7 +1535,7 @@ export function GalleryFilters({ filters, counts, onChange }: Props) {
 'use client';
 
 import { useId } from 'react';
-import { cn } from '@/lib/cn';
+import { clsx } from 'clsx';
 
 interface Option<T extends string> { value: T; label: string; count?: number }
 
@@ -1554,7 +1559,7 @@ export function SegmentedControl<T extends string>({ name, label, value, options
           return (
             <label
               key={o.value}
-              className={cn(
+              className={clsx(
                 'relative cursor-pointer px-3 py-1.5 text-caption transition-colors',
                 'border-r border-rule-strong last:border-r-0',
                 'has-checked:bg-ink has-checked:text-canvas',
@@ -1584,18 +1589,44 @@ export function SegmentedControl<T extends string>({ name, label, value, options
 
 ```tsx
 // src/components/gallery/ArtworkGrid.tsx  (no 'use client' — usable from server fallback and client Gallery)
+// No 'use client' — rendered both as the server Suspense fallback and inside the client Gallery.
 import type { GalleryItem } from '@/data/schema/artwork';
 import type { Locale } from '@/lib/i18n/config';
 import { ArtworkCard } from './ArtworkCard';
 
 const EAGER_COUNT = 4; // first row on desktop
+const MOBILE_FIRST_ROW = 2;
 
-export function ArtworkGrid({ items, locale, query }: { items: GalleryItem[]; locale: Locale; query: string }) {
+/**
+ * Appendix B allows one high-priority image. Columns are equal width, so the LCP candidate is the
+ * tallest work (largest height/width) in the first row of the 2-column mobile layout.
+ */
+export function lcpIndex(items: readonly Pick<GalleryItem, 'image'>[]): number {
+  const aspects = items.slice(0, MOBILE_FIRST_ROW).map(({ image }) => image.height / image.width);
+  return aspects.reduce((best, aspect, i, all) => (aspect > (all[best] ?? 0) ? i : best), 0);
+}
+
+export function ArtworkGrid({
+  items,
+  locale,
+  query,
+}: {
+  items: GalleryItem[];
+  locale: Locale;
+  query: string;
+}) {
+  const priorityIndex = lcpIndex(items);
   return (
     <ul className="grid grid-cols-2 items-start gap-x-gutter gap-y-stack md:grid-cols-3 xl:grid-cols-4">
       {items.map((item, i) => (
         <li key={item.id}>
-          <ArtworkCard item={item} locale={locale} query={query} eager={i < EAGER_COUNT} />
+          <ArtworkCard
+            item={item}
+            locale={locale}
+            query={query}
+            eager={i < EAGER_COUNT}
+            priority={i === priorityIndex}
+          />
         </li>
       ))}
     </ul>
@@ -1609,16 +1640,30 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { GalleryItem } from '@/data/schema/artwork';
 import type { Locale } from '@/lib/i18n/config';
-import { cn } from '@/lib/cn';
+import { clsx } from 'clsx';
 
-export function ArtworkCard({ item, locale, query, eager }: { item: GalleryItem; locale: Locale; query: string; eager: boolean }) {
+export function ArtworkCard({
+  item,
+  locale,
+  query,
+  eager,
+  priority,
+}: {
+  item: GalleryItem;
+  locale: Locale;
+  query: string;
+  eager: boolean;
+  /** Appendix B: exactly one high-priority image per page. */
+  priority: boolean;
+}) {
   const href = `/${locale}/works/${item.slug}${query ? `?${query}` : ''}`;
   const mono = item.styleCategory === 'black-and-white';
 
   return (
-    <figure data-artwork-card={item.slug} className="group">
+    // <div>, not <figure>: a <figcaption> must be the figure's direct child, not inside the link.
+    <div data-artwork-card={item.slug} className="group">
       <Link href={href} scroll={false} className="block focus-visible:outline-offset-4">
-        <div className={cn('bg-mat', mono && 'ring-1 ring-rule')}>
+        <div className={clsx('bg-mat', mono && 'ring-1 ring-rule')}>
           <Image
             src={item.image.src}
             alt={item.image.alt}
@@ -1629,18 +1674,20 @@ export function ArtworkCard({ item, locale, query, eager }: { item: GalleryItem;
             placeholder={item.image.blurDataURL ? 'blur' : 'empty'}
             blurDataURL={item.image.blurDataURL}
             loading={eager ? 'eager' : 'lazy'}
-            fetchPriority={eager ? 'high' : 'auto'}
+            fetchPriority={priority ? 'high' : 'auto'}
             className="h-auto w-full"
           />
         </div>
-        <figcaption className="mt-3 flex items-baseline justify-between gap-3">
+        <div className="mt-3 flex items-baseline justify-between gap-3">
           <span className="font-serif text-body leading-snug decoration-1 underline-offset-4 group-hover:underline">
             {item.title}
           </span>
-          {item.year !== null && <span className="shrink-0 text-caption tabular-nums text-ink-muted">{item.year}</span>}
-        </figcaption>
+          {item.year !== null && (
+            <span className="shrink-0 text-caption text-ink-muted tabular-nums">{item.year}</span>
+          )}
+        </div>
       </Link>
-    </figure>
+    </div>
   );
 }
 ```
@@ -1743,8 +1790,8 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { NavIndexEntry } from '@/data/schema/artwork';
 import { useI18n } from '@/components/providers/I18nProvider';
-import { LightboxNav } from './LightboxNav';
-import { cn } from '@/lib/cn';
+import { LightboxNav, takePendingNavFocus } from './LightboxNav';
+import { clsx } from 'clsx';
 
 type Mat = 'auto' | 'light' | 'dark';
 
@@ -1769,7 +1816,16 @@ export function LightboxDialog({ slug, ink, titleId, navIndex, fullPageHref, chi
 
   useEffect(() => {
     const dialog = ref.current;
-    if (dialog && !dialog.open) dialog.showModal();
+    if (dialog && !dialog.open) {
+      dialog.showModal();
+      const dir = takePendingNavFocus();
+      // The nav renders under Suspense; wait a frame so the link exists.
+      if (dir) {
+        requestAnimationFrame(() =>
+          dialog.querySelector<HTMLElement>(`[data-nav="${dir}"]`)?.focus({ preventScroll: true }),
+        );
+      }
+    }
     return () => {
       // Restore focus to the card of the work shown last. While another lightbox is open (prev/next
       // remounts this component) the grid is inert, so this is a no-op until the final close.
@@ -1799,7 +1855,7 @@ export function LightboxDialog({ slug, ink, titleId, navIndex, fullPageHref, chi
         const target = e.target as HTMLElement;
         if (target === e.currentTarget || target.hasAttribute(BACKDROP_ATTR)) close();
       }}
-      className={cn(
+      className={clsx(
         'fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none overflow-hidden p-0',
         'bg-mat text-mat-ink backdrop:bg-scrim open:animate-fade-in',
       )}
@@ -1865,7 +1921,20 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import type { NavIndexEntry } from '@/data/schema/artwork';
 import { filterItems, parseFilters, serializeFilters } from '@/lib/gallery/filters';
 import { useI18n } from '@/components/providers/I18nProvider';
-import { cn } from '@/lib/cn';
+import { clsx } from 'clsx';
+
+type NavDirection = 'prev' | 'next';
+let pendingFocus: NavDirection | null = null;
+
+/**
+ * Prev/next remounts the lightbox, and showModal() then focuses the first control in the dialog.
+ * The control that was activated records itself here so the new dialog can hand focus back to it.
+ */
+export function takePendingNavFocus(): NavDirection | null {
+  const dir = pendingFocus;
+  pendingFocus = null;
+  return dir;
+}
 
 export function LightboxNav({
   currentSlug,
@@ -1923,8 +1992,10 @@ export function LightboxNav({
         replace
         scroll={false}
         href={prevHref}
+        data-nav="prev"
+        onClick={() => (pendingFocus = 'prev')}
         aria-label={messages.lightbox.previous}
-        className={cn(btn, 'lg:left-2')}
+        className={clsx(btn, 'lg:left-2')}
       >
         <svg
           aria-hidden
@@ -1941,8 +2012,10 @@ export function LightboxNav({
         replace
         scroll={false}
         href={nextHref}
+        data-nav="next"
+        onClick={() => (pendingFocus = 'next')}
         aria-label={messages.lightbox.next}
-        className={cn(btn, 'lg:right-[calc(26rem+0.5rem)]')}
+        className={clsx(btn, 'lg:right-[calc(26rem+0.5rem)]')}
       >
         <svg
           aria-hidden
@@ -1984,6 +2057,11 @@ export function ArtworkDetailView({
   const t = getDictionary(locale).lightbox;
   const title = localize(artwork.title, locale);
   const modal = variant === 'modal';
+  // The image is height-capped (60dvh <lg, 100dvh − 6rem ≥lg), so a portrait work renders narrower
+  // than its column. Tell the browser, so a phone fetches ~640w instead of 828w at the same
+  // quality. A browser without min() in `sizes` drops both entries and falls back to 100vw.
+  const ratio = (artwork.image.width / artwork.image.height).toFixed(3);
+  const sizes = `(min-width: 1024px) min(calc(100vw - 26rem), calc((100vh - 6rem) * ${ratio})), min(100vw, calc(60vh * ${ratio}))`;
 
   return (
     <div
@@ -2004,7 +2082,7 @@ export function ArtworkDetailView({
           alt={localize(artwork.image.alt, locale)}
           width={artwork.image.width}
           height={artwork.image.height}
-          sizes="(min-width: 1024px) calc(100vw - 26rem), 100vw"
+          sizes={sizes}
           quality={90}
           placeholder={artwork.image.blurDataURL ? 'blur' : 'empty'}
           blurDataURL={artwork.image.blurDataURL}
@@ -2014,10 +2092,13 @@ export function ArtworkDetailView({
         />
       </div>
 
-      <aside
+      {/* Not <aside>: this panel holds the page's h1, so it isn't complementary content. */}
+      <div
+        data-details-panel
         className={cn(
           'overflow-y-auto border-t border-rule bg-surface p-gutter text-ink lg:border-t-0 lg:border-l lg:p-10',
-          modal && 'pb-20 lg:pb-10', // clears the mobile prev/next bar
+          // Clears the fixed mobile prev/next bar, also when focus scrolls a field into view (2.4.11).
+          modal && 'scroll-pb-16 pb-20 lg:scroll-pb-0 lg:pb-10',
         )}
       >
         <p className="text-eyebrow text-ink-subtle uppercase">{artwork.id}</p>
@@ -2044,9 +2125,13 @@ export function ArtworkDetailView({
         )}
 
         {artwork['available-as-reprint'] && (
-          <ReprintPanel artworkId={artwork.id} artworkTitle={title} />
+          <ReprintPanel
+            artworkId={artwork.id}
+            artworkTitle={title}
+            pageHref={`/${locale}/works/${artwork.slug}`}
+          />
         )}
-      </aside>
+      </div>
     </div>
   );
 }
@@ -2067,7 +2152,7 @@ import {
 } from '@/data/schema/inquiry';
 import { useI18n } from '@/components/providers/I18nProvider';
 import { ReprintInquiryForm } from '@/components/inquiry/ReprintInquiryForm';
-import { cn } from '@/lib/cn';
+import { clsx } from 'clsx';
 
 const SECTION_ID = 'reprint-inquiry';
 
@@ -2122,7 +2207,7 @@ export function ReprintPanel({
 
   return (
     <div className="mt-8">
-      <section id={SECTION_ID} className={cn('peer', showForm ? 'animate-fade-in' : 'hidden target:block')}>
+      <section id={SECTION_ID} className={clsx('peer', showForm ? 'animate-fade-in' : 'hidden target:block')}>
         <ReprintInquiryForm
           artworkId={artworkId}
           artworkTitle={artworkTitle}
@@ -2747,10 +2832,22 @@ export function SubmitButton({ label, pendingLabel }: { label: string; pendingLa
 ```tsx
 // src/components/inquiry/FormField.tsx
 import { useId } from 'react';
-import { cn } from '@/lib/cn';
+import { clsx } from 'clsx';
 
-type Base = { name: string; label: string; error?: string; defaultValue?: string; maxLength?: number; placeholder?: string };
-type InputProps = Base & { multiline?: false; type?: 'text' | 'email'; autoComplete?: string; inputMode?: 'email' | 'text' };
+type Base = {
+  name: string;
+  label: string;
+  error?: string;
+  defaultValue?: string;
+  maxLength?: number;
+  placeholder?: string;
+};
+type InputProps = Base & {
+  multiline?: false;
+  type?: 'text' | 'email';
+  autoComplete?: string;
+  inputMode?: 'email' | 'text';
+};
 type AreaProps = Base & { multiline: true; rows?: number };
 
 export function FormField(props: InputProps | AreaProps) {
@@ -2762,21 +2859,43 @@ export function FormField(props: InputProps | AreaProps) {
     defaultValue: props.defaultValue,
     maxLength: props.maxLength,
     placeholder: props.placeholder,
+    // aria-required, not `required`: native validation would pre-empt the localized server
+    // errors on the no-JS path. The form intro states that every field is required (3.3.2).
+    'aria-required': true,
     'aria-invalid': props.error ? true : undefined,
     'aria-describedby': props.error ? errorId : undefined,
-    className: cn(
-      'w-full border border-rule-strong bg-surface px-3 py-2.5 text-body text-ink placeholder:text-ink-subtle',
-      'focus:border-ink focus:outline-none aria-invalid:border-danger',
+    className: clsx(
+      // border-ink-subtle ≥ 3:1 on surface (1.4.11). No outline override: the global
+      // :focus-visible ring must show on invalid fields too, where focus lands after an error.
+      'w-full border border-ink-subtle bg-surface px-3 py-2.5 text-body text-ink placeholder:text-ink-subtle',
+      'focus:border-ink aria-invalid:border-danger',
     ),
   };
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-caption text-ink-muted">{props.label}</label>
-      {props.multiline
-        ? <textarea {...shared} rows={props.rows ?? 5} className={cn(shared.className, 'resize-y')} />
-        : <input {...shared} type={props.type ?? 'text'} autoComplete={props.autoComplete} inputMode={props.inputMode} />}
-      {props.error && <p id={errorId} className="text-caption text-danger">{props.error}</p>}
+      <label htmlFor={id} className="text-caption text-ink-muted">
+        {props.label}
+      </label>
+      {props.multiline ? (
+        <textarea
+          {...shared}
+          rows={props.rows ?? 5}
+          className={clsx(shared.className, 'resize-y')}
+        />
+      ) : (
+        <input
+          {...shared}
+          type={props.type ?? 'text'}
+          autoComplete={props.autoComplete}
+          inputMode={props.inputMode}
+        />
+      )}
+      {props.error && (
+        <p id={errorId} className="text-caption text-danger">
+          {props.error}
+        </p>
+      )}
     </div>
   );
 }
@@ -2971,7 +3090,7 @@ Loaders in `src/lib/data/about.ts` (`server-only`) parse each file once (and thr
 │  caption: Photo · credit, yr  │                                          │
 │                               │  Paragraphs (max-w-prose, text-body,     │
 │                               │  first paragraph drop-cap optional)      │
-│                               │  ── pull quote (font-serif italic) ──    │
+│                               │  ── pull quote (font-serif-italic) ──    │
 │                               │  Born / Died <dl>                        │
 └───────────────────────────────┴─────────────────────────────────────────┘
 grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-gutter; stacks on mobile
@@ -3086,7 +3205,7 @@ return (
 | Never upscale | Lightbox `<Image>` gets `style={{ maxWidth: photo.width }}` and `sizes={\`(min-width: ${photo.width}px) ${photo.width}px, 100vw\`}` so the browser never requests more pixels than exist |
 | Small thumbnails | Fixed `aspect-4/3` + `object-cover`, `quality={70}`, `sizes="(min-width:1024px) 22vw, (min-width:640px) 33vw, 50vw"`. A cropped box upscales when it is wider than the photo *or* taller than it, so thumbnails, album covers and the 4:5 biography portrait get `style={{ maxWidth: maxCoverWidth(width, height, ratio) }}` = `min(width, ⌊height × ratio⌋)` (`src/lib/images/archival.ts`) |
 | Lazy everything | Default `loading="lazy"`; only the first 4 thumbnails eager on album pages |
-| Long albums | `[content-visibility:auto] [contain-intrinsic-size:auto_220px]` on each grid item |
+| Long albums | `[content-visibility:auto] [contain-intrinsic-size:auto_220px]` on a wrapper inside each thumbnail button (not the `<li>`: its paint containment clips the button's focus ring) |
 | Authenticity | No sharpening, filters, colourisation or AI upscaling — archival record shown as-is |
 | Placeholders | `blurDataURL` from the script; fallback `bg-mat` |
 
@@ -3143,7 +3262,7 @@ return (
 ```
 
 - Original headline wrapped in `<span lang={headlineLanguage}>`; translation shown when `headlineTranslation[locale]` exists and differs from the original language.
-- File link: `href={asset.href}`, `target="_blank"`, `rel="noopener"`, accessible name `"{open}: {headline} ({PDF|Image}, 2,3 MB)" + opensInNewTab`. Size via `formatFileSize(bytes, locale)` (`src/lib/i18n/format.ts`): decimal units, `Intl.NumberFormat(locale, { style: 'unit', unit: 'megabyte', maximumFractionDigits: 1 })` from 999 950 bytes up, otherwise `unit: 'kilobyte'` with the same options — megabytes alone would print small scans as "0 MB". 2 348 123 → "2,3 MB" / "2.3 MB"; 12 664 → "12,7 kB" / "12.7 kB".
+- File link: `href={asset.href}`, `target="_blank"`, `rel="noopener"`, accessible name `"{open}: {headline} ({PDF|Image}, 2,3 MB)" + opensInNewTab`, built from the link's content (visible `{open} ↗` is `aria-hidden`; one `sr-only` span holds `{open}: `, the headline in `<span lang={headlineLanguage}>`, and `pressLinkDetails()`; a separate sr-only span after the visible text would get a space inserted before it), not an `aria-label`: an attribute string can't carry `lang`, so the headline would be read in the page's voice. Size via `formatFileSize(bytes, locale)` (`src/lib/i18n/format.ts`): decimal units, `Intl.NumberFormat(locale, { style: 'unit', unit: 'megabyte', maximumFractionDigits: 1 })` from 999 950 bytes up, otherwise `unit: 'kilobyte'` with the same options — megabytes alone would print small scans as "0 MB". 2 348 123 → "2,3 MB" / "2.3 MB"; 12 664 → "12,7 kB" / "12.7 kB".
 - `kind: 'image'` items additionally render a 64 px thumbnail via `next/image` (local `/press/...` path — no remotePatterns needed).
 - Year jump links (`#y1974`) rendered above the list when more than 15 items.
 
@@ -3192,7 +3311,7 @@ import { siFacebook } from 'simple-icons';
 /** Official Facebook mark path from the `simple-icons` package; render unmodified, monochrome. */
 export function FacebookIcon({ className }: { className?: string }) {
   return (
-    <svg role="img" aria-hidden="true" viewBox="0 0 24 24" className={className} fill="currentColor">
+    <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="currentColor">
       <path d={siFacebook.path} />
     </svg>
   );
@@ -3239,17 +3358,30 @@ Footer layout: thin top rule, `max-w-wide px-gutter py-10`, left: `rights` line 
 // src/app/fonts.ts
 import { EB_Garamond, Inter } from 'next/font/google';
 
+// `subsets` only decides which files are *preloaded*. next/font self-hosts every subset Google
+// serves (latin-ext included) behind `unicode-range`, so foreign venue/author names (Č, Ł, Ő)
+// still render in the right face; that file just isn't fetched until a page uses those glyphs.
 // Latin-1 (the `latin` subset) already covers Icelandic: Þ þ Ð ð Æ æ Ö ö Á É Í Ó Ú Ý.
-// `latin-ext` is added for foreign venue/author names (e.g. Č, Ł, Ő).
 export const serif = EB_Garamond({
-  subsets: ['latin', 'latin-ext'],
-  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  style: ['normal'],
   variable: '--font-garamond',
   display: 'swap',
 });
 
+// Italic is a separate instance so it isn't preloaded on every page: only the biography quote
+// uses it (`font-serif-italic italic`). One family can't hold both: with `font-serif italic` the
+// browser would synthesize a slanted roman rather than fall through to a second family.
+export const serifItalic = EB_Garamond({
+  subsets: ['latin'],
+  style: ['italic'],
+  variable: '--font-garamond-italic',
+  display: 'swap',
+  preload: false,
+});
+
 export const sans = Inter({
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
 });
@@ -3332,6 +3464,7 @@ export const sans = Inter({
 
   /* Families */
   --font-serif: var(--font-garamond), "EB Garamond", ui-serif, Georgia, serif;
+  --font-serif-italic: var(--font-garamond-italic), "EB Garamond", ui-serif, Georgia, serif;
   --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
 
   /* Type scale (fluid) — utilities: text-display, text-title, text-lede, text-body, text-caption, text-eyebrow */
@@ -3396,6 +3529,8 @@ export const sans = Inter({
   ::selection { background: var(--ink); color: var(--canvas); }
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
   dialog :focus-visible { outline-color: var(--mat-ink); }
+  /* The details panel is always light (bg-surface), whatever the mat: use the page focus colour. */
+  dialog [data-details-panel] :focus-visible { outline-color: var(--focus); }
   html:has(dialog[open]) { overflow: hidden; }
   dialog::backdrop { background: var(--scrim); }
 
@@ -3440,7 +3575,8 @@ export const sans = Inter({
 | Layout spacing via named tokens | `px-gutter`, `py-section`, `gap-stack` | Unexplained `px-[37px]` |
 | State via ARIA/data variants | `aria-[current=page]:text-ink`, `aria-pressed:underline`, `aria-invalid:border-danger`, `has-checked:bg-ink`, `data-[state=open]:…` | Parallel `isActive ? 'a' : 'b'` strings when an attribute already exists |
 | Ink-context styling | `ink-color:text-mat-ink`, `ink-mono:ring-rule` | Branching on category in JS for purely visual changes |
-| Merge with `cn()` | `cn('px-3', className)` | String concatenation of conflicting utilities |
+| Merge with `cn()` in Server Components | `cn('px-3', className)` | String concatenation of conflicting utilities |
+| Client Components (and anything they import) use `clsx` | `clsx(base, open && 'block')` | `cn()` in a client graph: it ships tailwind-merge (≈ 9 kB gzip) to the browser. If a client leaf ever needs to merge an outside `className`, give it a prop that avoids the conflict instead |
 | `@apply` | Only inside `@layer components` for `.prose-archive` | Component classes that duplicate utilities |
 | Class order | Enforced by `prettier-plugin-tailwindcss` | Manual ordering debates |
 | Artwork images | Bare `<Image>` + optional `ring-1 ring-rule` (mono only) | `rounded-*`, `shadow-*`, `opacity-*`, `grayscale`, `blur`, `mix-blend-*` |
@@ -3483,7 +3619,7 @@ export function cn(...inputs: ClassValue[]) {
 | Text link | `underline decoration-1 underline-offset-4 hover:decoration-2` |
 | Artwork thumbnail frame | `bg-mat` + `ring-1 ring-rule` (mono) |
 | Lightbox | `bg-mat text-mat-ink backdrop:bg-scrim`; aside `bg-surface text-ink` |
-| Input | `border border-rule-strong bg-surface focus:border-ink aria-invalid:border-danger` |
+| Input | `border border-ink-subtle bg-surface focus:border-ink aria-invalid:border-danger` (≥ 3:1 edge; the global `:focus-visible` ring is never suppressed) |
 
 ### 6.6 Tailwind v3 fallback (only if the project is pinned to Tailwind 3.x)
 
@@ -3564,10 +3700,13 @@ export default {
 | LCP | < 2.0 s |
 | CLS | < 0.02 |
 | INP | < 150 ms |
-| First-load JS, gallery route | < 110 kB gzip |
+| First-load JS, gallery route `/[locale]` | ≤ 150 kB gzip total, of which ≤ 20 kB app code over the framework runtime |
 
-- All pages statically generated (`○`/`●` in build output); only the Server Action executes at runtime.
-- Exactly one high-priority image per page (first gallery row / portrait / lightbox image).
+- First-load JS is measured with `pnpm build && pnpm bundle:stats` (`scripts/bundle-stats.ts`). Next 16 no longer prints a "First Load JS" column; it writes uncompressed bytes per route to `.next/diagnostics/route-bundle-stats.json`, and the script gzips (level 9) that chunk list. The original 110 kB target predates React 19 / Next 16: their runtime (`rootMainFiles`) alone is 128.9 kB gzip on Next 16.4.5 + React 19.3. Phase 9 baseline: gallery 145.1 kB gzip (124.7 kB brotli), app code 16.2 kB.
+- All pages statically generated (`○`/`●` in build output); only the Server Action executes at runtime. Exception: the `[locale]/[...rest]` 404 catch-all (`ƒ`), which by design only serves unknown URLs.
+- Exactly one high-priority image per page: on the gallery, the tallest work in the first row of the 2-column mobile layout (`lcpIndex()` in `ArtworkGrid.tsx`; equal-width columns make it the LCP element); otherwise the portrait or the lightbox image. Other first-row images stay `loading="eager"` at normal priority.
+- Preload only what the first paint needs: `next/font` `subsets: ['latin']` (latin-ext stays available via `unicode-range`); the italic serif is a separate, non-preloaded instance.
+- Lighthouse is run with `pnpm dlx lighthouse@<exact version>` (never `npx`); see `docs/QA-CHECKLIST.md` for the commands. Lighthouse navigation runs can't measure INP: use TBT as the lab proxy and field data (PageSpeed Insights / CrUX) after launch.
 - WCAG 2.2 AA: visible focus, 44×44 px targets for icon buttons, `lang` correct per page and per foreign-language span, dialogs labelled, live regions for filter counts and form status, colour never the sole carrier of state.
 - Optional: `@vercel/speed-insights` (add its endpoints to CSP `connect-src`/`script-src` if enabled).
 
@@ -3586,11 +3725,11 @@ Each phase ends with `pnpm typecheck && pnpm lint && pnpm test && pnpm build` pa
 | 6 | Inquiry | Schema, env, Resend client, `sendInquiry`, email template, form components | Each error code renders in both locales; success path delivers email in Resend dashboard; honeypot path sends nothing; works with JS disabled |
 | 7 | Legacy sections | About layout/nav, Biography, Timeline, Albums (index + detail), Press | Sorting & date formatting correct in `is` and `en`; archival photos never upscaled |
 | 8 | SEO & hardening | Metadata, sitemap, robots, JSON-LD, security headers | Rich Results test passes; headers present on production |
-| 9 | QA | Lighthouse on `/is`, `/en/about/press`, a work page; keyboard-only run-through; screen-reader spot check | Appendix B targets met |
+| 9 | QA | Lighthouse on `/is`, `/en/about/press`, a work page; `pnpm bundle:stats`; a11y code audit + `e2e/a11y.spec.ts`; `docs/QA-CHECKLIST.md` for the manual keyboard, screen-reader, mobile Safari and real-send checks | Appendix B targets met |
 
 ## Appendix D — Testing
 
 - **Vitest unit**: `lib/gallery/filters.ts`, `lib/i18n/format.ts` (partial dates in both locales incl. UTC edge at midnight, plural forms incl. Icelandic `21 → one`), `lib/i18n/localize.ts` fallback, `inquirySchema` (each error code reachable; whitespace trimming; email lowercasing).
 - **Data validation**: `pnpm data:validate`, chained into `pnpm build` (§0.6). `scripts/validate-data.test.ts` runs it against the committed data and against a deliberately broken copy.
 - **Server Action**: unit-test `sendInquiry` with `vi.mock('@/lib/email/resend')` (and `@/lib/env`) covering honeypot, validation failure, broken hidden context, `too_fast`, unstamped (no-JS) `startedAt`, unknown artwork, non-reprint artwork, Resend error, Resend throwing, invalid env, success (server-side title, not the submitted one). Every case asserts that no PII reaches `console.error`.
-- **E2E (Playwright)**, `pnpm test:e2e`, in `e2e/`. `lightbox.spec.ts` (Phase 5): every §3.7 criterion + hard refresh; "←/→ in form" runs against the real form fields. `inquiry.spec.ts` (Phase 6): JS validation round-trip + focus + Back in the lightbox; with `javaScriptEnabled: false`, the CTA reveals the form, a POST renders localized field errors with values kept, Back returns to the CTA, and a honeypot POST renders success. None of these send email. `about.spec.ts` (Phase 7), for `/is` and `/en`: AboutNav current item, biography year-only dates + `Person` JSON-LD, timeline order/decades/date ranges, album index + dialog (←/→, Esc restores focus), album ↔ exhibition links, unknown album → 404, press order/dates/file type + size in the link's accessible name, translation only on `/en`, one footer link; and at 2560×1440 no image renders larger than its declared `width`×`height`. `seo.spec.ts` (Phase 8): security headers on `/is` and no `X-Powered-By`; immutable `Cache-Control` on `/press/*`; `/sitemap.xml`, `/robots.txt`, `/og-default.jpg` served without a locale redirect; no console errors or `securitypolicyviolation` events on the main routes, the lightbox + reprint form (incl. client-side validation) and the album dialog. `Person` and `VisualArtwork` are not Google rich-result types, so the Rich Results Test reports "no items" for them; validate with the Schema Markup Validator (validator.schema.org) against a deployed URL. Still to add: locale redirect, toggle, inquiry happy path against a mocked action.
+- **E2E (Playwright)**, `pnpm test:e2e`, in `e2e/`. `lightbox.spec.ts` (Phase 5): every §3.7 criterion + hard refresh; "←/→ in form" runs against the real form fields. `inquiry.spec.ts` (Phase 6): JS validation round-trip + focus + Back in the lightbox; with `javaScriptEnabled: false`, the CTA reveals the form, a POST renders localized field errors with values kept, Back returns to the CTA, and a honeypot POST renders success. None of these send email. `about.spec.ts` (Phase 7), for `/is` and `/en`: AboutNav current item, biography year-only dates + `Person` JSON-LD, timeline order/decades/date ranges, album index + dialog (←/→, Esc restores focus), album ↔ exhibition links, unknown album → 404, press order/dates/file type + size in the link's accessible name, translation only on `/en`, one footer link; and at 2560×1440 no image renders larger than its declared `width`×`height`. `a11y.spec.ts` (Phase 9): language toggle `lang` + accessible name starting with its visible text, 44×44 icon targets, lightbox labelled by its title, `--focus` ring inside the details panel, `aria-required` + visible focus on invalid fields, press link name built from content with the headline in a `lang` span. `lightbox.spec.ts` also checks that keyboard prev/next keeps focus on the control. `seo.spec.ts` (Phase 8): security headers on `/is` and no `X-Powered-By`; immutable `Cache-Control` on `/press/*`; `/sitemap.xml`, `/robots.txt`, `/og-default.jpg` served without a locale redirect; no console errors or `securitypolicyviolation` events on the main routes, the lightbox + reprint form (incl. client-side validation) and the album dialog. `Person` and `VisualArtwork` are not Google rich-result types, so the Rich Results Test reports "no items" for them; validate with the Schema Markup Validator (validator.schema.org) against a deployed URL. Still to add: locale redirect, toggle, inquiry happy path against a mocked action.

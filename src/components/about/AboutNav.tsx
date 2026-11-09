@@ -10,7 +10,8 @@ export function AboutNav({ label, items }: { label: string; items: NavItem[] }) 
 
   return (
     <nav aria-label={label} className="-mx-gutter mt-3 overflow-x-auto px-gutter">
-      <ul className="flex snap-x gap-6 whitespace-nowrap">
+      {/* py-1: overflow-x-auto also clips vertically, which would cut off the focus ring. */}
+      <ul className="flex snap-x gap-6 py-1 whitespace-nowrap">
         {items.map((item) => (
           <li key={item.href} className="snap-start">
             <Link

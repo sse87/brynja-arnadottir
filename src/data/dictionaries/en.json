@@ -3,7 +3,7 @@
     "siteTitle": "Brynja Árnadóttir",
     "siteDescription": "A digital archive of pen drawings by Brynja Árnadóttir (1942–2025)."
   },
-  "languageToggle": { "label": "Íslenska", "ariaLabel": "Skoða þessa síðu á íslensku" },
+  "languageToggle": { "label": "Íslenska", "ariaLabel": "Íslenska – skoða þessa síðu á íslensku" },
   "nav": {
     "works": "Works",
     "about": "About the artist",
@@ -53,6 +53,7 @@
     "email": "Email",
     "message": "Message",
     "messagePlaceholder": "For example a preferred size or framing questions.",
+    "allRequired": "All fields are required.",
     "submit": "Send inquiry",
     "submitting": "Sending…",
     "back": "Back",

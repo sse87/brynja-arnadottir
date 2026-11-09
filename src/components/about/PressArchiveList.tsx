@@ -7,7 +7,7 @@ import { localize } from '@/lib/i18n/localize';
 import {
   YEAR_NAV_THRESHOLD,
   pressFileMeta,
-  pressLinkLabel,
+  pressLinkDetails,
   translationFor,
   yearAnchors,
 } from '@/lib/about/press';
@@ -30,7 +30,7 @@ export function PressArchiveList({
     <>
       {items.length > YEAR_NAV_THRESHOLD && (
         <nav aria-label={t.jumpToYear} className="mb-6">
-          <ul className="flex flex-wrap gap-x-4 gap-y-1 text-caption tabular-nums">
+          <ul className="flex flex-wrap gap-x-4 gap-y-2 text-caption tabular-nums">
             {[...anchors.values()].map((anchor) => (
               <li key={anchor}>
                 <a href={`#${anchor}`} className="underline decoration-1 underline-offset-4">
@@ -45,6 +45,8 @@ export function PressArchiveList({
       <ul className="divide-y divide-rule border-y border-rule">
         {items.map((item) => {
           const translation = translationFor(item, locale);
+          const headlineLang =
+            item.headlineLanguage === 'other' ? undefined : item.headlineLanguage;
           const summary = item.summary && localize(item.summary, locale);
           const eyebrow = [item.publication, item.page && `${t.page} ${item.page}`]
             .filter(Boolean)
@@ -67,11 +69,7 @@ export function PressArchiveList({
               <div className="min-w-0">
                 <p className="text-eyebrow text-ink-subtle uppercase">{eyebrow}</p>
                 <h2 className="mt-1 font-serif text-lede">
-                  <span
-                    lang={item.headlineLanguage === 'other' ? undefined : item.headlineLanguage}
-                  >
-                    {item.headline}
-                  </span>
+                  <span lang={headlineLang}>{item.headline}</span>
                 </h2>
                 {translation && (
                   <p className="mt-1 text-caption text-ink-muted">
@@ -99,10 +97,15 @@ export function PressArchiveList({
                     href={item.asset.href}
                     target="_blank"
                     rel="noopener"
-                    aria-label={pressLinkLabel(item, locale, copy)}
                     className="text-caption underline decoration-1 underline-offset-4 hover:decoration-2"
                   >
-                    {t.open} <span aria-hidden>↗</span>
+                    {/* One sr-only span carries the whole name: Chrome adds a space before an
+                        absolutely positioned child, which would split "{open}" from its colon. */}
+                    <span aria-hidden>{t.open} ↗</span>
+                    <span className="sr-only">
+                      {t.open}: <span lang={headlineLang}>{item.headline}</span>{' '}
+                      {pressLinkDetails(item, locale, copy)}
+                    </span>
                   </a>
                   <p className="mt-1 text-caption text-ink-subtle tabular-nums" data-press-file>
                     {pressFileMeta(item, locale, copy)}

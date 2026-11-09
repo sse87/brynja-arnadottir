@@ -6,7 +6,20 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import type { NavIndexEntry } from '@/data/schema/artwork';
 import { filterItems, parseFilters, serializeFilters } from '@/lib/gallery/filters';
 import { useI18n } from '@/components/providers/I18nProvider';
-import { cn } from '@/lib/cn';
+import { clsx } from 'clsx';
+
+type NavDirection = 'prev' | 'next';
+let pendingFocus: NavDirection | null = null;
+
+/**
+ * Prev/next remounts the lightbox, and showModal() then focuses the first control in the dialog.
+ * The control that was activated records itself here so the new dialog can hand focus back to it.
+ */
+export function takePendingNavFocus(): NavDirection | null {
+  const dir = pendingFocus;
+  pendingFocus = null;
+  return dir;
+}
 
 export function LightboxNav({
   currentSlug,
@@ -64,8 +77,10 @@ export function LightboxNav({
         replace
         scroll={false}
         href={prevHref}
+        data-nav="prev"
+        onClick={() => (pendingFocus = 'prev')}
         aria-label={messages.lightbox.previous}
-        className={cn(btn, 'lg:left-2')}
+        className={clsx(btn, 'lg:left-2')}
       >
         <svg
           aria-hidden
@@ -82,8 +97,10 @@ export function LightboxNav({
         replace
         scroll={false}
         href={nextHref}
+        data-nav="next"
+        onClick={() => (pendingFocus = 'next')}
         aria-label={messages.lightbox.next}
-        className={cn(btn, 'lg:right-[calc(26rem+0.5rem)]')}
+        className={clsx(btn, 'lg:right-[calc(26rem+0.5rem)]')}
       >
         <svg
           aria-hidden

@@ -14,13 +14,14 @@ export function pressFileMeta(item: PressItem, locale: Locale, t: PressCopy): st
 }
 
 /**
- * Accessible name of the file link. Starts with the visible text ("Open clipping") so speech
- * input can target it (WCAG 2.5.3), then says what opens and that it opens in a new tab.
+ * Screen-reader tail of the file link: "(PDF, 2.3 MB) (opens in a new tab)". The link's accessible
+ * name is built from its content: visible "Open clipping" first (WCAG 2.5.3), then the headline in
+ * a span carrying its own `lang` (3.1.2; an aria-label string can't), then this tail.
  */
-export function pressLinkLabel(item: PressItem, locale: Locale, t: PressCopy): string {
+export function pressLinkDetails(item: PressItem, locale: Locale, t: PressCopy): string {
   const type = t.press.fileTypes[item.asset.kind];
   const size = formatFileSize(item.asset.bytes, locale);
-  return `${t.press.open}: ${item.headline} (${type}, ${size}) ${t.footer.opensInNewTab}`;
+  return `(${type}, ${size}) ${t.footer.opensInNewTab}`;
 }
 
 /** The headline translation into `locale`, unless the headline is already in that language. */

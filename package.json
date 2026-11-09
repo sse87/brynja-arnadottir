@@ -12,6 +12,7 @@
     "test": "vitest run",
     "format": "prettier --write .",
     "data:validate": "tsx scripts/validate-data.ts",
+    "bundle:stats": "tsx scripts/bundle-stats.ts",
     "images:blur": "tsx scripts/generate-blur-placeholders.ts",
     "email": "email dev --dir src/components/emails --port 3001",
     "test:e2e": "playwright test"

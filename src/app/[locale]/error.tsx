@@ -12,8 +12,11 @@ export default function ErrorBoundary({
   const t = messages.error;
 
   return (
-    <div role="alert" className="mx-auto max-w-wide px-gutter py-section">
-      <h1 className="font-serif text-title">{t.title}</h1>
+    <div className="mx-auto max-w-wide px-gutter py-section">
+      {/* Alert on the message only, so the Retry button isn't read as part of it. */}
+      <div role="alert">
+        <h1 className="font-serif text-title">{t.title}</h1>
+      </div>
       <button
         type="button"
         onClick={reset}

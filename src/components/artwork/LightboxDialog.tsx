@@ -4,8 +4,8 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { NavIndexEntry } from '@/data/schema/artwork';
 import { useI18n } from '@/components/providers/I18nProvider';
-import { LightboxNav } from './LightboxNav';
-import { cn } from '@/lib/cn';
+import { LightboxNav, takePendingNavFocus } from './LightboxNav';
+import { clsx } from 'clsx';
 
 type Mat = 'auto' | 'light' | 'dark';
 
@@ -30,7 +30,16 @@ export function LightboxDialog({ slug, ink, titleId, navIndex, fullPageHref, chi
 
   useEffect(() => {
     const dialog = ref.current;
-    if (dialog && !dialog.open) dialog.showModal();
+    if (dialog && !dialog.open) {
+      dialog.showModal();
+      const dir = takePendingNavFocus();
+      // The nav renders under Suspense; wait a frame so the link exists.
+      if (dir) {
+        requestAnimationFrame(() =>
+          dialog.querySelector<HTMLElement>(`[data-nav="${dir}"]`)?.focus({ preventScroll: true }),
+        );
+      }
+    }
     return () => {
       // Restore focus to the card of the work shown last. While another lightbox is open (prev/next
       // remounts this component) the grid is inert, so this is a no-op until the final close.
@@ -60,7 +69,7 @@ export function LightboxDialog({ slug, ink, titleId, navIndex, fullPageHref, chi
         const target = e.target as HTMLElement;
         if (target === e.currentTarget || target.hasAttribute(BACKDROP_ATTR)) close();
       }}
-      className={cn(
+      className={clsx(
         'fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none overflow-hidden p-0',
         'bg-mat text-mat-ink backdrop:bg-scrim open:animate-fade-in',
       )}

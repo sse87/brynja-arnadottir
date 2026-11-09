@@ -84,6 +84,7 @@
 
   /* Families */
   --font-serif: var(--font-garamond), "EB Garamond", ui-serif, Georgia, serif;
+  --font-serif-italic: var(--font-garamond-italic), "EB Garamond", ui-serif, Georgia, serif;
   --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
 
   /* Type scale (fluid) — utilities: text-display, text-title, text-lede, text-body, text-caption, text-eyebrow */
@@ -159,6 +160,10 @@
   }
   dialog :focus-visible {
     outline-color: var(--mat-ink);
+  }
+  /* The details panel is always light (bg-surface), whatever the mat: use the page focus colour. */
+  dialog [data-details-panel] :focus-visible {
+    outline-color: var(--focus);
   }
   html:has(dialog[open]) {
     overflow: hidden;

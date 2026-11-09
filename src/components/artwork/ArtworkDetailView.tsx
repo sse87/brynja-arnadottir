@@ -20,6 +20,11 @@ export function ArtworkDetailView({
   const t = getDictionary(locale).lightbox;
   const title = localize(artwork.title, locale);
   const modal = variant === 'modal';
+  // The image is height-capped (60dvh <lg, 100dvh − 6rem ≥lg), so a portrait work renders narrower
+  // than its column. Tell the browser, so a phone fetches ~640w instead of 828w at the same
+  // quality. A browser without min() in `sizes` drops both entries and falls back to 100vw.
+  const ratio = (artwork.image.width / artwork.image.height).toFixed(3);
+  const sizes = `(min-width: 1024px) min(calc(100vw - 26rem), calc((100vh - 6rem) * ${ratio})), min(100vw, calc(60vh * ${ratio}))`;
 
   return (
     <div
@@ -40,7 +45,7 @@ export function ArtworkDetailView({
           alt={localize(artwork.image.alt, locale)}
           width={artwork.image.width}
           height={artwork.image.height}
-          sizes="(min-width: 1024px) calc(100vw - 26rem), 100vw"
+          sizes={sizes}
           quality={90}
           placeholder={artwork.image.blurDataURL ? 'blur' : 'empty'}
           blurDataURL={artwork.image.blurDataURL}
@@ -50,10 +55,13 @@ export function ArtworkDetailView({
         />
       </div>
 
-      <aside
+      {/* Not <aside>: this panel holds the page's h1, so it isn't complementary content. */}
+      <div
+        data-details-panel
         className={cn(
           'overflow-y-auto border-t border-rule bg-surface p-gutter text-ink lg:border-t-0 lg:border-l lg:p-10',
-          modal && 'pb-20 lg:pb-10', // clears the mobile prev/next bar
+          // Clears the fixed mobile prev/next bar, also when focus scrolls a field into view (2.4.11).
+          modal && 'scroll-pb-16 pb-20 lg:scroll-pb-0 lg:pb-10',
         )}
       >
         <p className="text-eyebrow text-ink-subtle uppercase">{artwork.id}</p>
@@ -86,7 +94,7 @@ export function ArtworkDetailView({
             pageHref={`/${locale}/works/${artwork.slug}`}
           />
         )}
-      </aside>
+      </div>
     </div>
   );
 }

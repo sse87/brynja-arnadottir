@@ -47,6 +47,7 @@ export interface Dictionary {
     email: string;
     message: string;
     messagePlaceholder: string;
+    allRequired: string;
     submit: string;
     submitting: string;
     back: string;

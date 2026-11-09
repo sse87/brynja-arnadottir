@@ -96,6 +96,7 @@ export function ReprintInquiryForm({
           <span className="tabular-nums">{artworkId}</span>
         </p>
         <p className="mt-3 text-body text-ink-muted">{t.intro}</p>
+        <p className="mt-2 text-caption text-ink-muted">{t.allRequired}</p>
       </header>
 
       {/* Hidden context */}
