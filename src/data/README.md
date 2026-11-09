@@ -17,4 +17,5 @@ The schemas are strict, so files cannot carry a "sample" flag. Placeholder text 
 | `about/albums.json`      | **Sample** (the one photo is the biography portrait, used as a stand-in)                                                                               |
 | `about/press.json`       | **Sample**, with placeholder files `public/press/sample-*`                                                                                             |
 
-After adding or replacing images, run `pnpm images:blur` to fill `blurDataURL`.
+After adding or replacing images, run `pnpm images:blur` to fill `blurDataURL`. For the full
+step-by-step, see [Adding an artwork](../../README.md#adding-an-artwork) in the root README.

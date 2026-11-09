@@ -62,7 +62,9 @@ INQUIRY_TO_EMAIL=estate@brynjaarnadottir.is
 NEXT_PUBLIC_SITE_URL=https://brynja-arnadottir.vercel.app
 ```
 
-Set all variables in Vercel for **Production, Preview and Development**.
+Set all variables in Vercel for **Production, Preview and Development**. Make `RESEND_API_KEY` a **Secret** and the rest **Config**. Vercel now allows Secrets in Development; it used to limit Sensitive variables to Production and Preview.
+
+Vercel also needs one build-only variable, which is not in `.env.example`: `ENABLE_EXPERIMENTAL_COREPACK=1`. Without it, Vercel ignores `"packageManager": "pnpm@12.x"` and picks pnpm 9/10 from `lockfileVersion: '9.0'`, and those versions don't read `allowBuilds` in `pnpm-workspace.yaml`. `NEXT_PUBLIC_SITE_URL` is inlined at build time, so changing it requires a redeploy. The deploy checklist is in `README.md`.
 
 ### 0.6 `package.json` scripts
 
