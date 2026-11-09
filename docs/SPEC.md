@@ -104,7 +104,8 @@ Set all variables in Vercel for **Production, Preview and Development**.
 ├── playwright.config.ts               # E2E against `next start` on :3210 (never reuses a running server)
 ├── e2e/
 │   ├── lightbox.spec.ts               # §3.7 acceptance criteria
-│   └── inquiry.spec.ts                # §4.6 form, incl. JavaScript disabled
+│   ├── inquiry.spec.ts                # §4.6 form, incl. JavaScript disabled
+│   └── about.spec.ts                  # §5 legacy sections (sorting, dates, no upscaling, press links)
 ├── package.json
 ├── public/
 │   ├── press/                         # Locally hosted scanned clippings (PDF / JPG / PNG)
@@ -220,7 +221,11 @@ Set all variables in Vercel for **Production, Preview and Development**.
         ├── email/
         │   └── resend.ts              # server-only Resend singleton
         ├── images/
-        │   └── cdn.ts                 # CDN transform URLs (email thumbnails, blur script)
+        │   ├── cdn.ts                 # CDN transform URLs (email thumbnails, blur script)
+        │   └── archival.ts            # maxCoverWidth / noUpscaleSizes — never upscale (§5.5)
+        ├── about/
+        │   ├── timeline.ts            # groupByDecade, decadeLabel (§5.4)
+        │   └── press.ts               # file meta, link label, translationFor, yearAnchors (§5.6)
         ├── data/                      # server-only loaders (parse JSON with Zod)
         │   ├── artworks.ts
         │   ├── about.ts
@@ -464,9 +469,13 @@ export interface Dictionary {
   about: {
     heading: string;
     biography: { portraitCredit: string; born: string; died: string };
-    exhibitions: { heading: string; intro: string; solo: string; group: string };
-    albums: { heading: string; intro: string; photoCount: { one: string; other: string }; close: string; previous: string; next: string };
-    press: { heading: string; intro: string; page: string; open: string; fileTypes: { pdf: string; image: string }; translatedHeadline: string };
+    exhibitions: { heading: string; intro: string; solo: string; group: string; photoAlbum: string };
+    albums: {
+      heading: string; intro: string; photoCount: { one: string; other: string }; close: string; previous: string; next: string;
+      fromExhibition: string;   // {title}
+      photoOf: string;          // {index} {total}
+    };
+    press: { heading: string; intro: string; page: string; open: string; fileTypes: { pdf: string; image: string }; translatedHeadline: string; jumpToYear: string };
   };
   footer: { facebook: string; opensInNewTab: string; rights: string };
   notFound: { title: string; body: string; home: string };
@@ -588,14 +597,16 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
   "about": {
     "heading": "Um listamanninn",
     "biography": { "portraitCredit": "Ljósmynd", "born": "Fædd(ur)", "died": "Dáin(n)" },
-    "exhibitions": { "heading": "Sýningarferill", "intro": "Einka- og samsýningar í tímaröð.", "solo": "Einkasýning", "group": "Samsýning" },
+    "exhibitions": { "heading": "Sýningarferill", "intro": "Einka- og samsýningar í tímaröð.", "solo": "Einkasýning", "group": "Samsýning", "photoAlbum": "Myndaalbúm" },
     "albums": {
       "heading": "Myndaalbúm",
       "intro": "Ljósmyndir frá sýningaropnunum og vinnustofu.",
       "photoCount": { "one": "{count} mynd", "other": "{count} myndir" },
       "close": "Loka",
       "previous": "Fyrri mynd",
-      "next": "Næsta mynd"
+      "next": "Næsta mynd",
+      "fromExhibition": "Frá sýningunni {title}",
+      "photoOf": "{index} af {total}"
     },
     "press": {
       "heading": "Fjölmiðlar",
@@ -603,7 +614,8 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
       "page": "bls.",
       "open": "Opna úrklippu",
       "fileTypes": { "pdf": "PDF", "image": "Mynd" },
-      "translatedHeadline": "Þýðing fyrirsagnar"
+      "translatedHeadline": "Þýðing fyrirsagnar",
+      "jumpToYear": "Fara í ár"
     }
   },
   "footer": { "facebook": "Opinber Facebook-síða", "opensInNewTab": "(opnast í nýjum flipa)", "rights": "© Allur réttur áskilinn." },
@@ -690,14 +702,16 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
   "about": {
     "heading": "About the artist",
     "biography": { "portraitCredit": "Photo", "born": "Born", "died": "Died" },
-    "exhibitions": { "heading": "Exhibition history", "intro": "Solo and group exhibitions in chronological order.", "solo": "Solo exhibition", "group": "Group exhibition" },
+    "exhibitions": { "heading": "Exhibition history", "intro": "Solo and group exhibitions in chronological order.", "solo": "Solo exhibition", "group": "Group exhibition", "photoAlbum": "Photo album" },
     "albums": {
       "heading": "Photo albums",
       "intro": "Photographs from exhibition openings and the studio.",
       "photoCount": { "one": "{count} photo", "other": "{count} photos" },
       "close": "Close",
       "previous": "Previous photo",
-      "next": "Next photo"
+      "next": "Next photo",
+      "fromExhibition": "From the exhibition {title}",
+      "photoOf": "{index} of {total}"
     },
     "press": {
       "heading": "Press",
@@ -705,7 +719,8 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
       "page": "p.",
       "open": "Open clipping",
       "fileTypes": { "pdf": "PDF", "image": "Image" },
-      "translatedHeadline": "Translated headline"
+      "translatedHeadline": "Translated headline",
+      "jumpToYear": "Jump to year"
     }
   },
   "footer": { "facebook": "Official Facebook Page", "opensInNewTab": "(opens in a new tab)", "rights": "© All rights reserved." },
@@ -2804,10 +2819,10 @@ export default async function AboutLayout({ children, params }: { children: Reac
         <AboutNav
           label={d.nav.aboutSections}
           items={[
-            { href: base, label: d.nav.biography, exact: true },
-            { href: `${base}/exhibitions`, label: d.nav.exhibitions },
-            { href: `${base}/albums`, label: d.nav.albums },
-            { href: `${base}/press`, label: d.nav.press },
+            { href: base, label: d.nav.biography, match: 'exact' },
+            { href: `${base}/exhibitions`, label: d.nav.exhibitions, match: 'prefix' },
+            { href: `${base}/albums`, label: d.nav.albums, match: 'prefix' },
+            { href: `${base}/press`, label: d.nav.press, match: 'prefix' },
           ]}
         />
       </header>
@@ -2817,7 +2832,7 @@ export default async function AboutLayout({ children, params }: { children: Reac
 }
 ```
 
-`AboutNav` (client): horizontal, scrollable on mobile (`overflow-x-auto snap-x`), `aria-current="page"` via `usePathname()`, active item underlined with a 1px ink rule.
+`AboutNav` (client): horizontal, scrollable on mobile (`overflow-x-auto snap-x`), `aria-current="page"` via `usePathname()`, active item underlined with a 1px ink rule. Items are the header's `NavItem` (`match: 'exact' | 'prefix'`) and use the same `isCurrent()` from `NavLinks.tsx`, so `/about/albums/[albumId]` keeps "Albums" current.
 
 ### 5.2 Schemas (`src/data/schema/about.ts`)
 
@@ -3061,7 +3076,7 @@ return (
 | Rule | Implementation |
 |---|---|
 | Never upscale | Lightbox `<Image>` gets `style={{ maxWidth: photo.width }}` and `sizes={\`(min-width: ${photo.width}px) ${photo.width}px, 100vw\`}` so the browser never requests more pixels than exist |
-| Small thumbnails | Fixed `aspect-[4/3]` + `object-cover`, `quality={70}`, `sizes="(min-width:1024px) 22vw, (min-width:640px) 33vw, 50vw"` |
+| Small thumbnails | Fixed `aspect-4/3` + `object-cover`, `quality={70}`, `sizes="(min-width:1024px) 22vw, (min-width:640px) 33vw, 50vw"`. A cropped box upscales when it is wider than the photo *or* taller than it, so thumbnails, album covers and the 4:5 biography portrait get `style={{ maxWidth: maxCoverWidth(width, height, ratio) }}` = `min(width, ⌊height × ratio⌋)` (`src/lib/images/archival.ts`) |
 | Lazy everything | Default `loading="lazy"`; only the first 4 thumbnails eager on album pages |
 | Long albums | `[content-visibility:auto] [contain-intrinsic-size:auto_220px]` on each grid item |
 | Authenticity | No sharpening, filters, colourisation or AI upscaling — archival record shown as-is |
@@ -3120,7 +3135,7 @@ return (
 ```
 
 - Original headline wrapped in `<span lang={headlineLanguage}>`; translation shown when `headlineTranslation[locale]` exists and differs from the original language.
-- File link: `href={asset.href}`, `target="_blank"`, `rel="noopener"`, accessible name `"{open}: {headline} ({PDF|Image}, 2,3 MB)" + opensInNewTab`. Size formatted with `Intl.NumberFormat(locale, { style: 'unit', unit: 'megabyte', maximumFractionDigits: 1 })`.
+- File link: `href={asset.href}`, `target="_blank"`, `rel="noopener"`, accessible name `"{open}: {headline} ({PDF|Image}, 2,3 MB)" + opensInNewTab`. Size via `formatFileSize(bytes, locale)` (`src/lib/i18n/format.ts`): decimal units, `Intl.NumberFormat(locale, { style: 'unit', unit: 'megabyte', maximumFractionDigits: 1 })` from 999 950 bytes up, otherwise `unit: 'kilobyte'` with the same options — megabytes alone would print small scans as "0 MB". 2 348 123 → "2,3 MB" / "2.3 MB"; 12 664 → "12,7 kB" / "12.7 kB".
 - `kind: 'image'` items additionally render a 64 px thumbnail via `next/image` (local `/press/...` path — no remotePatterns needed).
 - Year jump links (`#y1974`) rendered above the list when more than 15 items.
 
@@ -3569,4 +3584,4 @@ Each phase ends with `pnpm typecheck && pnpm lint && pnpm test && pnpm build` pa
 - **Vitest unit**: `lib/gallery/filters.ts`, `lib/i18n/format.ts` (partial dates in both locales incl. UTC edge at midnight, plural forms incl. Icelandic `21 → one`), `lib/i18n/localize.ts` fallback, `inquirySchema` (each error code reachable; whitespace trimming; email lowercasing).
 - **Data validation**: `pnpm data:validate`, chained into `pnpm build` (§0.6). `scripts/validate-data.test.ts` runs it against the committed data and against a deliberately broken copy.
 - **Server Action**: unit-test `sendInquiry` with `vi.mock('@/lib/email/resend')` (and `@/lib/env`) covering honeypot, validation failure, broken hidden context, `too_fast`, unstamped (no-JS) `startedAt`, unknown artwork, non-reprint artwork, Resend error, Resend throwing, invalid env, success (server-side title, not the submitted one). Every case asserts that no PII reaches `console.error`.
-- **E2E (Playwright)**, `pnpm test:e2e`, in `e2e/`. `lightbox.spec.ts` (Phase 5): every §3.7 criterion + hard refresh; "←/→ in form" runs against the real form fields. `inquiry.spec.ts` (Phase 6): JS validation round-trip + focus + Back in the lightbox; with `javaScriptEnabled: false`, the CTA reveals the form, a POST renders localized field errors with values kept, Back returns to the CTA, and a honeypot POST renders success. None of these send email. Still to add: locale redirect, toggle, inquiry happy path against a mocked action.
+- **E2E (Playwright)**, `pnpm test:e2e`, in `e2e/`. `lightbox.spec.ts` (Phase 5): every §3.7 criterion + hard refresh; "←/→ in form" runs against the real form fields. `inquiry.spec.ts` (Phase 6): JS validation round-trip + focus + Back in the lightbox; with `javaScriptEnabled: false`, the CTA reveals the form, a POST renders localized field errors with values kept, Back returns to the CTA, and a honeypot POST renders success. None of these send email. `about.spec.ts` (Phase 7), for `/is` and `/en`: AboutNav current item, biography year-only dates + `Person` JSON-LD, timeline order/decades/date ranges, album index + dialog (←/→, Esc restores focus), album ↔ exhibition links, unknown album → 404, press order/dates/file type + size in the link's accessible name, translation only on `/en`, one footer link; and at 2560×1440 no image renders larger than its declared `width`×`height`. Still to add: locale redirect, toggle, inquiry happy path against a mocked action.

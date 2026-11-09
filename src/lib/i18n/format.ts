@@ -26,6 +26,19 @@ export function formatPartialDate(iso: string, locale: Locale): string {
   return new Intl.DateTimeFormat(localeMeta[locale].intl, opts).format(date);
 }
 
+/**
+ * Decimal file size: 2 348 123 → "2,3 MB" (is) / "2.3 MB" (en). Below 1 MB it switches to kB so
+ * small scans don't read as "0 MB" (SPEC §5.6). The threshold is where kB would round to "1000 kB".
+ */
+export function formatFileSize(bytes: number, locale: Locale): string {
+  const mb = bytes >= 999_950;
+  return new Intl.NumberFormat(localeMeta[locale].intl, {
+    style: 'unit',
+    unit: mb ? 'megabyte' : 'kilobyte',
+    maximumFractionDigits: 1,
+  }).format(mb ? bytes / 1_000_000 : bytes / 1_000);
+}
+
 /** 29.7 → "29,7" (is) / "29.7" (en). */
 export function formatCm(value: number, locale: Locale): string {
   return new Intl.NumberFormat(localeMeta[locale].intl, { maximumFractionDigits: 1 }).format(value);

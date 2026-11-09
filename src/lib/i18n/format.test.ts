@@ -3,6 +3,7 @@ import {
   formatArtworkYear,
   formatCm,
   formatDimensions,
+  formatFileSize,
   formatPartialDate,
   interpolate,
   plural,
@@ -81,6 +82,36 @@ describe('formatPartialDate', () => {
       expect(formatPartialDate('1968-01-01', 'en')).toBe('1 January 1968');
       expect(formatPartialDate('1968-12-31', 'is')).toBe('31. desember 1968');
     });
+  });
+});
+
+describe('formatPartialDate — about-section data shapes', () => {
+  it.each([
+    // year-only (biography born/died), year-month (press), full (exhibitions)
+    ['1942', 'is', '1942'],
+    ['1942', 'en', '1942'],
+    ['1991-11', 'is', 'nóvember 1991'],
+    ['1991-11', 'en', 'November 1991'],
+    ['1974-05-18', 'is', '18. maí 1974'],
+    ['1974-05-18', 'en', '18 May 1974'],
+  ] as const)('%s (%s) → %s', (iso, locale, expected) => {
+    expect(formatPartialDate(iso, locale)).toBe(expected);
+  });
+});
+
+describe('formatFileSize', () => {
+  it.each([
+    [2_348_123, 'is', '2,3 MB'],
+    [2_348_123, 'en', '2.3 MB'],
+    [1_000_000, 'en', '1 MB'],
+    [999_950, 'is', '1 MB'], // would otherwise round to "1000 kB"
+    [999_949, 'en', '999.9 kB'],
+    [12_664, 'is', '12,7 kB'],
+    [12_664, 'en', '12.7 kB'],
+    [668, 'is', '0,7 kB'],
+    [668, 'en', '0.7 kB'],
+  ] as const)('%i B (%s) → %s', (bytes, locale, expected) => {
+    expect(formatFileSize(bytes, locale)).toBe(expected);
   });
 });
 

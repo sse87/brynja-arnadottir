@@ -58,7 +58,13 @@ export interface Dictionary {
   about: {
     heading: string;
     biography: { portraitCredit: string; born: string; died: string };
-    exhibitions: { heading: string; intro: string; solo: string; group: string };
+    exhibitions: {
+      heading: string;
+      intro: string;
+      solo: string;
+      group: string;
+      photoAlbum: string;
+    };
     albums: {
       heading: string;
       intro: string;
@@ -66,6 +72,8 @@ export interface Dictionary {
       close: string;
       previous: string;
       next: string;
+      fromExhibition: string; // {title}
+      photoOf: string; // {index} {total}
     };
     press: {
       heading: string;
@@ -74,6 +82,7 @@ export interface Dictionary {
       open: string;
       fileTypes: { pdf: string; image: string };
       translatedHeadline: string;
+      jumpToYear: string;
     };
   };
   footer: { facebook: string; opensInNewTab: string; rights: string };

@@ -83,7 +83,8 @@
       "heading": "Exhibition history",
       "intro": "Solo and group exhibitions in chronological order.",
       "solo": "Solo exhibition",
-      "group": "Group exhibition"
+      "group": "Group exhibition",
+      "photoAlbum": "Photo album"
     },
     "albums": {
       "heading": "Photo albums",
@@ -91,7 +92,9 @@
       "photoCount": { "one": "{count} photo", "other": "{count} photos" },
       "close": "Close",
       "previous": "Previous photo",
-      "next": "Next photo"
+      "next": "Next photo",
+      "fromExhibition": "From the exhibition {title}",
+      "photoOf": "{index} of {total}"
     },
     "press": {
       "heading": "Press",
@@ -99,7 +102,8 @@
       "page": "p.",
       "open": "Open clipping",
       "fileTypes": { "pdf": "PDF", "image": "Image" },
-      "translatedHeadline": "Translated headline"
+      "translatedHeadline": "Translated headline",
+      "jumpToYear": "Jump to year"
     }
   },
   "footer": {

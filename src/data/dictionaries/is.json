@@ -83,7 +83,8 @@
       "heading": "Sýningarferill",
       "intro": "Einka- og samsýningar í tímaröð.",
       "solo": "Einkasýning",
-      "group": "Samsýning"
+      "group": "Samsýning",
+      "photoAlbum": "Myndaalbúm"
     },
     "albums": {
       "heading": "Myndaalbúm",
@@ -91,7 +92,9 @@
       "photoCount": { "one": "{count} mynd", "other": "{count} myndir" },
       "close": "Loka",
       "previous": "Fyrri mynd",
-      "next": "Næsta mynd"
+      "next": "Næsta mynd",
+      "fromExhibition": "Frá sýningunni {title}",
+      "photoOf": "{index} af {total}"
     },
     "press": {
       "heading": "Fjölmiðlar",
@@ -99,7 +102,8 @@
       "page": "bls.",
       "open": "Opna úrklippu",
       "fileTypes": { "pdf": "PDF", "image": "Mynd" },
-      "translatedHeadline": "Þýðing fyrirsagnar"
+      "translatedHeadline": "Þýðing fyrirsagnar",
+      "jumpToYear": "Fara í ár"
     }
   },
   "footer": {
