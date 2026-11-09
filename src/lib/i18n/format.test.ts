@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
+  countryName,
   formatArtworkYear,
   formatCm,
   formatDimensions,
@@ -96,6 +97,13 @@ describe('formatPartialDate — about-section data shapes', () => {
     ['1974-05-18', 'en', '18 May 1974'],
   ] as const)('%s (%s) → %s', (iso, locale, expected) => {
     expect(formatPartialDate(iso, locale)).toBe(expected);
+  });
+});
+
+describe('countryName', () => {
+  it('names a region in the page language', () => {
+    expect(countryName('NO', 'is')).toBe('Noregur');
+    expect(countryName('NO', 'en')).toBe('Norway');
   });
 });
 

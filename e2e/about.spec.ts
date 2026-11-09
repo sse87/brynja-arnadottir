@@ -17,8 +17,13 @@ const copy = {
       press: 'Fjölmiðlar',
     },
     born: '1942',
-    exhibitionDates: ['15. mars 1968 – 30. mars 1968', '29. maí 2008 – 15. júní 2008'],
-    decades: ['1960–1969', '2000–2009'],
+    exhibitionDates: {
+      'EXH-1991-02': '1991',
+      'EXH-2011-01': 'júlí 2011',
+      'EXH-2011-02': 'haust 2011',
+    },
+    norway: 'Sandefjord, Noregur',
+    groupTag: 'Samsýning',
     albumMeta: '29. maí 2008 · 1 mynd',
     photoOf: '1 af 1',
     close: 'Loka',
@@ -38,8 +43,13 @@ const copy = {
       press: 'Press',
     },
     born: '1942',
-    exhibitionDates: ['15 March 1968 – 30 March 1968', '29 May 2008 – 15 June 2008'],
-    decades: ['1960–1969', '2000–2009'],
+    exhibitionDates: {
+      'EXH-1991-02': '1991',
+      'EXH-2011-01': 'July 2011',
+      'EXH-2011-02': 'Autumn 2011',
+    },
+    norway: 'Sandefjord, Norway',
+    groupTag: 'Group exhibition',
     albumMeta: '29 May 2008 · 1 photo',
     photoOf: '1 of 1',
     close: 'Close',
@@ -114,37 +124,57 @@ for (const locale of ['is', 'en'] as const) {
       expect(jsonLd).toMatchObject({ '@type': 'Person', birthDate: '1942', deathDate: '2025' });
     });
 
-    test('exhibitions: ascending, grouped by decade, localized ranges', async ({ page }) => {
-      await page.goto(`/${locale}/about/exhibitions`);
-      await expect(page.locator('main section h2')).toHaveText([...t.decades]);
-      await expect(page.locator('[data-exhibition]')).toHaveCount(2);
-      const ids = await page
-        .locator('[data-exhibition]')
-        .evaluateAll((els) => els.map((e) => e.id));
-      expect(ids).toEqual(['EXH-1968-01', 'EXH-2008-01']);
-      await expect(page.locator('[data-exhibition] > p:first-child')).toHaveText([
-        ...t.exhibitionDates,
-      ]);
-      await expect(page.locator('[data-exhibition="EXH-1968-01"] time').first()).toHaveAttribute(
-        'datetime',
-        '1968-03-15',
-      );
-
-      await page.locator('[data-exhibition="EXH-2008-01"] a').click();
-      await expect(page).toHaveURL(new RegExp(`/${locale}/about/albums/${ALBUM}$`));
-    });
-
-    test('albums: index card shows date + photo count; back-link to exhibition anchor', async ({
+    test('exhibitions: one ascending list by decade, group tags, year/month/season dates', async ({
       page,
     }) => {
+      await page.goto(`/${locale}/about/exhibitions`);
+      await expect(page.locator('main section h2')).toHaveText([
+        '1980–1989',
+        '1990–1999',
+        '2000–2009',
+        '2010–2019',
+      ]);
+      const items = page.locator('[data-exhibition]');
+      await expect(items).toHaveCount(30);
+      const ids = await items.evaluateAll((els) => els.map((e) => e.id));
+      expect(ids[0]).toBe('EXH-1984-01');
+      expect(ids.at(-1)).toBe('EXH-2015-01');
+      expect(ids).toEqual(ids.toSorted());
+
+      // Solo and group share the list; only group exhibitions carry a tag.
+      await expect(page.locator('[data-exhibition-tag]')).toHaveCount(6);
+      await expect(
+        page.locator('[data-exhibition-type="group"] [data-exhibition-tag]'),
+      ).toHaveCount(6);
+      await expect(page.locator('[data-exhibition-tag]').first()).toHaveText(t.groupTag);
+
+      for (const [id, label] of Object.entries(t.exhibitionDates)) {
+        await expect(page.locator(`[data-exhibition="${id}"] time`)).toHaveText(label);
+      }
+      await expect(page.locator('[data-exhibition="EXH-2011-02"] time')).toHaveAttribute(
+        'datetime',
+        '2011',
+      );
+
+      // Venue is the heading; city only when known; country only outside Iceland.
+      await expect(page.locator('[data-exhibition="EXH-1991-02"] h3')).toHaveText('Hafnarborg');
+      await expect(
+        page.locator('[data-exhibition="EXH-1991-02"] [data-exhibition-place]'),
+      ).toHaveText('Hafnarfirði');
+      await expect(
+        page.locator('[data-exhibition="EXH-1992-01"] [data-exhibition-place]'),
+      ).toHaveCount(0);
+      await expect(
+        page.locator('[data-exhibition="EXH-2011-01"] [data-exhibition-place]'),
+      ).toHaveText(t.norway);
+    });
+
+    test('albums: index card shows date + photo count', async ({ page }) => {
       await page.goto(`/${locale}/about/albums`);
       await expect(page.locator(`[data-album="${ALBUM}"] p`)).toHaveText(t.albumMeta);
 
       await page.locator(`[data-album="${ALBUM}"] a`).click();
       await expect(page).toHaveURL(new RegExp(`/about/albums/${ALBUM}$`));
-      await page.locator('[data-exhibition-link]').click();
-      await expect(page).toHaveURL(new RegExp(`/${locale}/about/exhibitions#EXH-2008-01$`));
-      await expect(page.locator('#EXH-2008-01')).toBeInViewport();
     });
 
     test('album dialog: opens, counts, arrows are harmless at the ends, Esc restores focus', async ({

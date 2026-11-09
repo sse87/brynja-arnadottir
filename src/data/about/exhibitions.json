@@ -1,45 +1,195 @@
 [
   {
-    "id": "EXH-1968-01",
-    "date": "1968-03-15",
-    "endDate": "1968-03-30",
-    "title": {
-      "is": "[Sýnishorn] Teikningar",
-      "en": "[Sample] Drawings"
-    },
+    "id": "EXH-1984-01",
+    "date": "1984",
+    "location": { "venue": "Samsýning Baðstofunnar", "city": "Keflavík", "countryCode": "IS" },
+    "type": "group"
+  },
+  {
+    "id": "EXH-1989-01",
+    "date": "1989",
+    "location": { "venue": "Bjórhöllin Gerðubergi", "city": "Reykjavík", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1991-01",
+    "date": "1991",
+    "location": { "venue": "Keramikhúsið", "city": "Reykjavík", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1991-02",
+    "date": "1991",
+    "location": { "venue": "Hafnarborg", "city": "Hafnarfirði", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1992-01",
+    "date": "1992",
+    "location": { "venue": "Ráðhús Siglufjarðar", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1992-02",
+    "date": "1992",
+    "location": { "venue": "Samsýning í Njarðvík", "countryCode": "IS" },
+    "type": "group"
+  },
+  {
+    "id": "EXH-1993-01",
+    "date": "1993",
+    "location": { "venue": "Gallerý Náttúra", "city": "Keflavík", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1996-01",
+    "date": "1996",
+    "location": { "venue": "Í bókasafni Kjarna", "city": "Keflavík", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1997-01",
+    "date": "1997",
     "location": {
-      "venue": {
-        "is": "[Sýnishorn] Sýningarsalur",
-        "en": "[Sample] Gallery"
-      },
-      "city": {
-        "is": "[Sýnishorn] Borg",
-        "en": "[Sample] City"
-      },
+      "venue": "Gallerý Sölva Helgasonar",
+      "city": "Lónkoti Skagafirði",
       "countryCode": "IS"
     },
     "type": "solo"
   },
   {
-    "id": "EXH-2008-01",
-    "date": "2008-05-29",
-    "endDate": "2008-06-15",
-    "title": {
-      "is": "[Sýnishorn] Samsýning",
-      "en": "[Sample] Group exhibition"
-    },
+    "id": "EXH-1997-02",
+    "date": "1997",
+    "location": { "venue": "Bakkinn", "city": "Húsavík", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1998-01",
+    "date": "1998",
+    "location": { "venue": "Gallery Hár & List", "city": "Hafnarfirði", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1999-01",
+    "date": "1999",
+    "location": { "venue": "Sæborg", "city": "Hrísey", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1999-02",
+    "date": "1999",
+    "location": { "venue": "Kaffi-Krús", "city": "Selfossi", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1999-03",
+    "date": "1999",
+    "location": { "venue": "Við Árbakkann", "city": "Blönduósi", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-1999-04",
+    "date": "1999",
+    "location": { "venue": "Samsýning í Gallery Gutenberg", "countryCode": "IS" },
+    "type": "group"
+  },
+  {
+    "id": "EXH-2000-01",
+    "date": "2000",
+    "location": { "venue": "Lóuhreiður", "city": "Reykjavík", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2001-01",
+    "date": "2001",
+    "location": { "venue": "Te & Kaffi", "city": "Reykjavík", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2003-01",
+    "date": "2003",
+    "location": { "venue": "Gallery Hár & List", "city": "Hafnarfirði", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2005-01",
+    "date": "2005",
     "location": {
-      "venue": {
-        "is": "[Sýnishorn] Listasafn",
-        "en": "[Sample] Art museum"
-      },
-      "city": {
-        "is": "[Sýnishorn] Borg",
-        "en": "[Sample] City"
-      },
+      "venue": "Menningarverstöðinni Hólamröst",
+      "city": "Stokkseyri",
       "countryCode": "IS"
     },
-    "type": "group",
-    "albumId": "sample-opening-2008"
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2006-01",
+    "date": "2006",
+    "location": { "venue": "Í gamla Lækjarskóla", "city": "Hafnarfirði", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2006-02",
+    "date": "2006",
+    "location": { "venue": "Hótel Hvolsvöllur", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2007-01",
+    "date": "2007",
+    "location": { "venue": "Jaðarleikhúsinu", "city": "Hafnarfirði", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2008-01",
+    "date": "2008",
+    "location": { "venue": "Hafnafjörður 100 ára", "city": "Hafnarfirði", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2010-01",
+    "date": "2010",
+    "location": { "venue": "Ljósanótt", "city": "Reykjanesbær", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2011-01",
+    "date": "2011-07",
+    "location": { "venue": "Hubro Litteratur", "city": "Sandefjord", "countryCode": "NO" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2011-02",
+    "date": "2011",
+    "season": "autumn",
+    "location": { "venue": "Hubro Litteratur", "city": "Sandefjord", "countryCode": "NO" },
+    "type": "group"
+  },
+  {
+    "id": "EXH-2012-01",
+    "date": "2012-01",
+    "location": { "venue": "Hubro Litteratur", "city": "Sandefjord", "countryCode": "NO" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2012-02",
+    "date": "2012-05",
+    "location": {
+      "venue": "Gallerí 002 Þúfubarði 17",
+      "city": "Hafnarfirði",
+      "countryCode": "IS"
+    },
+    "type": "group"
+  },
+  {
+    "id": "EXH-2012-03",
+    "date": "2012-06",
+    "location": { "venue": "Gallerí Abbý", "city": "Siglufirði", "countryCode": "IS" },
+    "type": "group"
+  },
+  {
+    "id": "EXH-2015-01",
+    "date": "2015-11",
+    "location": { "venue": "Art 67", "city": "Reykjavík", "countryCode": "IS" },
+    "type": "solo"
   }
 ]

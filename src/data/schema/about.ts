@@ -15,19 +15,28 @@ export const biographySchema = z.strictObject({
 export type Biography = z.infer<typeof biographySchema>;
 
 /* ---------- Exhibitions ---------- */
-export const exhibitionSchema = z.strictObject({
-  id: z.string().regex(/^EXH-\d{4}-\d{2}$/),
-  date: partialDate,
-  endDate: partialDate.optional(),
-  title: localizedString,
-  location: z.strictObject({
-    venue: localizedString,
-    city: localizedString,
-    countryCode: z.string().length(2).toUpperCase(),
-  }),
-  type: z.enum(['solo', 'group']),
-  albumId: z.string().optional(), // links to a photo album from the opening
-});
+export const seasons = ['spring', 'summer', 'autumn', 'winter'] as const;
+export type Season = (typeof seasons)[number];
+
+export const exhibitionSchema = z
+  .strictObject({
+    id: z.string().regex(/^EXH-\d{4}-\d{2}$/),
+    date: partialDate,
+    endDate: partialDate.optional(),
+    season: z.enum(seasons).optional(), // "Haust 2011": held for the whole season of `date`'s year
+    title: localizedString.optional(), // most records from the old site have none
+    location: z.strictObject({
+      venue: z.string().min(1), // Icelandic, verbatim from the old site; shown as-is in every locale
+      city: z.string().min(1).optional(), // ditto; absent when the venue names the place
+      countryCode: z.string().length(2).toUpperCase(),
+    }),
+    type: z.enum(['solo', 'group']),
+    albumId: z.string().optional(), // links to a photo album from the opening
+  })
+  .refine((e) => e.season === undefined || /^\d{4}$/.test(e.date), {
+    message: 'season requires a year-only date',
+    path: ['season'],
+  });
 export const exhibitionListSchema = z.array(exhibitionSchema).superRefine(uniqueKeys('id'));
 export type Exhibition = z.infer<typeof exhibitionSchema>;
 

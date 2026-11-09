@@ -13,7 +13,7 @@ The schemas are strict, so files cannot carry a "sample" flag. Placeholder text 
 | `artworks.json`          | Real images. To confirm with the estate: `year` (only ART-0003's "2012" was read from the signature), `medium`, English titles, `available-as-reprint` |
 | `site.json`              | Real                                                                                                                                                   |
 | `about/biography.json`   | Portrait and birth/death years are real; places, lede, body and pull quote are **sample**                                                              |
-| `about/exhibitions.json` | **Sample**                                                                                                                                             |
+| `about/exhibitions.json` | Real, from the previous website: venue and city copied verbatim (Icelandic, as written there), year/month/season only, no titles                       |
 | `about/albums.json`      | **Sample** (the one photo is the biography portrait, used as a stand-in)                                                                               |
 | `about/press.json`       | **Sample**, with placeholder files `public/press/sample-*`                                                                                             |
 

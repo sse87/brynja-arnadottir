@@ -480,7 +480,7 @@ export interface Dictionary {
   about: {
     heading: string;
     biography: { portraitCredit: string; born: string; died: string };
-    exhibitions: { heading: string; intro: string; solo: string; group: string; photoAlbum: string };
+    exhibitions: { heading: string; intro: string; group: string; seasons: Record<Season, string> /* {year} */; photoAlbum: string };
     albums: {
       heading: string; intro: string; photoCount: { one: string; other: string }; close: string; previous: string; next: string;
       fromExhibition: string;   // {title}
@@ -609,7 +609,7 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
   "about": {
     "heading": "Um listamanninn",
     "biography": { "portraitCredit": "Ljósmynd", "born": "Fædd", "died": "Dáin" },
-    "exhibitions": { "heading": "Sýningarferill", "intro": "Einka- og samsýningar í tímaröð.", "solo": "Einkasýning", "group": "Samsýning", "photoAlbum": "Myndaalbúm" },
+    "exhibitions": { "heading": "Sýningarferill", "intro": "Einka- og samsýningar í tímaröð.", "group": "Samsýning", "seasons": { "spring": "vor {year}", "summer": "sumar {year}", "autumn": "haust {year}", "winter": "vetur {year}" }, "photoAlbum": "Myndaalbúm" },
     "albums": {
       "heading": "Myndaalbúm",
       "intro": "Ljósmyndir frá sýningaropnunum og vinnustofu.",
@@ -715,7 +715,7 @@ export function pickClientMessages(d: Dictionary): ClientMessages {
   "about": {
     "heading": "About the artist",
     "biography": { "portraitCredit": "Photo", "born": "Born", "died": "Died" },
-    "exhibitions": { "heading": "Exhibition history", "intro": "Solo and group exhibitions in chronological order.", "solo": "Solo exhibition", "group": "Group exhibition", "photoAlbum": "Photo album" },
+    "exhibitions": { "heading": "Exhibition history", "intro": "Solo and group exhibitions in chronological order.", "group": "Group exhibition", "seasons": { "spring": "Spring {year}", "summer": "Summer {year}", "autumn": "Autumn {year}", "winter": "Winter {year}" }, "photoAlbum": "Photo album" },
     "albums": {
       "heading": "Photo albums",
       "intro": "Photographs from exhibition openings and the studio.",
@@ -2981,19 +2981,28 @@ export const biographySchema = z.strictObject({
 export type Biography = z.infer<typeof biographySchema>;
 
 /* ---------- Exhibitions ---------- */
-export const exhibitionSchema = z.strictObject({
-  id: z.string().regex(/^EXH-\d{4}-\d{2}$/),
-  date: partialDate,
-  endDate: partialDate.optional(),
-  title: localizedString,
-  location: z.strictObject({
-    venue: localizedString,
-    city: localizedString,
-    countryCode: z.string().length(2).toUpperCase(),
-  }),
-  type: z.enum(['solo', 'group']),
-  albumId: z.string().optional(),   // links to a photo album from the opening
-});
+export const seasons = ['spring', 'summer', 'autumn', 'winter'] as const;
+export type Season = (typeof seasons)[number];
+
+export const exhibitionSchema = z
+  .strictObject({
+    id: z.string().regex(/^EXH-\d{4}-\d{2}$/),
+    date: partialDate,
+    endDate: partialDate.optional(),
+    season: z.enum(seasons).optional(),   // "Haust 2011": held for the whole season of `date`'s year
+    title: localizedString.optional(),    // most records from the old site have none
+    location: z.strictObject({
+      venue: z.string().min(1),           // Icelandic, verbatim from the old site; shown as-is in every locale
+      city: z.string().min(1).optional(), // ditto; absent when the venue names the place
+      countryCode: z.string().length(2).toUpperCase(),
+    }),
+    type: z.enum(['solo', 'group']),
+    albumId: z.string().optional(),       // links to a photo album from the opening
+  })
+  .refine((e) => e.season === undefined || /^\d{4}$/.test(e.date), {
+    message: 'season requires a year-only date',
+    path: ['season'],
+  });
 export const exhibitionListSchema = z.array(exhibitionSchema).superRefine(uniqueKeys('id'));
 export type Exhibition = z.infer<typeof exhibitionSchema>;
 
@@ -3048,7 +3057,7 @@ export function aboutCrossRefIssues(
 Loaders in `src/lib/data/about.ts` (`server-only`) parse each file once (and throw on cross-ref issues) and return:
 
 - `getBiography()`
-- `getExhibitions()` — sorted ascending by `date` (string compare is correct for partial ISO dates), tie-break by `id`
+- `getExhibitions()` — sorted ascending by `exhibitionSortKey` (`date`, or `YYYY-MM` at the season's first month: spring 03, summer 06, autumn 09, winter 12; string compare is correct for partial ISO dates), tie-break by `id`
 - `getAlbums()` — sorted descending by `date`; `getAlbum(id)`
 - `getPressItems()` — sorted descending by `publishedAt`
 
@@ -3107,72 +3116,72 @@ grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-gutter; stacks on mobile
 
 ```json
 // src/data/about/exhibitions.json
+The records come from the artist's previous website, which listed only the venue and town (in
+Icelandic, often in the dative: "Hafnarborg, Hafnarfirði"), a country code when abroad, and the
+year — the most recent ones with a month or a season. Venue and city are stored **verbatim** as
+plain strings and shown in Icelandic in both locales; there are no titles. Solo and group
+exhibitions form one chronological list; `type` only drives a tag on group exhibitions.
+
+```json
+// src/data/about/exhibitions.json
 [
   {
-    "id": "EXH-1968-01",
-    "date": "1968-03-15",
-    "endDate": "1968-03-30",
-    "title": { "is": "Teikningar", "en": "Drawings" },
-    "location": {
-      "venue": { "is": "Bogasalurinn", "en": "Bogasalurinn Gallery" },
-      "city": { "is": "Reykjavík", "en": "Reykjavík" },
-      "countryCode": "IS"
-    },
+    "id": "EXH-1991-02",
+    "date": "1991",
+    "location": { "venue": "Hafnarborg", "city": "Hafnarfirði", "countryCode": "IS" },
     "type": "solo"
+  },
+  {
+    "id": "EXH-1992-01",
+    "date": "1992",
+    "location": { "venue": "Ráðhús Siglufjarðar", "countryCode": "IS" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2011-01",
+    "date": "2011-07",
+    "location": { "venue": "Hubro Litteratur", "city": "Sandefjord", "countryCode": "NO" },
+    "type": "solo"
+  },
+  {
+    "id": "EXH-2011-02",
+    "date": "2011",
+    "season": "autumn",
+    "location": { "venue": "Hubro Litteratur", "city": "Sandefjord", "countryCode": "NO" },
+    "type": "group"
   },
   {
     "id": "EXH-1985-02",
     "date": "1985-09",
     "title": { "is": "Norræn teikning", "en": "Nordic Drawing" },
-    "location": {
-      "venue": { "is": "Kjarvalsstaðir", "en": "Kjarvalsstaðir" },
-      "city": { "is": "Reykjavík", "en": "Reykjavík" },
-      "countryCode": "IS"
-    },
+    "location": { "venue": "Kjarvalsstaðir", "city": "Reykjavík", "countryCode": "IS" },
     "type": "group",
     "albumId": "opening-1985-kjarvalsstadir"
   }
 ]
 ```
 
+(The last record is illustrative: it shows the optional `title` and an album link.)
+
+IDs are `EXH-YYYY-NN`, numbered chronologically within the year, so they double as the
+in-year order when the dates are equal (year-only).
+
+**Helpers (`src/lib/about/timeline.ts`)**
+
+- `groupByDecade(items)`, `decadeLabel(decade)` — `Math.floor(year / 10) * 10`, `1960–1969`.
+- `exhibitionSortKey(e)` — `date`, or `YYYY-MM` at the season's first month (see §5.2 loaders).
+- `formatExhibitionDate(e, locale, t.seasons)` — season → dictionary template (`haust 2011` /
+  `Autumn 2011`); otherwise `formatPartialDate` (`1991`, `júlí 2011`), ranges as `start – end`.
+- `exhibitionLabel(e, locale)` — title if any, else venue (used by the album page's
+  "From the exhibition {title}" back-link).
+- `countryName(code, locale)` in `src/lib/i18n/format.ts` — `Intl.DisplayNames`: NO → Noregur / Norway.
+
 **Component (`ExhibitionTimeline.tsx`, server, zero JS)**
 
-- Groups by decade: `Math.floor(year / 10) * 10`.
-- Semantic structure: `<section>` per decade → `<h2>` (e.g. `1960–1969`) → `<ol>` → `<li>` per exhibition.
-- Each item: `<time dateTime={date}>` (formatted with `formatPartialDate`; ranges as `start – end`), `<h3 class="font-serif text-lede">` title, venue · city, type label (`solo`/`group` from dictionary), optional link "→ Myndaalbúm / Photo album" when `albumId` is set.
+- Semantic structure: `<section>` per decade → `<h2>` (e.g. `1980–1989`) → `<ol>` → `<li id={id} data-exhibition data-exhibition-type>` per exhibition.
+- Each item: `<time dateTime={date}>` (`formatExhibitionDate`); `<h3 class="font-serif text-lede">` title, or the venue when there is no title; a muted line with (venue if titled), city, and the country name only when `countryCode !== 'IS'` — omitted when empty; for `type: 'group'` only, a square tag `border border-rule px-1.5 text-eyebrow uppercase text-ink-subtle` reading "Samsýning / Group exhibition" (solo is the default and untagged); optional link "→ Myndaalbúm / Photo album" when `albumId` is set.
+- On `/en`, venue and city text is wrapped in `lang="is"`.
 - Visual: two-column grid `md:grid-cols-[10rem_1fr]`, decade label sticky (`md:sticky md:top-24`), 1px vertical `border-l border-rule` on the list with 7px ink dots (`before:` pseudo-element) per item.
-
-```tsx
-// src/components/about/ExhibitionTimeline.tsx (core)
-const groups = Map.groupBy(items, (e) => Math.floor(Number(e.date.slice(0, 4)) / 10) * 10);
-
-return (
-  <div className="flex flex-col">
-    {[...groups].map(([decade, list]) => (
-      <section key={decade} aria-labelledby={`decade-${decade}`} className="grid gap-x-gutter border-t border-rule py-stack md:grid-cols-[10rem_1fr]">
-        <h2 id={`decade-${decade}`} className="font-serif text-title tabular-nums md:sticky md:top-24 md:self-start">
-          {decade}–{decade + 9}
-        </h2>
-        <ol className="relative mt-6 flex flex-col gap-8 border-l border-rule pl-6 md:mt-0">
-          {list.map((e) => (
-            <li key={e.id} className="relative before:absolute before:-left-[calc(1.5rem+3.5px)] before:top-2 before:size-[7px] before:rounded-full before:bg-ink">
-              <time dateTime={e.date} className="text-caption tabular-nums text-ink-muted">
-                {formatPartialDate(e.date, locale)}{e.endDate ? ` – ${formatPartialDate(e.endDate, locale)}` : ''}
-              </time>
-              <h3 className="mt-1 font-serif text-lede">{localize(e.title, locale)}</h3>
-              <p className="mt-1 text-caption text-ink-muted">
-                {localize(e.location.venue, locale)}, {localize(e.location.city, locale)} · {t.exhibitions[e.type]}
-              </p>
-            </li>
-          ))}
-        </ol>
-      </section>
-    ))}
-  </div>
-);
-```
-
-(`Map.groupBy` requires Node ≥ 21 / ES2024 lib; set `"lib": ["ES2024", "DOM", "DOM.Iterable"]` in `tsconfig.json`, or implement a small `groupBy` helper.)
 
 ### 5.5 Gallery Photo Albums (archival snapshots)
 

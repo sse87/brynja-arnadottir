@@ -1,3 +1,4 @@
+import type { Season } from './about';
 import type { InquiryErrorCode } from './inquiry';
 
 export interface Dictionary {
@@ -62,8 +63,8 @@ export interface Dictionary {
     exhibitions: {
       heading: string;
       intro: string;
-      solo: string;
-      group: string;
+      group: string; // tag on group exhibitions; solo is the default and is not tagged
+      seasons: Record<Season, string>; // {year}
       photoAlbum: string;
     };
     albums: {

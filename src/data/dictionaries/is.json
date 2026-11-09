@@ -83,8 +83,13 @@
     "exhibitions": {
       "heading": "Sýningarferill",
       "intro": "Einka- og samsýningar í tímaröð.",
-      "solo": "Einkasýning",
       "group": "Samsýning",
+      "seasons": {
+        "spring": "vor {year}",
+        "summer": "sumar {year}",
+        "autumn": "haust {year}",
+        "winter": "vetur {year}"
+      },
       "photoAlbum": "Myndaalbúm"
     },
     "albums": {

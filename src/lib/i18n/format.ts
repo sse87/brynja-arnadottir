@@ -26,6 +26,11 @@ export function formatPartialDate(iso: string, locale: Locale): string {
   return new Intl.DateTimeFormat(localeMeta[locale].intl, opts).format(date);
 }
 
+/** ISO 3166 region code → localized country name: "NO" → "Noregur" (is) / "Norway" (en). */
+export function countryName(code: string, locale: Locale): string {
+  return new Intl.DisplayNames(localeMeta[locale].intl, { type: 'region' }).of(code) ?? code;
+}
+
 /**
  * Decimal file size: 2 348 123 → "2,3 MB" (is) / "2.3 MB" (en). Below 1 MB it switches to kB so
  * small scans don't read as "0 MB" (SPEC §5.6). The threshold is where kB would round to "1000 kB".

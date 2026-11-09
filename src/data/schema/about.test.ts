@@ -27,8 +27,7 @@ const album = {
 const exhibition = {
   id: 'EXH-1985-02',
   date: '1985-09',
-  title: loc('Nordic Drawing'),
-  location: { venue: loc('Kjarvalsstaðir'), city: loc('Reykjavík'), countryCode: 'is' },
+  location: { venue: 'Hafnarborg', city: 'Hafnarfirði', countryCode: 'is' },
   type: 'group',
 };
 const press = {
@@ -58,6 +57,27 @@ describe('exhibitionListSchema', () => {
   });
   it('rejects duplicate ids', () => {
     expect(exhibitionListSchema.safeParse([exhibition, exhibition]).success).toBe(false);
+  });
+  it('accepts an optional title and a venue without a city', () => {
+    const titled = { ...exhibition, title: loc('Nordic Drawing') };
+    const noCity = { ...exhibition, location: { venue: 'Ráðhús Siglufjarðar', countryCode: 'IS' } };
+    expect(exhibitionListSchema.safeParse([titled]).success).toBe(true);
+    expect(exhibitionListSchema.safeParse([noCity]).success).toBe(true);
+  });
+  it('requires a venue', () => {
+    const noVenue = { ...exhibition, location: { city: 'Keflavík', countryCode: 'IS' } };
+    expect(exhibitionListSchema.safeParse([noVenue]).success).toBe(false);
+  });
+  it('allows a season only on a year-only date', () => {
+    expect(
+      exhibitionListSchema.safeParse([{ ...exhibition, date: '2011', season: 'autumn' }]).success,
+    ).toBe(true);
+    const monthAndSeason = exhibitionListSchema.safeParse([{ ...exhibition, season: 'autumn' }]);
+    expect(monthAndSeason.success).toBe(false);
+    expect(monthAndSeason.error?.issues[0]?.path).toEqual([0, 'season']);
+    expect(
+      exhibitionListSchema.safeParse([{ ...exhibition, date: '2011', season: 'fall' }]).success,
+    ).toBe(false);
   });
 });
 

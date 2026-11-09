@@ -30,6 +30,19 @@ describe('about comparators (SPEC §5.2)', () => {
     ]);
   });
 
+  it('sorts a season at its first month', () => {
+    const list = [
+      { id: 'EXH-2011-02', date: '2011', season: 'autumn' },
+      { id: 'EXH-2011-03', date: '2011-10' },
+      { id: 'EXH-2011-01', date: '2011-07' },
+    ] as Exhibition[];
+    expect(list.toSorted(compareExhibitions).map((e) => e.id)).toEqual([
+      'EXH-2011-01',
+      'EXH-2011-02',
+      'EXH-2011-03',
+    ]);
+  });
+
   it('sorts albums and press descending by date', () => {
     const albums = [
       { id: 'a', date: '1985' },
@@ -55,6 +68,14 @@ describe('about loader', () => {
     expect(getExhibitions().length).toBeGreaterThan(0);
     expect(getAlbums().length).toBeGreaterThan(0);
     expect(getPressItems().length).toBeGreaterThan(0);
+  });
+
+  it('holds the exhibition list from the previous website', () => {
+    const list = getExhibitions();
+    expect(list).toHaveLength(30);
+    expect(list.filter((e) => e.type === 'group')).toHaveLength(6);
+    // Sorted order keeps ids chronological, so ids double as stable anchors.
+    expect(list.map((e) => e.id)).toEqual(list.map((e) => e.id).toSorted());
   });
 
   it('returns sorted lists', () => {

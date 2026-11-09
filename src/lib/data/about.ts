@@ -14,12 +14,13 @@ import {
   type Exhibition,
   type PressItem,
 } from '@/data/schema/about';
+import { exhibitionSortKey } from '@/lib/about/timeline';
 
 // Partial ISO dates ("1968" < "1968-03" < "1968-03-15") sort correctly as plain strings.
 const byString = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
 
 export const compareExhibitions = (a: Exhibition, b: Exhibition) =>
-  byString(a.date, b.date) || byString(a.id, b.id);
+  byString(exhibitionSortKey(a), exhibitionSortKey(b)) || byString(a.id, b.id);
 export const compareAlbums = (a: Album, b: Album) =>
   byString(b.date, a.date) || byString(a.id, b.id);
 export const comparePress = (a: PressItem, b: PressItem) =>
@@ -39,7 +40,7 @@ if (crossRefIssues.length > 0) throw new Error(`Invalid about data:\n${crossRefI
 const albumById = new Map(albums.map((a) => [a.id, a]));
 
 export const getBiography = (): Biography => biography;
-/** Ascending by date, tie-break by id. */
+/** Ascending by date (seasons at their first month), tie-break by id. */
 export const getExhibitions = (): readonly Exhibition[] => exhibitions;
 /** Descending by date. */
 export const getAlbums = (): readonly Album[] => albums;

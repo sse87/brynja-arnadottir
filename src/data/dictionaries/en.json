@@ -83,8 +83,13 @@
     "exhibitions": {
       "heading": "Exhibition history",
       "intro": "Solo and group exhibitions in chronological order.",
-      "solo": "Solo exhibition",
       "group": "Group exhibition",
+      "seasons": {
+        "spring": "Spring {year}",
+        "summer": "Summer {year}",
+        "autumn": "Autumn {year}",
+        "winter": "Winter {year}"
+      },
       "photoAlbum": "Photo album"
     },
     "albums": {

@@ -7,6 +7,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { localize } from '@/lib/i18n/localize';
 import { formatPartialDate, interpolate } from '@/lib/i18n/format';
 import { getAlbum, getAlbums, getExhibitions } from '@/lib/data/about';
+import { exhibitionLabel } from '@/lib/about/timeline';
 import type { Album } from '@/data/schema/about';
 import { AlbumPhotoGrid, type AlbumPhotoView } from '@/components/about/AlbumPhotoGrid';
 import { openGraphFor } from '@/lib/seo/metadata';
@@ -81,7 +82,7 @@ export default async function AlbumPage({ params }: { params: Params }) {
             data-exhibition-link
             className="mt-3 inline-block text-caption underline decoration-1 underline-offset-4 hover:decoration-2"
           >
-            {interpolate(t.fromExhibition, { title: localize(exhibition.title, locale) })}
+            {interpolate(t.fromExhibition, { title: exhibitionLabel(exhibition, locale) })}
           </Link>
         )}
       </header>
