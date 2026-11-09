@@ -1,9 +1,12 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { resolveLocale, alternatesFor, type LocaleParams } from '@/lib/i18n/route';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { getAllArtworks, toGalleryItem } from '@/lib/data/artworks';
+import { Hero } from '@/components/home/Hero';
+import { Gallery } from '@/components/gallery/Gallery';
+import { ArtworkGrid } from '@/components/gallery/ArtworkGrid';
 
-// Placeholder until Phase 4 replaces it with Hero + Gallery (SPEC §3.6).
 export async function generateMetadata({ params }: { params: LocaleParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
   return { title: getDictionary(locale).gallery.heading, alternates: alternatesFor(locale) };
@@ -12,22 +15,24 @@ export async function generateMetadata({ params }: { params: LocaleParams }): Pr
 export default async function HomePage({ params }: { params: LocaleParams }) {
   const locale = await resolveLocale(params);
   const dict = getDictionary(locale);
-  const works = getAllArtworks().map((a) => toGalleryItem(a, locale));
+  const items = getAllArtworks().map((a) => toGalleryItem(a, locale));
 
   return (
-    <section className="mx-auto max-w-wide px-gutter py-section">
-      <p className="text-eyebrow text-ink-subtle uppercase">{dict.hero.eyebrow}</p>
-      <h1 className="mt-4 font-serif text-display">{dict.meta.siteTitle}</h1>
-      <p className="mt-6 max-w-prose-archive font-serif text-lede text-ink-muted">
-        {dict.hero.tagline}
-      </p>
-      {/* Phase 3: renders loader output so `next build` parses artworks.json. */}
-      <h2 className="mt-section font-serif text-title">{dict.gallery.heading}</h2>
-      <ul className="mt-4 flex flex-col gap-1">
-        {works.map((w) => (
-          <li key={w.id}>{w.title}</li>
-        ))}
-      </ul>
-    </section>
+    <>
+      <Hero locale={locale} dict={dict} />
+      <section
+        aria-labelledby="works-heading"
+        className="mx-auto max-w-gallery px-gutter pb-section"
+      >
+        <h2 id="works-heading" className="sr-only">
+          {dict.gallery.heading}
+        </h2>
+        {/* Gallery reads useSearchParams(), so the static HTML is this unfiltered server grid:
+            crawlers and first paint get every artwork; filters hydrate on top (SPEC §3.6). */}
+        <Suspense fallback={<ArtworkGrid items={items} locale={locale} query="" />}>
+          <Gallery items={items} />
+        </Suspense>
+      </section>
+    </>
   );
 }

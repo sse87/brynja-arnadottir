@@ -1123,8 +1123,11 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
-      { protocol: 'https', hostname: 'brynja.b-cdn.net', pathname: '/v*/archive/**' },
-      // Custom hostname variant: { protocol: 'https', hostname: 'cdn.brynja-arnadottir.is', pathname: '/v*/archive/**' },
+      // Whole pull zone: the current masters sit at the zone root (e.g. `/Brj%C3%B3st%2050x35.jpg`).
+      // The `/v1/archive/…` folder layout above is the target, not yet in use; once every JSON URL
+      // has moved there this can tighten to `pathname: '/v*/archive/**'`.
+      { protocol: 'https', hostname: 'brynja.b-cdn.net', pathname: '/**' },
+      // Custom hostname variant: { protocol: 'https', hostname: 'cdn.brynja-arnadottir.is', pathname: '/**' },
     ],
     deviceSizes: [640, 828, 1080, 1280, 1600, 1920, 2560],
     imageSizes: [128, 256, 384, 480],
@@ -1303,7 +1306,8 @@ type ParamsLike = Pick<URLSearchParams, 'get'>;
 export function parseFilters(params: ParamsLike | null | undefined): GalleryFilters {
   const ink = params?.get('ink') ?? '';
   return {
-    color: INK_TO_COLOR[ink] ?? 'all',
+    // hasOwn guard: `?ink=constructor` / `?ink=toString` must not resolve to inherited Object.prototype members.
+    color: Object.hasOwn(INK_TO_COLOR, ink) ? (INK_TO_COLOR[ink] ?? 'all') : 'all',
     availability: params?.get('reprints') === '1' ? 'reprints' : 'all',
   };
 }
