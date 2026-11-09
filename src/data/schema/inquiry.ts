@@ -9,6 +9,8 @@ export const INQUIRY_LIMITS = {
 } as const;
 
 export const MIN_FILL_TIME_MS = 3_000;
+/** `startedAt` rendered before JavaScript stamps the form; skips the min-fill-time check. */
+export const STARTED_AT_UNSTAMPED = 0;
 
 export const INQUIRY_ERROR_CODES = [
   'name_required',
@@ -63,7 +65,11 @@ export const inquirySchema = z.object({
     .min(1, e('artwork_invalid'))
     .max(INQUIRY_LIMITS.title.max, e('artwork_invalid')),
   locale: z.enum(locales),
-  startedAt: z.coerce.number().int().positive(),
+  /**
+   * Epoch ms when the form was opened. Client-supplied, so only a speed bump.
+   * `STARTED_AT_UNSTAMPED` (0): submitted without JavaScript from a static page.
+   */
+  startedAt: z.coerce.number().int().nonnegative(),
 });
 export type InquiryInput = z.infer<typeof inquirySchema>;
 

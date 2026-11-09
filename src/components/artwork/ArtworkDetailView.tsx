@@ -80,7 +80,11 @@ export function ArtworkDetailView({
         )}
 
         {artwork['available-as-reprint'] && (
-          <ReprintPanel artworkId={artwork.id} artworkTitle={title} />
+          <ReprintPanel
+            artworkId={artwork.id}
+            artworkTitle={title}
+            pageHref={`/${locale}/works/${artwork.slug}`}
+          />
         )}
       </aside>
     </div>

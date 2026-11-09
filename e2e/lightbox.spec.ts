@@ -120,15 +120,8 @@ test('←/→ do nothing while focus is in the inquiry form', async ({ page }) =
   const panel = openDialog(page).locator('#reprint-inquiry');
   await expect(panel).toBeVisible();
 
-  // Phase 5 renders a placeholder; inject the kinds of field the Phase 6 form will contain.
-  await panel.evaluate((el) => {
-    el.insertAdjacentHTML(
-      'beforeend',
-      '<input id="e2e-input"><textarea id="e2e-textarea"></textarea><select id="e2e-select"><option>a</option></select>',
-    );
-  });
-  for (const id of ['e2e-input', 'e2e-textarea', 'e2e-select']) {
-    await page.locator(`#${id}`).focus();
+  for (const name of ['name', 'email', 'message']) {
+    await panel.locator(`[name="${name}"]`).focus();
     await pressAndExpectNoNavigation(page, 'ArrowRight');
     await pressAndExpectNoNavigation(page, 'ArrowLeft');
   }

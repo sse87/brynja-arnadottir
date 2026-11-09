@@ -103,7 +103,8 @@ Set all variables in Vercel for **Production, Preview and Development**.
 ├── vitest.config.ts
 ├── playwright.config.ts               # E2E against `next start` on :3210 (never reuses a running server)
 ├── e2e/
-│   └── lightbox.spec.ts               # §3.7 acceptance criteria
+│   ├── lightbox.spec.ts               # §3.7 acceptance criteria
+│   └── inquiry.spec.ts                # §4.6 form, incl. JavaScript disabled
 ├── package.json
 ├── public/
 │   ├── press/                         # Locally hosted scanned clippings (PDF / JPG / PNG)
@@ -176,9 +177,9 @@ Set all variables in Vercel for **Production, Preview and Development**.
     │   │   ├── ArtworkDetailView.tsx  # Server — shared by modal + full page (image + <dl> inline)
     │   │   ├── LightboxDialog.tsx     # 'use client' — native <dialog>
     │   │   ├── LightboxNav.tsx        # 'use client' — prev/next + keyboard
-    │   │   └── ReprintPanel.tsx       # 'use client' — CTA ↔ form view switch
+    │   │   └── ReprintPanel.tsx       # 'use client' — CTA ↔ form view switch; owns useActionState
     │   ├── inquiry/
-    │   │   ├── ReprintInquiryForm.tsx # 'use client' — useActionState
+    │   │   ├── ReprintInquiryForm.tsx # 'use client' — renders state from ReprintPanel
     │   │   ├── FormField.tsx
     │   │   └── SubmitButton.tsx       # 'use client' — useFormStatus
     │   ├── about/
@@ -2028,64 +2029,107 @@ export function ArtworkDetailView({
 }
 ```
 
+`ArtworkDetailView` renders it as `<ReprintPanel artworkId={artwork.id} artworkTitle={title} pageHref={`/${locale}/works/${artwork.slug}`} />`.
+
 ```tsx
 // src/components/artwork/ReprintPanel.tsx
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
+import { sendInquiry } from '@/app/actions/sendInquiry';
+import {
+  INITIAL_INQUIRY_STATE,
+  STARTED_AT_UNSTAMPED,
+  type InquiryState,
+} from '@/data/schema/inquiry';
 import { useI18n } from '@/components/providers/I18nProvider';
-// Phase 6 swaps this for ReprintInquiryForm (same props).
-import { ReprintInquiryPlaceholder as ReprintInquiryForm } from '@/components/inquiry/ReprintInquiryPlaceholder';
+import { ReprintInquiryForm } from '@/components/inquiry/ReprintInquiryForm';
+import { cn } from '@/lib/cn';
+
+const SECTION_ID = 'reprint-inquiry';
 
 export function ReprintPanel({
   artworkId,
   artworkTitle,
+  pageHref,
 }: {
   artworkId: string;
   artworkTitle: string;
+  pageHref: string;
 }) {
   const { messages } = useI18n();
+  const [state, formAction] = useActionState(sendInquiry, INITIAL_INQUIRY_STATE);
   const [view, setView] = useState<'cta' | 'form'>('cta');
-  const ctaRef = useRef<HTMLButtonElement>(null);
+  // Deterministic until the CTA click stamps it, so SSR and hydration agree.
+  const [startedAt, setStartedAt] = useState(STARTED_AT_UNSTAMPED);
+  // `useActionState` can't be reset: "Back" marks the current result as dismissed instead.
+  const [dismissed, setDismissed] = useState<InquiryState | null>(null);
+  const ctaRef = useRef<HTMLAnchorElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const returning = useRef(false);
 
-  // Refocus the CTA only when coming back from the form — never on first mount.
+  const current = state === dismissed ? INITIAL_INQUIRY_STATE : state;
+  const showForm = view === 'form' || current.status !== 'idle';
+
+  // Focus the form heading on open; refocus the CTA only when coming back — never on first mount.
   useEffect(() => {
-    if (view === 'form') returning.current = true;
-    else if (returning.current) {
+    if (view === 'form') {
+      returning.current = true;
+      headingRef.current?.focus({ preventScroll: true });
+    } else if (returning.current) {
       returning.current = false;
       ctaRef.current?.focus({ preventScroll: true });
     }
   }, [view]);
 
-  if (view === 'form') {
-    return (
-      <section id="reprint-inquiry" className="mt-8 animate-fade-in">
-        <ReprintInquiryForm
-          artworkId={artworkId}
-          artworkTitle={artworkTitle}
-          onBack={() => setView('cta')}
-        />
-      </section>
-    );
+  function open(e: React.MouseEvent) {
+    e.preventDefault();
+    setStartedAt(Date.now());
+    setView('form');
+  }
+
+  function back() {
+    // A hash from a pre-hydration click would keep the form visible via `:target`.
+    if (window.location.hash === `#${SECTION_ID}`) {
+      window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+    }
+    setDismissed(state);
+    setView('cta');
   }
 
   return (
     <div className="mt-8">
-      <p className="flex items-center gap-2 text-caption">
-        <span aria-hidden className="size-1.5 rounded-full bg-ink" />
-        {messages.lightbox.reprintAvailable}
-      </p>
-      <button
-        ref={ctaRef}
-        type="button"
-        aria-expanded={false}
-        aria-controls="reprint-inquiry"
-        onClick={() => setView('form')}
-        className="mt-4 w-full bg-ink px-6 py-3.5 text-caption tracking-[0.14em] text-canvas uppercase transition-opacity hover:opacity-90"
-      >
-        {messages.lightbox.buyReprint}
-      </button>
+      <section id={SECTION_ID} className={cn('peer', showForm ? 'animate-fade-in' : 'hidden target:block')}>
+        <ReprintInquiryForm
+          artworkId={artworkId}
+          artworkTitle={artworkTitle}
+          state={current}
+          formAction={formAction}
+          startedAt={startedAt}
+          headingRef={headingRef}
+          onBack={back}
+          backHref={pageHref}
+        />
+      </section>
+
+      {!showForm && (
+        <div className="peer-target:hidden">
+          <p className="flex items-center gap-2 text-caption">
+            <span aria-hidden className="size-1.5 rounded-full bg-ink" />
+            {messages.lightbox.reprintAvailable}
+          </p>
+          <a
+            ref={ctaRef}
+            href={`#${SECTION_ID}`}
+            aria-expanded={false}
+            aria-controls={SECTION_ID}
+            onClick={open}
+            className="mt-4 block w-full bg-ink px-6 py-3.5 text-center text-caption tracking-[0.14em] text-canvas uppercase transition-opacity hover:opacity-90"
+          >
+            {messages.lightbox.buyReprint}
+          </a>
+        </div>
+      )}
     </div>
   );
 }
@@ -2101,7 +2145,7 @@ export function ReprintPanel({
 - **`ReprintPanel` refocuses the CTA only after "Back" from the form**, never on mount. Focusing on mount would steal focus on full-page loads.
 - **Mobile:** the modal grid uses `grid-rows-[auto_minmax(0,1fr)]` so the aside scrolls inside `h-dvh`. Below `lg`, prev/next form a fixed bottom bar (the wrapper is `lg:contents`, so at `lg` and up the links are absolutely positioned against the dialog), and the aside gets `pb-20` to clear the bar.
 - **Focus return after prev/next:** the dialog remounts per slug, so closing returns focus to the card of the work *shown last*. That card is where the user's attention is, and it is always in the filtered grid.
-- Until Phase 6, `ReprintPanel` imports `ReprintInquiryPlaceholder` under the `ReprintInquiryForm` name (same props). Phase 6 swaps the import and deletes the placeholder.
+- **`ReprintPanel` works without JavaScript** (Phase 6). The form is always server-rendered and stays `hidden` until opened. The CTA is a `#reprint-inquiry` link, so with JS off, `:target` reveals the form (and `peer-target:hidden` hides the CTA). With JS on, `onClick` prevents the jump and switches `view`. `useActionState` lives in the panel, not the form, so the response to a no-JS POST renders the form view with the returned errors or success. If the form owned the hook, the server would re-render the panel in `cta` view and the result would be lost. "Back" is a link to `pageHref`; without JS, that GET gives a fresh form.
 
 **Lightbox acceptance criteria** (covered by `e2e/lightbox.spec.ts`)
 
@@ -2119,8 +2163,9 @@ export function ReprintPanel({
 ### 4.1 Architecture
 
 ```text
-ReprintInquiryForm (client)
-  └─ <form action={formAction}>      useActionState(sendInquiry, INITIAL_INQUIRY_STATE)
+ReprintPanel (client)                useActionState(sendInquiry, INITIAL_INQUIRY_STATE)
+  └─ ReprintInquiryForm (client)     receives state + formAction as props
+     └─ <form action={formAction}>
         │  FormData: name, email, message                       (visible)
         │            artworkId, artworkTitle, locale, startedAt (hidden context)
         │            company                                    (honeypot, must be empty)
@@ -2128,7 +2173,7 @@ ReprintInquiryForm (client)
 src/app/actions/sendInquiry.ts  ('use server')
   1. Honeypot  → silent fake success
   2. Zod safeParse(inquirySchema) → field error CODES (not prose)
-  3. Min-fill-time check (anti-bot speed bump)
+  3. Min-fill-time check (anti-bot speed bump; skipped when startedAt = 0, i.e. no JS)
   4. Server-side truth: artwork exists AND ['available-as-reprint'] === true
   5. Resend send → React Email template (canonical bilingual title from server data)
   6. Return InquiryState (idle | success | error)
@@ -2153,6 +2198,8 @@ export const INQUIRY_LIMITS = {
 } as const;
 
 export const MIN_FILL_TIME_MS = 3_000;
+/** `startedAt` rendered before JavaScript stamps the form; skips the min-fill-time check. */
+export const STARTED_AT_UNSTAMPED = 0;
 
 export const INQUIRY_ERROR_CODES = [
   'name_required', 'name_too_short', 'name_too_long',
@@ -2187,7 +2234,11 @@ export const inquirySchema = z.object({
   artworkId: z.string().regex(/^ART-\d{4}$/, e('artwork_invalid')),
   artworkTitle: z.string().trim().min(1, e('artwork_invalid')).max(INQUIRY_LIMITS.title.max, e('artwork_invalid')),
   locale: z.enum(locales),
-  startedAt: z.coerce.number().int().positive(),
+  /**
+   * Epoch ms when the form was opened. Client-supplied, so only a speed bump.
+   * `STARTED_AT_UNSTAMPED` (0): submitted without JavaScript from a static page.
+   */
+  startedAt: z.coerce.number().int().nonnegative(),
 });
 export type InquiryInput = z.infer<typeof inquirySchema>;
 
@@ -2278,7 +2329,7 @@ import { getArtworkById } from '@/lib/data/artworks';
 import { bunnyTransform } from '@/lib/images/cdn';
 import { ReprintInquiryEmail } from '@/components/emails/ReprintInquiryEmail';
 import {
-  inquirySchema, isInquiryErrorCode, MIN_FILL_TIME_MS, INQUIRY_VISIBLE_FIELDS,
+  inquirySchema, isInquiryErrorCode, MIN_FILL_TIME_MS, INQUIRY_VISIBLE_FIELDS, STARTED_AT_UNSTAMPED,
   type InquiryState, type InquiryValues, type InquiryField, type InquiryErrorCode,
 } from '@/data/schema/inquiry';
 
@@ -2325,7 +2376,8 @@ export async function sendInquiry(_prev: InquiryState, formData: FormData): Prom
   const data = parsed.data;
 
   // 3. Speed bump against naive bots (client-supplied → not a security boundary).
-  if (Date.now() - data.startedAt < MIN_FILL_TIME_MS) {
+  //    Unstamped = submitted without JavaScript from a static page; there is no start time.
+  if (data.startedAt !== STARTED_AT_UNSTAMPED && Date.now() - data.startedAt < MIN_FILL_TIME_MS) {
     return errorState(values, { formError: 'submission_too_fast' });
   }
 
@@ -2334,11 +2386,12 @@ export async function sendInquiry(_prev: InquiryState, formData: FormData): Prom
   if (!artwork) return errorState(values, { formError: 'artwork_invalid' });
   if (!artwork['available-as-reprint']) return errorState(values, { formError: 'artwork_unavailable' });
 
-  const env = getServerEnv();
-  const artworkUrl = `${env.NEXT_PUBLIC_SITE_URL}/${data.locale}/works/${artwork.slug}`;
-
-  // 5. Send
+  // 5. Send. Env parsing is inside the try: a misconfigured deployment shows `send_failed`
+  //    in the form instead of throwing into the error boundary.
   try {
+    const env = getServerEnv();
+    const artworkUrl = `${env.NEXT_PUBLIC_SITE_URL}/${data.locale}/works/${artwork.slug}`;
+
     const { error } = await getResend().emails.send({
       from: env.RESEND_FROM_EMAIL,
       to: [env.INQUIRY_TO_EMAIL],
@@ -2365,7 +2418,12 @@ export async function sendInquiry(_prev: InquiryState, formData: FormData): Prom
       return errorState(values, { formError: 'send_failed' });
     }
   } catch (err) {
-    console.error('[sendInquiry] Unexpected failure', err);
+    // Not the raw error object: SDK errors can carry the request payload (user PII).
+    console.error('[sendInquiry] Unexpected failure', {
+      name: err instanceof Error ? err.name : typeof err,
+      message: err instanceof Error ? err.message : undefined,
+      artworkId: artwork.id,
+    });
     return errorState(values, { formError: 'send_failed' });
   }
 
@@ -2519,10 +2577,9 @@ Preview locally with `pnpm email` (React Email dev server on :3001).
 ```tsx
 'use client';
 
-import { useActionState, useEffect, useRef, useState } from 'react';
-import { sendInquiry } from '@/app/actions/sendInquiry';
+import { useEffect, useRef } from 'react';
 import {
-  INITIAL_INQUIRY_STATE, INQUIRY_LIMITS, INQUIRY_VISIBLE_FIELDS, type InquiryField,
+  INQUIRY_LIMITS, INQUIRY_VISIBLE_FIELDS, type InquiryField, type InquiryState,
 } from '@/data/schema/inquiry';
 import { useI18n } from '@/components/providers/I18nProvider';
 import { FormField } from './FormField';
@@ -2531,14 +2588,22 @@ import { SubmitButton } from './SubmitButton';
 interface Props {
   artworkId: string;
   artworkTitle: string;
+  /** From `useActionState` in `ReprintPanel`, which owns it so no-JS POST responses render it (§3.7). */
+  state: InquiryState;
+  formAction: (payload: FormData) => void;
+  /** Epoch ms when the form was opened, or `STARTED_AT_UNSTAMPED` before JavaScript runs. */
+  startedAt: number;
+  headingRef?: React.Ref<HTMLHeadingElement>;
   onBack: () => void;
+  /** Without JavaScript, "Back" is a plain GET of the work page (fresh form state). */
+  backHref: string;
 }
 
-export function ReprintInquiryForm({ artworkId, artworkTitle, onBack }: Props) {
+export function ReprintInquiryForm({
+  artworkId, artworkTitle, state, formAction, startedAt, headingRef, onBack, backHref,
+}: Props) {
   const { locale, messages } = useI18n();
   const t = messages.inquiry;
-  const [state, formAction] = useActionState(sendInquiry, INITIAL_INQUIRY_STATE);
-  const [startedAt] = useState(() => Date.now());
   const formRef = useRef<HTMLFormElement>(null);
   const alertRef = useRef<HTMLParagraphElement>(null);
   const successRef = useRef<HTMLHeadingElement>(null);
@@ -2553,12 +2618,22 @@ export function ReprintInquiryForm({ artworkId, artworkTitle, onBack }: Props) {
     else alertRef.current?.focus();
   }, [state]);
 
+  const back = (
+    <a
+      href={backHref}
+      onClick={(e) => { e.preventDefault(); onBack(); }}
+      className="text-caption underline decoration-1 underline-offset-4 hover:decoration-2"
+    >
+      {t.back}
+    </a>
+  );
+
   if (state.status === 'success') {
     return (
       <div role="status" className="border border-rule p-6">
         <h2 ref={successRef} tabIndex={-1} className="font-serif text-title outline-none">{t.successTitle}</h2>
         <p className="mt-3 text-body text-ink-muted">{t.successBody}</p>
-        <button type="button" onClick={onBack} className="mt-6 text-caption underline underline-offset-4">{t.back}</button>
+        <p className="mt-6">{back}</p>
       </div>
     );
   }
@@ -2570,7 +2645,7 @@ export function ReprintInquiryForm({ artworkId, artworkTitle, onBack }: Props) {
   return (
     <form ref={formRef} action={formAction} noValidate className="flex flex-col gap-5">
       <header>
-        <h2 className="font-serif text-title">{t.heading}</h2>
+        <h2 ref={headingRef} tabIndex={-1} className="font-serif text-title outline-none">{t.heading}</h2>
         <p className="mt-2 text-caption text-ink-muted">
           {t.regarding}: <span className="text-ink">{artworkTitle}</span> · <span className="tabular-nums">{artworkId}</span>
         </p>
@@ -2617,7 +2692,7 @@ export function ReprintInquiryForm({ artworkId, artworkTitle, onBack }: Props) {
       <p className="text-caption text-ink-subtle">{t.privacyNote}</p>
 
       <div className="flex items-center justify-between gap-4">
-        <button type="button" onClick={onBack} className="text-caption underline underline-offset-4">{t.back}</button>
+        {back}
         <SubmitButton label={t.submit} pendingLabel={t.submitting} />
       </div>
     </form>
@@ -2694,7 +2769,7 @@ export function FormField(props: InputProps | AreaProps) {
 | `error` + `formError` | `role="alert"` banner above fields, focused |
 | `success` | Form replaced by `role="status"` panel, heading focused; "Back" returns to CTA |
 
-Progressive enhancement: the form works without JavaScript (Server Action POST); validation is server-authoritative. `noValidate` disables inconsistent native bubbles in favour of localized messages.
+Progressive enhancement: the form works without JavaScript (Server Action POST); validation is server-authoritative. `noValidate` disables inconsistent native bubbles in favour of localized messages. The mechanics live in `ReprintPanel` (§3.7): the form is server-rendered and revealed by `:target`, the panel owns `useActionState`, and "Back" is a real link. `startedAt` renders as `STARTED_AT_UNSTAMPED` (0) until the CTA click stamps it, so the server and hydration markup agree on these static pages; a no-JS submission therefore skips the min-fill-time check. Covered by `e2e/inquiry.spec.ts` with `javaScriptEnabled: false`.
 
 ---
 
@@ -3493,5 +3568,5 @@ Each phase ends with `pnpm typecheck && pnpm lint && pnpm test && pnpm build` pa
 
 - **Vitest unit**: `lib/gallery/filters.ts`, `lib/i18n/format.ts` (partial dates in both locales incl. UTC edge at midnight, plural forms incl. Icelandic `21 → one`), `lib/i18n/localize.ts` fallback, `inquirySchema` (each error code reachable; whitespace trimming; email lowercasing).
 - **Data validation**: `pnpm data:validate`, chained into `pnpm build` (§0.6). `scripts/validate-data.test.ts` runs it against the committed data and against a deliberately broken copy.
-- **Server Action**: unit-test `sendInquiry` with `vi.mock('@/lib/email/resend')` covering honeypot, validation failure, `too_fast`, unknown artwork, non-reprint artwork, Resend error, success.
-- **E2E (Playwright)**, `pnpm test:e2e`, in `e2e/`. It exists since Phase 5 (`lightbox.spec.ts`: every §3.7 criterion + hard refresh). Still to add: locale redirect, toggle, inquiry happy path against a mocked action. Phase 6 re-runs the "←/→ in form" test against the real form (Phase 5 injects fields into the placeholder).
+- **Server Action**: unit-test `sendInquiry` with `vi.mock('@/lib/email/resend')` (and `@/lib/env`) covering honeypot, validation failure, broken hidden context, `too_fast`, unstamped (no-JS) `startedAt`, unknown artwork, non-reprint artwork, Resend error, Resend throwing, invalid env, success (server-side title, not the submitted one). Every case asserts that no PII reaches `console.error`.
+- **E2E (Playwright)**, `pnpm test:e2e`, in `e2e/`. `lightbox.spec.ts` (Phase 5): every §3.7 criterion + hard refresh; "←/→ in form" runs against the real form fields. `inquiry.spec.ts` (Phase 6): JS validation round-trip + focus + Back in the lightbox; with `javaScriptEnabled: false`, the CTA reveals the form, a POST renders localized field errors with values kept, Back returns to the CTA, and a honeypot POST renders success. None of these send email. Still to add: locale redirect, toggle, inquiry happy path against a mocked action.
