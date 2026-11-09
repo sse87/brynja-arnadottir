@@ -113,7 +113,7 @@
   },
   {
     "id": "EXH-2005-01",
-    "date": "2005",
+    "date": "2005-05",
     "location": {
       "venue": "Menningarverstöðinni Hólmaröst",
       "city": "Stokkseyri",
@@ -143,7 +143,7 @@
   {
     "id": "EXH-2008-01",
     "date": "2008",
-    "location": { "venue": "Hafnafjörður 100 ára", "city": "Hafnarfirði", "countryCode": "IS" },
+    "location": { "venue": "Hafnarfjörður 100 ára", "city": "Hafnarfirði", "countryCode": "IS" },
     "type": "solo",
     "albumId": "2008-05-29-hafnarfjordur-100-ara"
   },

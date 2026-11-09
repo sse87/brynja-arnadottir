@@ -184,7 +184,7 @@ for (const locale of ['is', 'en'] as const) {
       await expect(page).toHaveURL(new RegExp(`/about/albums/${ALBUM}$`));
       // No title on the exhibition, so the link names its venue (verbatim).
       const back = page.locator('[data-exhibition-link]');
-      await expect(back).toContainText('Hafnafjörður 100 ára');
+      await expect(back).toContainText('Hafnarfjörður 100 ára');
       await back.click();
       await expect(page).toHaveURL(new RegExp(`/${locale}/about/exhibitions#EXH-2008-01$`));
       await expect(page.locator('#EXH-2008-01')).toBeInViewport();
