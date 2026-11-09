@@ -18,7 +18,8 @@ const copy = {
       albums: 'Myndaalbúm',
       press: 'Fjölmiðlar',
     },
-    born: '1942',
+    born: '8. janúar 1942',
+    died: '9. nóvember 2025',
     exhibitionDates: {
       'EXH-1991-02': '1991',
       'EXH-2011-01': 'júlí 2011',
@@ -44,7 +45,8 @@ const copy = {
       albums: 'Photo albums',
       press: 'Press',
     },
-    born: '1942',
+    born: '8 January 1942',
+    died: '9 November 2025',
     exhibitionDates: {
       'EXH-1991-02': '1991',
       'EXH-2011-01': 'July 2011',
@@ -112,18 +114,23 @@ for (const locale of ['is', 'en'] as const) {
       }
     });
 
-    test('biography: lifespan and year-only born/died dates', async ({ page }) => {
+    test('biography: lifespan and full born/died dates', async ({ page }) => {
       await page.goto(`/${locale}/about`);
       await expect(page.getByText('1942–2025')).toBeVisible();
       const times = page.locator('main dl time');
       await expect(times).toHaveCount(2);
-      await expect(times.nth(0)).toHaveAttribute('datetime', '1942');
+      await expect(times.nth(0)).toHaveAttribute('datetime', '1942-01-08');
       await expect(times.nth(0)).toHaveText(t.born);
-      await expect(times.nth(1)).toHaveText('2025');
+      await expect(times.nth(1)).toHaveAttribute('datetime', '2025-11-09');
+      await expect(times.nth(1)).toHaveText(t.died);
       const jsonLd = JSON.parse(
         (await page.locator('script[type="application/ld+json"]').textContent()) ?? '{}',
       );
-      expect(jsonLd).toMatchObject({ '@type': 'Person', birthDate: '1942', deathDate: '2025' });
+      expect(jsonLd).toMatchObject({
+        '@type': 'Person',
+        birthDate: '1942-01-08',
+        deathDate: '2025-11-09',
+      });
     });
 
     test('exhibitions: one ascending list by decade, group tags, year/month/season dates', async ({
