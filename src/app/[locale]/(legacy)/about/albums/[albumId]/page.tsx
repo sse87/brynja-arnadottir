@@ -9,6 +9,7 @@ import { formatPartialDate, interpolate } from '@/lib/i18n/format';
 import { getAlbum, getAlbums, getExhibitions } from '@/lib/data/about';
 import type { Album } from '@/data/schema/about';
 import { AlbumPhotoGrid, type AlbumPhotoView } from '@/components/about/AlbumPhotoGrid';
+import { openGraphFor } from '@/lib/seo/metadata';
 
 type Params = Promise<{ locale: string; albumId: string }>;
 
@@ -27,10 +28,14 @@ async function load(params: Params): Promise<{ locale: Locale; album: Album }> {
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale, album } = await load(params);
+  const dict = getDictionary(locale);
+  const title = localize(album.title, locale);
+  const path = `/about/albums/${album.id}`;
   return {
-    title: localize(album.title, locale),
-    ...(album.description && { description: localize(album.description, locale) }),
-    alternates: alternatesFor(locale, `/about/albums/${album.id}`),
+    title,
+    description: album.description ? localize(album.description, locale) : dict.about.albums.intro,
+    alternates: alternatesFor(locale, path),
+    openGraph: openGraphFor(locale, dict.meta.siteTitle, path, { title }),
   };
 }
 

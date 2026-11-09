@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import { locales } from '@/lib/i18n/config';
 
+// This schema runs in the browser (client-side validation). Zod 4 probes `new Function('')` on
+// first parse to decide whether to JIT-compile object parsers; under our CSP (no 'unsafe-eval')
+// the probe fails safely but Chromium logs a `script-src` violation. Opt out of the JIT.
+z.config({ jitless: true });
+
 export const INQUIRY_LIMITS = {
   name: { min: 2, max: 120 },
   email: { max: 254 },

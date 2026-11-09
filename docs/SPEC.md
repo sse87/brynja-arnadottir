@@ -105,7 +105,8 @@ Set all variables in Vercel for **Production, Preview and Development**.
 ├── e2e/
 │   ├── lightbox.spec.ts               # §3.7 acceptance criteria
 │   ├── inquiry.spec.ts                # §4.6 form, incl. JavaScript disabled
-│   └── about.spec.ts                  # §5 legacy sections (sorting, dates, no upscaling, press links)
+│   ├── about.spec.ts                  # §5 legacy sections (sorting, dates, no upscaling, press links)
+│   └── seo.spec.ts                    # Appendix A / §3.3: security headers, sitemap/robots, no CSP violations
 ├── package.json
 ├── public/
 │   ├── press/                         # Locally hosted scanned clippings (PDF / JPG / PNG)
@@ -194,6 +195,8 @@ Set all variables in Vercel for **Production, Preview and Development**.
     │   │   └── ReprintInquiryEmail.tsx
     │   ├── icons/
     │   │   └── FacebookIcon.tsx
+    │   ├── seo/
+    │   │   └── JsonLd.tsx          # <script type="application/ld+json"> with `<` escaped
     │   └── ui/
     │       ├── SegmentedControl.tsx   # 'use client'
     │       └── VisuallyHidden.tsx
@@ -220,6 +223,9 @@ Set all variables in Vercel for **Production, Preview and Development**.
         ├── env.ts                     # server-only, lazy Zod env parse
         ├── email/
         │   └── resend.ts              # server-only Resend singleton
+        ├── seo/
+        │   ├── site-url.ts            # siteUrl() / absoluteUrl() from NEXT_PUBLIC_SITE_URL (no secrets needed)
+        │   └── metadata.ts            # openGraphFor(): shared Open Graph fields
         ├── images/
         │   ├── cdn.ts                 # CDN transform URLs (email thumbnails, blur script)
         │   └── archival.ts            # maxCoverWidth / noUpscaleSizes — never upscale (§5.5)
@@ -1178,6 +1184,8 @@ export default nextConfig;
 ```
 
 > CSP note: a nonce-based CSP forces dynamic rendering of every page, which defeats static generation. `'unsafe-inline'` for scripts is the accepted trade-off for a static, form-light site with no user-generated HTML. All images are served via `/_next/image` (same origin), so the Bunny hostname does not need to appear in `img-src`.
+>
+> Zod 4 probes `new Function('')` on first parse to decide whether to JIT-compile object schemas. The inquiry schema runs in the browser, so without `'unsafe-eval'` the probe fails safely but Chromium logs a `script-src` CSP violation. `src/data/schema/inquiry.ts` therefore calls `z.config({ jitless: true })`. Do not add `'unsafe-eval'` in production instead.
 
 **Quality tiers (must match `images.qualities`)**
 
@@ -3538,11 +3546,12 @@ export default {
 
 ## Appendix A — SEO, Metadata & Structured Data
 
-- Every page exports `generateMetadata` with a localized `title`, `description`, and `alternates: alternatesFor(locale, path)` (canonical + `hreflang` for `is`, `en`, `x-default → /is`).
+- Every page exports `generateMetadata` with a localized `title`, `description`, `alternates: alternatesFor(locale, path)` (canonical + `hreflang` for `is`, `en`, `x-default → /is`), and `openGraph: openGraphFor(locale, siteTitle, path, { title, images? })` (`src/lib/seo/metadata.ts`). Next **replaces** rather than merges a parent's `openGraph` when a page sets its own, so going through the helper keeps `og:locale`, `og:locale:alternate`, `og:site_name` and `og:url` on every page.
+- The public origin comes from `siteUrl()` (`src/lib/seo/site-url.ts`: `NEXT_PUBLIC_SITE_URL`, falling back to `http://localhost:3000`). It is used for `metadataBase`, the sitemap and robots. Not `getServerEnv()`, which also requires the Resend secrets.
 - `src/app/sitemap.ts`: one entry per route × locale, each with `alternates.languages` for both locales; artworks and albums enumerated from data loaders.
 - `src/app/robots.ts`: allow all; `sitemap: ${NEXT_PUBLIC_SITE_URL}/sitemap.xml`.
 - Open Graph images: static `/og-default.jpg`; artwork pages use `bunnyTransform(src, { width: 1200 })`.
-- JSON-LD rendered via `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, '\\u003c') }} />`:
+- JSON-LD rendered via `<JsonLd data={…} />` (`src/components/seo/JsonLd.tsx`), i.e. `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, '\\u003c') }} />`:
   - Biography → `Person` (`name`, `birthDate`, `deathDate`, `birthPlace`, `deathPlace`, `image`, `sameAs: [facebookUrl]`).
   - Artwork page → `VisualArtwork` (`name`, `image`, `dateCreated`, `artMedium`, `artform: "Drawing"`, `width`/`height` as `Distance` in cm, `creator: { @type: Person, name }`, `inLanguage`).
 
@@ -3584,4 +3593,4 @@ Each phase ends with `pnpm typecheck && pnpm lint && pnpm test && pnpm build` pa
 - **Vitest unit**: `lib/gallery/filters.ts`, `lib/i18n/format.ts` (partial dates in both locales incl. UTC edge at midnight, plural forms incl. Icelandic `21 → one`), `lib/i18n/localize.ts` fallback, `inquirySchema` (each error code reachable; whitespace trimming; email lowercasing).
 - **Data validation**: `pnpm data:validate`, chained into `pnpm build` (§0.6). `scripts/validate-data.test.ts` runs it against the committed data and against a deliberately broken copy.
 - **Server Action**: unit-test `sendInquiry` with `vi.mock('@/lib/email/resend')` (and `@/lib/env`) covering honeypot, validation failure, broken hidden context, `too_fast`, unstamped (no-JS) `startedAt`, unknown artwork, non-reprint artwork, Resend error, Resend throwing, invalid env, success (server-side title, not the submitted one). Every case asserts that no PII reaches `console.error`.
-- **E2E (Playwright)**, `pnpm test:e2e`, in `e2e/`. `lightbox.spec.ts` (Phase 5): every §3.7 criterion + hard refresh; "←/→ in form" runs against the real form fields. `inquiry.spec.ts` (Phase 6): JS validation round-trip + focus + Back in the lightbox; with `javaScriptEnabled: false`, the CTA reveals the form, a POST renders localized field errors with values kept, Back returns to the CTA, and a honeypot POST renders success. None of these send email. `about.spec.ts` (Phase 7), for `/is` and `/en`: AboutNav current item, biography year-only dates + `Person` JSON-LD, timeline order/decades/date ranges, album index + dialog (←/→, Esc restores focus), album ↔ exhibition links, unknown album → 404, press order/dates/file type + size in the link's accessible name, translation only on `/en`, one footer link; and at 2560×1440 no image renders larger than its declared `width`×`height`. Still to add: locale redirect, toggle, inquiry happy path against a mocked action.
+- **E2E (Playwright)**, `pnpm test:e2e`, in `e2e/`. `lightbox.spec.ts` (Phase 5): every §3.7 criterion + hard refresh; "←/→ in form" runs against the real form fields. `inquiry.spec.ts` (Phase 6): JS validation round-trip + focus + Back in the lightbox; with `javaScriptEnabled: false`, the CTA reveals the form, a POST renders localized field errors with values kept, Back returns to the CTA, and a honeypot POST renders success. None of these send email. `about.spec.ts` (Phase 7), for `/is` and `/en`: AboutNav current item, biography year-only dates + `Person` JSON-LD, timeline order/decades/date ranges, album index + dialog (←/→, Esc restores focus), album ↔ exhibition links, unknown album → 404, press order/dates/file type + size in the link's accessible name, translation only on `/en`, one footer link; and at 2560×1440 no image renders larger than its declared `width`×`height`. `seo.spec.ts` (Phase 8): security headers on `/is` and no `X-Powered-By`; immutable `Cache-Control` on `/press/*`; `/sitemap.xml`, `/robots.txt`, `/og-default.jpg` served without a locale redirect; no console errors or `securitypolicyviolation` events on the main routes, the lightbox + reprint form (incl. client-side validation) and the album dialog. `Person` and `VisualArtwork` are not Google rich-result types, so the Rich Results Test reports "no items" for them; validate with the Schema Markup Validator (validator.schema.org) against a deployed URL. Still to add: locale redirect, toggle, inquiry happy path against a mocked action.

@@ -3,14 +3,17 @@ import { resolveLocale, alternatesFor, type LocaleParams } from '@/lib/i18n/rout
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { getPressItems } from '@/lib/data/about';
 import { PressArchiveList } from '@/components/about/PressArchiveList';
+import { openGraphFor } from '@/lib/seo/metadata';
 
 export async function generateMetadata({ params }: { params: LocaleParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  const t = getDictionary(locale).about.press;
+  const dict = getDictionary(locale);
+  const t = dict.about.press;
   return {
     title: t.heading,
     description: t.intro,
     alternates: alternatesFor(locale, '/about/press'),
+    openGraph: openGraphFor(locale, dict.meta.siteTitle, '/about/press', { title: t.heading }),
   };
 }
 

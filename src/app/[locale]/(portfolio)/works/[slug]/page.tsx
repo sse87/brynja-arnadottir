@@ -11,6 +11,8 @@ import { getSite } from '@/lib/data/site';
 import { bunnyTransform } from '@/lib/images/cdn';
 import type { Artwork } from '@/data/schema/artwork';
 import { ArtworkDetailView } from '@/components/artwork/ArtworkDetailView';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { openGraphFor } from '@/lib/seo/metadata';
 
 type Params = Promise<{ locale: string; slug: string }>;
 
@@ -28,13 +30,14 @@ async function load(params: Params): Promise<{ locale: Locale; artwork: Artwork 
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale, artwork } = await load(params);
-  const t = getDictionary(locale).lightbox;
+  const dict = getDictionary(locale);
   const title = localize(artwork.title, locale);
+  const path = `/works/${artwork.slug}`;
   return {
     title,
-    description: `${localize(artwork.medium, locale)}, ${formatArtworkYear(artwork.year, artwork.yearCirca, t)}`,
-    alternates: alternatesFor(locale, `/works/${artwork.slug}`),
-    openGraph: {
+    description: `${localize(artwork.medium, locale)}, ${formatArtworkYear(artwork.year, artwork.yearCirca, dict.lightbox)}`,
+    alternates: alternatesFor(locale, path),
+    openGraph: openGraphFor(locale, dict.meta.siteTitle, path, {
       title,
       images: [
         {
@@ -42,7 +45,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
           alt: localize(artwork.image.alt, locale),
         },
       ],
-    },
+    }),
   };
 }
 
@@ -70,12 +73,7 @@ export default async function ArtworkPage({ params }: { params: Params }) {
 
   return (
     <article data-ink={ink}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(visualArtworkJsonLd(artwork, locale)).replace(/</g, '\\u003c'),
-        }}
-      />
+      <JsonLd data={visualArtworkJsonLd(artwork, locale)} />
       <div className="mx-auto max-w-gallery px-gutter py-4">
         <Link
           href={localizedPath(locale)}

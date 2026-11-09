@@ -6,13 +6,17 @@ import { getBiography } from '@/lib/data/about';
 import { getSite } from '@/lib/data/site';
 import type { Locale } from '@/lib/i18n/config';
 import { Biography } from '@/components/about/Biography';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { openGraphFor } from '@/lib/seo/metadata';
 
 export async function generateMetadata({ params }: { params: LocaleParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
+  const dict = getDictionary(locale);
   return {
-    title: getDictionary(locale).nav.biography,
+    title: dict.nav.biography,
     description: localize(getBiography().lede, locale),
     alternates: alternatesFor(locale, '/about'),
+    openGraph: openGraphFor(locale, dict.meta.siteTitle, '/about', { title: dict.nav.biography }),
   };
 }
 
@@ -37,12 +41,7 @@ export default async function BiographyPage({ params }: { params: LocaleParams }
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(personJsonLd(locale)).replace(/</g, '\\u003c'),
-        }}
-      />
+      <JsonLd data={personJsonLd(locale)} />
       <Biography
         bio={getBiography()}
         name={getSite().artist.name}

@@ -8,6 +8,8 @@ import { I18nProvider } from '@/components/providers/I18nProvider';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { SkipLink } from '@/components/layout/SkipLink';
+import { siteUrl } from '@/lib/seo/site-url';
+import { openGraphFor } from '@/lib/seo/metadata';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -17,15 +19,11 @@ export async function generateMetadata({ params }: { params: LocaleParams }): Pr
   const locale = await resolveLocale(params);
   const dict = getDictionary(locale);
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+    metadataBase: siteUrl(),
     title: { default: dict.meta.siteTitle, template: `%s — ${dict.meta.siteTitle}` },
     description: dict.meta.siteDescription,
     alternates: alternatesFor(locale),
-    openGraph: {
-      locale: localeMeta[locale].intl.replace('-', '_'),
-      siteName: dict.meta.siteTitle,
-      images: ['/og-default.jpg'],
-    },
+    openGraph: openGraphFor(locale, dict.meta.siteTitle),
   };
 }
 

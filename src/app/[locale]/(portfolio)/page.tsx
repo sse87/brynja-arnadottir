@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { resolveLocale, alternatesFor, type LocaleParams } from '@/lib/i18n/route';
 import { getDictionary } from '@/lib/i18n/dictionaries';
+import { openGraphFor } from '@/lib/seo/metadata';
 import { getAllArtworks, toGalleryItem } from '@/lib/data/artworks';
 import { Hero } from '@/components/home/Hero';
 import { Gallery } from '@/components/gallery/Gallery';
@@ -9,7 +10,13 @@ import { ArtworkGrid } from '@/components/gallery/ArtworkGrid';
 
 export async function generateMetadata({ params }: { params: LocaleParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  return { title: getDictionary(locale).gallery.heading, alternates: alternatesFor(locale) };
+  const dict = getDictionary(locale);
+  return {
+    title: dict.gallery.heading,
+    description: dict.meta.siteDescription,
+    alternates: alternatesFor(locale),
+    openGraph: openGraphFor(locale, dict.meta.siteTitle, '', { title: dict.gallery.heading }),
+  };
 }
 
 export default async function HomePage({ params }: { params: LocaleParams }) {
