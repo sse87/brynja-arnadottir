@@ -32,6 +32,7 @@ A permanent, low-maintenance, bilingual digital archive of a deceased pen-and-in
 | Images | `next/image` (Vercel Image Optimization) + Bunny.net masters | Bunny Storage Zone → Pull Zone (`*.b-cdn.net`); Bunny Optimizer for email/OG thumbnails only |
 | Class utils | `clsx` + `tailwind-merge` v3 | |
 | Icons | `simple-icons` (Facebook only) | |
+| Analytics | `@vercel/analytics` **2.x** | `<Analytics />` from `@vercel/analytics/next`, last child of `<body>` in `[locale]/layout.tsx`. Cookieless; loads and reports via same-origin `/_vercel/insights/*` (already excluded by the `proxy.ts` matcher). Must be enabled per project in the Vercel dashboard |
 | Tooling | pnpm, ESLint (flat config), Prettier + `prettier-plugin-tailwindcss`, Vitest 5 + `vite` (required peer), `@playwright/test` (E2E, Chromium only), `tsx`, `sharp` (scripts only) | `next lint` is removed in Next 16; call `eslint` directly. pnpm blocks dependency build scripts: `pnpm-workspace.yaml` `allowBuilds` allows `esbuild` only |
 | Next.js flags | `cacheComponents`, `partialPrefetching` and `reactCompiler` are **off** | create-next-app 16.4 enables all three by default. This spec targets the classic static-generation model (`generateStaticParams`, Suspense fallbacks for `useSearchParams`) |
 
@@ -1135,7 +1136,7 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ''}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
@@ -1190,7 +1191,7 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-> CSP note: a nonce-based CSP forces dynamic rendering of every page, which defeats static generation. `'unsafe-inline'` for scripts is the accepted trade-off for a static, form-light site with no user-generated HTML. All images are served via `/_next/image` (same origin), so the Bunny hostname does not need to appear in `img-src`.
+> CSP note: a nonce-based CSP forces dynamic rendering of every page, which defeats static generation. `'unsafe-inline'` for scripts is the accepted trade-off for a static, form-light site with no user-generated HTML. All images are served via `/_next/image` (same origin), so the Bunny hostname does not need to appear in `img-src`. Vercel Analytics needs no production CSP change (same-origin `/_vercel/insights`); `https://va.vercel-scripts.com` is allowed in `script-src` in development only, for its debug script.
 >
 > Zod 4 probes `new Function('')` on first parse to decide whether to JIT-compile object schemas. The inquiry schema runs in the browser, so without `'unsafe-eval'` the probe fails safely but Chromium logs a `script-src` CSP violation. `src/data/schema/inquiry.ts` therefore calls `z.config({ jitless: true })`. Do not add `'unsafe-eval'` in production instead.
 
@@ -3719,6 +3720,7 @@ export default {
 - Preload only what the first paint needs: `next/font` `subsets: ['latin']` (latin-ext stays available via `unicode-range`); the italic serif is a separate, non-preloaded instance.
 - Lighthouse is run with `pnpm dlx lighthouse@<exact version>` (never `npx`); see `docs/QA-CHECKLIST.md` for the commands. Lighthouse navigation runs can't measure INP: use TBT as the lab proxy and field data (PageSpeed Insights / CrUX) after launch.
 - WCAG 2.2 AA: visible focus, 44×44 px targets for icon buttons, `lang` correct per page and per foreign-language span, dialogs labelled, live regions for filter counts and form status, colour never the sole carrier of state.
+- Vercel Web Analytics (`@vercel/analytics`) is enabled; its client component adds about 1 kB gzip to every route.
 - Optional: `@vercel/speed-insights` (add its endpoints to CSP `connect-src`/`script-src` if enabled).
 
 ## Appendix C — Implementation Phases (for Claude Code)

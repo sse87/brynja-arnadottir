@@ -4,9 +4,11 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 // Static generation rules out nonces, so scripts need 'unsafe-inline' (SPEC §3.3 CSP note).
 // All images go through /_next/image and fonts are self-hosted, so 'self' covers them.
+// Vercel Analytics is same-origin (/_vercel/insights) in production; only its dev debug script
+// comes from va.vercel-scripts.com.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ''}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",

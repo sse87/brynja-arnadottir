@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import '../globals.css';
 import { serif, serifItalic, sans } from '../fonts';
 import { locales, localeMeta } from '@/lib/i18n/config';
@@ -54,6 +55,7 @@ export default async function LocaleLayout({
           <Footer locale={locale} dict={dict} />
           {modal}
         </I18nProvider>
+        <Analytics />
       </body>
     </html>
   );
