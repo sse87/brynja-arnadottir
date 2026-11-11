@@ -125,14 +125,15 @@
   {
     "id": "EXH-2006-01",
     "date": "2006",
-    "location": { "venue": "Í gamla Lækjarskóla", "city": "Hafnarfirði", "countryCode": "IS" },
+    "location": { "venue": "Hótel Hvolsvöllur", "countryCode": "IS" },
     "type": "solo"
   },
   {
     "id": "EXH-2006-02",
-    "date": "2006",
-    "location": { "venue": "Hótel Hvolsvöllur", "countryCode": "IS" },
-    "type": "solo"
+    "date": "2006-06",
+    "location": { "venue": "Í gamla Lækjarskóla", "city": "Hafnarfirði", "countryCode": "IS" },
+    "type": "solo",
+    "albumId": "2006-06-21-laekjarskoli"
   },
   {
     "id": "EXH-2007-01",

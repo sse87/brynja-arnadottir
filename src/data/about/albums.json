@@ -100,6 +100,579 @@
     ]
   },
   {
+    "id": "2006-06-21-laekjarskoli",
+    "title": {
+      "is": "Lækjarskóli",
+      "en": "Lækjarskóli"
+    },
+    "date": "2006-06-21",
+    "exhibitionId": "EXH-2006-02",
+    "coverPhotoId": "2006-06-21-laekjarskoli-01",
+    "photos": [
+      {
+        "id": "2006-06-21-laekjarskoli-01",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0871.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af appelsínugulu spjaldi þöktu barnateikningum, meðal annars sól, hendi og útklipptu blaði merktu „Til Brynju“.",
+          "en": "Colour photograph of an orange board covered in children's drawings, among them a sun, a hand and a paper cut-out marked “Til Brynju” (“To Brynja”)."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACQAQCdASoLABAAA4BaJQBOgB9kWoAA/qDuWqa5qygQfrDhi/KGpWVLaznTozN/9ubNZyt2ljuqhTlRfwyIRKsAAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-02",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0872.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af fjólubláu spjaldi með stóru útklipptu blaði fullu af litríkum stjörnum og krassi, merktu „Til Brynju“, og fleiri barnateikningum fyrir neðan.",
+          "en": "Colour photograph of a purple board with a large paper cut-out full of colourful stars and scribbles, marked “Til Brynju” (“To Brynja”), with more children's drawings below."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoLABAAA4BaJZQC7ADDbZV4GAAA/t25tCH5g2PLi8Nqm5vpHrknjLUsdnFl6UuyzBgPQpMv3T2aC2L01w0wMkKIAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-03",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0873.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum í lituðum pappírsrömmum á vegg, meðal annars mynd af manneskju í rauðum fötum undir bláum himni.",
+          "en": "Colour photograph of children's drawings in coloured card mounts on a wall, among them a figure in red clothes under a blue sky."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoLABAAA4BaJZwAAlKrdMO1JAAA/RTSgcsqqh+miiU0qgmqWzaVRZgNuFOmLJ+r4swmPuXfGAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-04",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0874.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum í römmum á tvílitum vegg, meðal annars rauðu húsi og litríkri mynd með stöfum.",
+          "en": "Colour photograph of framed children's drawings on a two-tone wall, among them a red house and a colourful picture with letters."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACwAQCdASoLABAAA4BaJZQAAmYoCd6wAMryn8OmzRsrsYNXAk/lMhd23eiy9Hfx4ZrufmQ+Ml2dyKBO0MsohfgAAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-05",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0875.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum í römmum sem hanga á ská meðfram stigavegg.",
+          "en": "Colour photograph of framed children's drawings hung diagonally along a stairwell wall."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoLABAAA4BaJZQC7ADdZoflnMAA/iRZMjPFhD2uLtfxUp1lnuxKEVLrFdY8FCgJhJsorIMSZI0MMRSwAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-06",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0876.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum við stigahandrið, meðal annars svartri leðurblöku, svörtum fugli og blómavasa á gulum grunni.",
+          "en": "Colour photograph of children's drawings beside a stair rail, among them a black bat, a black bird and a vase of flowers on a yellow ground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoLABAAA4BaJYwCdAECo5195CAA+nIRPcEMs2LLQwLCxQMVgV1gtco8mv3TPdCudgfP7t0UanVro9Hw4AA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-07",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0877.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af vegg með þremur röðum barnateikninga í römmum, meðal annars hesti, húsum og tungli.",
+          "en": "Colour photograph of a wall with three rows of framed children's drawings, among them a horse, houses and a moon."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAABwAQCdASoQAAsAA4BaJZwAAOlWAAD+iA1kn2ABeFwpICNQxRX8R5xnSHGIPHNjU5JROeKu8dSsc5eMxhAAAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-08",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0878.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af tveimur barnateikningum í dökkum römmum: blýantsteikningu af konu með krullað hár og blárri vatnslitamynd.",
+          "en": "Colour photograph of two children's drawings in dark mounts: a pencil drawing of a woman with curly hair and a blue watercolour."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoLABAAA4BaJZwAAuuKpum7uAD+hGf837dTyO53g3tt4o7PLcOd4x7HDPFCrK30OGt11gzCOoOAAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-09",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0879.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af þremur barnateikningum á brúnu spjaldi við hurðarkarm: húsi, húsi við vatn og nafninu BRYNJA skrifuðu í regnbogalitum.",
+          "en": "Colour photograph of three children's drawings on a brown board beside a door frame: a house, a house by the water, and the name BRYNJA written in rainbow colours."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoLABAAA4BaJQAAS2qXc6TgAP10BMWqbAR/pxIYnoav75gpMTL+QfmVvhdV/vCf8b5KhRIYAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-10",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0880.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af þremur barnateikningum á brúnum vegg undir blárri hillu, meðal annars andliti klipptu úr lituðum pappír.",
+          "en": "Colour photograph of three children's drawings on a brown wall below a blue ledge, among them a face made of cut coloured paper."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAACwAQCdASoQAAsAA4BaJYwCsAEOV2AAAPuVLd2gbCDihjgxIb34V2FmAGtTYHfB3yJqc2gAAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-11",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0881.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af þremur barnamálverkum í römmum hvert upp af öðru, í rauðum, bláum og grænum litum.",
+          "en": "Colour photograph of three children's paintings framed one above another, in reds, blues and greens."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoLABAAA4BaJZQCdAELVUSzHEfgAP6fog1cfPPJZZz7r+g/SYnH2RfTVVHKe5Ak48/4vdaLkxJjakRKBSJGGVBMS2bNlfmoAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-12",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0882.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum í römmum á tvílitum vegg, meðal annars rauðri rós og blaði fullu af andlitum.",
+          "en": "Colour photograph of framed children's drawings on a two-tone wall, among them a red rose and a page full of faces."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAACwAQCdASoLABAAA4BaJYwAAlLyfLQAAP26EeVTMojX6ogtC82owqqO5ERKDOwxXwRBWCApYdErx/e8b986oAAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-13",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0883.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum á stigavegg, meðal annars gulum teiknimyndafugli og tveimur stúlkum.",
+          "en": "Colour photograph of children's drawings on a stairwell wall, among them a yellow cartoon bird and two girls."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoLABAAA4BaJZQAAktj0W+AAP5GiB3ETBk0MOl3ChhvJerPRzbMgv9+AJMi6gBsKUb98AAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-14",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0884.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af fjórum barnateikningum í römmum á stigavegg, meðal annars gulum teiknimyndafugli og mynd með hjörtum og sól.",
+          "en": "Colour photograph of four framed children's drawings on a stairwell wall, among them a yellow cartoon bird and a picture with hearts and a sun."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAABwAQCdASoLABAAA4BaJZQAAScgAADw4rLSD7pxY8CpFaJcU/sOlR6QS8NaNQYJKvOUuVO9fUgPAAAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-15",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0886.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af fjórum stórum barnateikningum á stigavegg, meðal annars húsi með tré og brosandi andliti.",
+          "en": "Colour photograph of four large children's drawings on a stairwell wall, among them a house with a tree and a smiling face."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAACQAQCdASoLABAAA4BaJYwC7ABR5KAA/r/IBJssWD7peZQP/ZkqdWqodJsTW/myawi/cHU6amGrp3GpZYUgAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-16",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0887.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum á stigavegg, meðal annars vélmenni, skipi og blaði þar sem stendur „Best“.",
+          "en": "Colour photograph of children's drawings on a stairwell wall, among them a robot, a ship and a sheet reading “Best”."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAABwAQCdASoLABAAA4BaJZQAAlAWUAD+JgOqR3/yD7pfzLZFBdnq8kGJhBydZ2Z5UK14bZ0BvEUruwVlOvdRGvA8AAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-17",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0888.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum í römmum á stigavegg, meðal annars vélmenni, kirkju og skipi.",
+          "en": "Colour photograph of framed children's drawings on a stairwell wall, among them a robot, a church and a ship."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoLABAAA4BaJZQAAl1hvVCaAAD7lJ20tODn//qcPKwj2965zxMYRF2lzGGUkEUU6k9KA5Nqjo8Iuuc7eZw68YTQAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-18",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0889.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum í römmum á vegg, meðal annars litríku húsi og blárri mynd.",
+          "en": "Colour photograph of framed children's drawings on a wall, among them a colourful house and a blue picture."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAACwAQCdASoLABAAA4BaJZQAAkm6MC4AAPpLWnUcedXSS7mIbThRhw1m56conYclTYMGswqk+kpLLJZhurHOwGpwagSQAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-19",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0890.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af átta barnateikningum í römmum við glugga, meðal annars víkingi með hjálm og regnboga.",
+          "en": "Colour photograph of eight framed children's drawings by a window, among them a Viking in a horned helmet and a rainbow."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAACQAQCdASoLABAAA4BaJZwAAb1oegAA+OxrmUfRiU6/WmsVJRSNlIexu6kuIZlok9n9GtjfbULZP3Ki/LAAAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-20",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0891.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af fimm barnateikningum í grænum römmum á brúnum vegg, meðal annars litríku húsi og bíl.",
+          "en": "Colour photograph of five children's drawings in green mounts on a brown wall, among them a colourful house and a car."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoQAAsAA4BaJYwC7AD0DbB3jQAA/kivGr4SEQcaejyVl2nS4YyM9PueFZZLs7dR5gxkS4qhBXV9QYfHYAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-21",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0892.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af tveimur röðum barnateikninga undir gluggum, meðal annars fjöllum, grænni hendi og tré.",
+          "en": "Colour photograph of two rows of children's drawings below windows, among them mountains, a green hand and a tree."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAwAgCdASoQAAsAA4BaJYwCdAD8LMwJoDewAAD9lJY8fKw1yZDVaVoO/WR/70e/DAMPkQSFkQlJuh0zjrPNH/P1P5v6Wk6Va0GjTQAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-22",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0893.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af tveimur röðum barnateikninga undir gluggum, meðal annars hestum, tré og lunda.",
+          "en": "Colour photograph of two rows of children's drawings below windows, among them horses, a tree and a puffin."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADQAQCdASoQAAsAA4BaJZQAAup0tKMgYAD+W/0OLcTvKcCuKDIeI/CN9uA1AvrlE8/X94zUjJ9fSMAeqATzcqGK8S0llECDOn5YwTjS/w7sd6kX4AA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-23",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0894.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af tveimur röðum barnateikninga undir gluggum, meðal annars stelpu í rauðum kjól og tré.",
+          "en": "Colour photograph of two rows of children's drawings below windows, among them a girl in a red dress and a tree."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAQAgCdASoQAAsAA4BaJZQAAqBkbuJLLCAAAP7GByjSKnDkhKm+N2gWi71ig7dXe39CZiwc0fyGWoVT02oQvcgc16dwyMCflR4O8/Qq9gDW6AAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-24",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0895.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum í horni við glugga, meðal annars jólatré og litríkri mynd.",
+          "en": "Colour photograph of children's drawings in a corner by a window, among them a Christmas tree and a colourful picture."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoLABAAA4BaJYwC7ACpi0WcVAAAyiuneTIAYLemdLBNbyXvbZ71DiC0Ya7PMC+22/9vm9X8G77UkO5odV8DzuEQAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-25",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0896.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af níu barnateikningum í ferköntuðum römmum í þremur röðum, meðal annars fiðrildi.",
+          "en": "Colour photograph of nine children's drawings in square mounts in three rows, among them a butterfly."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQAAsAA4BaJZQAArL7qoLaLADct3xWDZTxCSlJ//qhz8SYLZFaFuRuyOc6movn04fAzqMZhkWd1Df00rdwRHS5IP57Q4AA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-26",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0897.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum sem hanga á ská meðfram stigavegg, meðal annars rauðu húsi á grænni hæð og stelpu í kjól.",
+          "en": "Colour photograph of children's drawings hung at an angle along a stairwell wall, among them a red house on a green hill and a girl in a dress."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADQAQCdASoQAAsAA4BaJYwC7AEDSPNKAAD91eRY0vvnl+oLamHjkgdvwoCYXJsbi4m9mkc9JHDe6fcghUg0H6+meEAAAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-27",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0898.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum á stigavegg, meðal annars stelpu með sítt rautt hár og fólki á grænu grasi.",
+          "en": "Colour photograph of children's drawings on a stairwell wall, among them a girl with long red hair and people on green grass."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAAAQAgCdASoQAAsAA4BaJYwC7AEXTA7ewFYAAP7TnZI6HDdd4PIb6YRIf9kO5q/v+mI1ulB2Iclu6cwYD2oAAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-28",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0899.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af fjórum barnateikningum í röð fyrir ofan gamlan ofn, meðal annars stóru andliti.",
+          "en": "Colour photograph of four children's drawings in a row above an old radiator, among them a large face."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoQAAsAA4BaJYwC7AD1dBNd0AD94jyWxWE4J+frNoU2QyN7i1/EcVCvsdew3OqvZGDfcrqzFoJIAAAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-29",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0900.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum á stigavegg, meðal annars húsi og fólki undir sól.",
+          "en": "Colour photograph of children's drawings on a stairwell wall, among them a house and figures under a sun."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAACwAQCdASoQAAsAA4BaJZQC/OCpyCqAAP7D3pOrsXlqpSq9LU1HEJoNXL0MueQNkRJtZqxDfyKT5evzKeAAAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-30",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0901.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af blýantsteikningum barna í römmum í röð á vegg, meðal annars fugli.",
+          "en": "Colour photograph of framed children's pencil drawings in a row on a wall, among them a bird."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoQAAsAA4BaJQBdgCG+JFuz3QAA/sTVCFyc6dYutIgeh6RnnWoRSayHZjnpYLqc2XtZmf9rVqRsz9HgAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-31",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0902.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum á vegg, meðal annars gulu andliti merktu „Til Brynju“ og fugli.",
+          "en": "Colour photograph of children's drawings on a wall, among them a yellow face marked “Til Brynju” (“To Brynja”) and a bird."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAABwAQCdASoLABAAA4BaJZQAAk8YAAD9+I7P6Dh6gA8SIWRsie7qQ8vOlc2V7CmNgLNDNkcgQBtouvihDfgoAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-32",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0903.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum sem raðast upp eftir stigavegg, meðal annars hesti og stelpu í kjól.",
+          "en": "Colour photograph of children's drawings climbing a stairwell wall, among them a horse and a girl in a dress."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAABwAQCdASoQAAsAA4BaJYwAApVSmAD+tf5F6U119OFy8x6PYbgcy6Vcjm2+s7pqMJOpO2MAwUKb170jltS9sQAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-33",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0904.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af barnateikningum sem raðast upp eftir stigavegg, meðal annars litríkri málningarklessu.",
+          "en": "Colour photograph of children's drawings climbing a stairwell wall, among them a colourful splash of paint."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoQAAsAA4BaJZQC7AED1wuwAAD99/VsQiLC5Tn1/5lBCRtic7d5Ks/m7wjiBdSo9LCI7aVoAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-34",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0906.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af þremur röðum barnateikninga í römmum, meðal annars blómi og brosandi andliti.",
+          "en": "Colour photograph of three rows of framed children's drawings, among them a flower and a smiling face."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAACwAQCdASoQAAsAA4BaJZwAAtPOflYAAP7ULdFEuqp+RfCmo96QhivJ9BzOiQgWc5v2J2PQaC581DcJOoUwAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-35",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0907.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af svarthvítri pennateikningu eftir Brynju í ljósum ramma: barnshafandi kona með fóstur sýnilegt í kviðnum stendur í ljósgeisla, umkringd hrúgum af litlum andlitum.",
+          "en": "Colour photograph of a black-and-white pen drawing by Brynja in a pale frame: a pregnant woman with a foetus visible in her belly stands in a shaft of light, surrounded by heaps of small faces."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAAAQAgCdASoLABAAA4BaJZwC7AEQ/VU6vcAAAMkhItXIMCqOZwdS02Fo71Q+eOGlAwIc0LKjuJdyaZHy2gAAAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-36",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0908.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af hárri svarthvítri pennateikningu eftir Brynju: nakin kona með tvö andlit sem snúa hvort í sína áttina, á dökkum skyggðum grunni.",
+          "en": "Colour photograph of a tall black-and-white pen drawing by Brynja: a nude woman with two faces turned in opposite directions, on a dark hatched ground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACwAQCdASoLABAAA4BaJYgAAlwYlGEAAP6JclKN4aGhGyJ6YiBGolF5PWi4Wjrb4+a/vBhg5F+LnlZf1A4wz3IMr2zEAAAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-37",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0911.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af hárri svarthvítri pennateikningu eftir Brynju: nakin kona með tvö andlit stendur með krosslagða fætur á hvítu skýi.",
+          "en": "Colour photograph of a tall black-and-white pen drawing by Brynja: a nude woman with two faces stands cross-legged on a white cloud."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAAAQAgCdASoLABAAA4BaJZwCdAEfUnwl23tAAPrtXuwML9kIdouCw73n6Jou3sPp1OAl6RbgZWr9AAAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-38",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0913.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af hárri litaðri pennateikningu eftir Brynju: grannvaxin kona í löngum ólífugrænum kjól á rauðfjólubláum grunni.",
+          "en": "Colour photograph of a tall coloured pen drawing by Brynja: a slender woman in a long olive-green dress on a red-violet ground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoLABAAA4BaJZQC7AELXtHQAAD+LzWFGbMFKbKVWMNS9+DT7IyimL+UN1k1Li6AwRodkKDAAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-39",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0915.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af hárri litaðri pennateikningu eftir Brynju: tvö rauðbrún hjörtu hvort upp af öðru á dökkbláum grunni.",
+          "en": "Colour photograph of a tall coloured pen drawing by Brynja: two red-brown hearts one above the other on a dark blue ground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAQCdASoLABAAA4BaJZwAAllgJDkZgAD+I1SvY8j9TdNDe2USKbGBopF5PDbFs81XxcgA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-40",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0917.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af svarthvítri pennateikningu eftir Brynju: kona hnipruð saman inni í eggi.",
+          "en": "Colour photograph of a black-and-white pen drawing by Brynja: a woman curled up inside an egg."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoLABAAA4BaJZwCdAC3XmaRz0AA/Msv33e/2b5SJ92NoUbZwESuJvVIAj+ts+zdeqZV2TwAAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-41",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0918.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af svarthvítri pennateikningu eftir Brynju: fjöldi kvenna með flaksandi hár svífur í hring um egg.",
+          "en": "Colour photograph of a black-and-white pen drawing by Brynja: a crowd of women with streaming hair floating around an egg."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADwAQCdASoLABAAA4BaJZwC7AEUSHjM/mwA/LKDkuRS7Wte1NzNWYFK9bnIiF7oddmD2PL/wv8qnAzMG2rsOrGaLflgAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-42",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0919.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af svarthvítri pennateikningu eftir Brynju: lítil nakin kona stendur á steini í hvítri regnhríð á dökkum grunni.",
+          "en": "Colour photograph of a black-and-white pen drawing by Brynja: a small nude woman stands on a stone amid white streaks of rain on a dark ground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoLABAAA4BaJZwAAtx50knsgAD+r6PGWO16JBmtVcYDpumbg5iyiiM694VtFau0s12LmzRcgAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-43",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0920.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af litaðri pennateikningu eftir Brynju: rauð og græn kvenvera saman undir gulu hattbarði á bláum grunni.",
+          "en": "Colour photograph of a coloured pen drawing by Brynja: red and green female figures together beneath a yellow hat brim on a blue ground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoLABAAA4BaJZQCdAEGfZ9GrAAA/En10Kh6rlUlbJZlBWZda8ZXgE0GVWZIBqoqJeZAAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-44",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0922.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af litaðri pennateikningu eftir Brynju: tvær skrumskældar verur með opna munna og rautt hjarta á milli sín.",
+          "en": "Colour photograph of a coloured pen drawing by Brynja: two distorted figures with open mouths and a red heart between them."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQAgCdASoLABAAA4BaJZQAAt469XAaTDKQAP7rMrepes6NpUYEf6zTTEs0fXU33XyZjV8odkhBMB8wZ0uR0haeQ7zlmvNAAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-45",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0923.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af litaðri pennateikningu eftir Brynju: kona og karl með lokuð augu leggja vanga saman fyrir framan rauðan hring á bláum grunni.",
+          "en": "Colour photograph of a coloured pen drawing by Brynja: a woman and a man with closed eyes, cheek to cheek before a red circle on a blue ground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAAAQAgCdASoLABAAA4BaJZQC7ADbPotU0hEAAP3ZTpUNV7nHhy7mns0cb10kNICEu2GRWzi+Ai1AAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-46",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0924.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af svarthvítri pennateikningu eftir Brynju: kona með sprungur um allan líkamann stendur í dökku opi á sprungnum vegg, með lítið blóm við fætur sér.",
+          "en": "Colour photograph of a black-and-white pen drawing by Brynja: a woman cracked all over stands in a dark opening in a cracked wall, with a small flower at her feet."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoLABAAA4BaJZwC7AEGGr8CQAAA/F4eTPg5eLvzyYbXpwW2hSD9FIDAuPWgiBUawuVgAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-47",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0925.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af hárri pennateikningu eftir Brynju: fjöður gerð úr ótal andlitum á dökkbláum grunni.",
+          "en": "Colour photograph of a tall pen drawing by Brynja: a feather made of countless faces on a dark blue ground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAAAQAgCdASoLABAAA4BaJZQC7AEUVA9QPAqQAPj9xX5W5JmywPr5a/ylqGoqVIyfVerQAr+018O+c+HQAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-48",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0926.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd af hárri litaðri pennateikningu eftir Brynju: tvær rauðhærðar konur í appelsínugulum kjól sem renna saman í einn líkama.",
+          "en": "Colour photograph of a tall coloured pen drawing by Brynja: two red-haired women in an orange dress merging into one body."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAADQAQCdASoLABAAA4BaJZwAAtz9FNAKAADiFOxqdBGxmSfMsZPSNKIvLAX5Jp+WxIYAAA=="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-49",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0927.jpg",
+        "width": 1824,
+        "height": 2736,
+        "alt": {
+          "is": "Litljósmynd, tekin á ská, af svarthvítri pennateikningu eftir Brynju: barnshafandi kona í ljósgeisla, umkringd hrúgum af litlum andlitum.",
+          "en": "Colour photograph, taken at an angle, of a black-and-white pen drawing by Brynja: a pregnant woman in a shaft of light, surrounded by heaps of small faces."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAwAgCdASoLABAAA4BaJZwCw7EQXrOtkmq7QAD3gvEX4Wzvkh9bo6T7hLUX+Wu0vqR/qvqr5ad3LKUK8dXpI1sOFfYfYSAA"
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-50",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0929.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Nærmynd í lit af efri hluta pennateikningar eftir Brynju: nakin kona með tvö andlit sem snúa hvort í sína áttina.",
+          "en": "Close-up colour photograph of the upper part of a pen drawing by Brynja: a nude woman with two faces turned in opposite directions."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACwAQCdASoQAAsAA4BaJZwAAhbih4EAAP7YEld3tnnfxwcQzauaCsRA4TUag//sZtxb0Fg7lA7wxDSUxbESfhWAAAA="
+      },
+      {
+        "id": "2006-06-21-laekjarskoli-51",
+        "src": "https://brynja.b-cdn.net/photo-albums/2006-06-21-laekjarskoli/DSCF0930.jpg",
+        "width": 2736,
+        "height": 1824,
+        "alt": {
+          "is": "Litljósmynd af pennateikningu Brynju af barnshafandi konu í ljósum ramma á hvítum vegg, tekin úr meiri fjarlægð.",
+          "en": "Colour photograph of Brynja's pen drawing of a pregnant woman in a pale frame on a white wall, seen from further back."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoQAAsAA4BaJYwC7ADC+IFgAP7Tlo00gFAOcaK+ifIhkINZW1XlJzN3yc17EKYMGPPi/1AS+AA="
+      }
+    ]
+  },
+  {
     "id": "2008-05-29-hafnarfjordur-100-ara",
     "title": {
       "is": "Hafnarfjörður 100 ára",
