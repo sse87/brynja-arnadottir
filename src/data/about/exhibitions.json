@@ -139,7 +139,8 @@
     "id": "EXH-2007-01",
     "date": "2007",
     "location": { "venue": "Jaðarleikhúsinu", "city": "Hafnarfirði", "countryCode": "IS" },
-    "type": "solo"
+    "type": "solo",
+    "albumId": "2007-07-01-jadarleikhusid"
   },
   {
     "id": "EXH-2008-01",

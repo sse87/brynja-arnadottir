@@ -673,6 +673,315 @@
     ]
   },
   {
+    "id": "2007-07-01-jadarleikhusid",
+    "title": {
+      "is": "Jaðarleikhúsið",
+      "en": "Jaðarleikhúsið"
+    },
+    "date": "2007-07-01",
+    "exhibitionId": "EXH-2007-01",
+    "coverPhotoId": "2007-07-01-jadarleikhusid-01",
+    "photos": [
+      {
+        "id": "2007-07-01-jadarleikhusid-01",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0009.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd frá opnun sýningarinnar í Jaðarleikhúsinu: gestir ganga um salinn milli raða af hvítum stólum og ungur maður í Batman-bol brosir fremst; teikningar hanga á veggjunum.",
+          "en": "Colour photograph from the exhibition opening at Jaðarleikhúsið: guests move through the room between rows of white chairs, with a young man in a Batman T-shirt smiling in the foreground; drawings hang on the walls."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAQCdASoQAAsAA4BaJQBOgCHvRlSApAAA/uX4e+LIvkQw+SiOIvgffxFnSDgP1/J1gffmENQOo+VaHS7ft3Fri/9MNoFow+kB4bSkJ56/sMttKDXeSAmybJ48E0oAAAA="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-02",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0010.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af gestum sem koma inn í salinn með glös í hönd, fyrir aftan raðir af hvítum stólum með rauðum sessum.",
+          "en": "Colour photograph of guests coming into the room with glasses in hand, behind rows of white chairs with red cushions."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoQAAsAA4BaJZAC7ADp5fvZscbIAP7O+HJH49cOCp12hoAaWQSSWQrB7ZWzJbsYKJbxQ+7k0X7YIEqwotFyPQPTCIW+G35rT97Jzz39u3WL+nivSfQD5K7DaMLifBT9dbg4AA=="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-03",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0011.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af gestum sem skoða teikningar á bláum vegg, meðal annars tvær litaðar teikningar af kvenverum.",
+          "en": "Colour photograph of guests looking at drawings on a blue wall, among them two coloured drawings of female figures."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoQAAsAA4BaJaACdAD0odaHxJatoAD+rMKs8ie7kTSDwRrhOPBwMsjNZUMVy9OZvGO1jty6KoXuC9f40Z8EyB/Me2a2J3RBfGQD545GcAoMv4RXWB1R9/qAAAA="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-04",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0012.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af gestum sem dreifast um salinn og skoða svarthvítar teikningar á hvítum veggjum.",
+          "en": "Colour photograph of guests spread around the room looking at black-and-white drawings on white walls."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoQAAsAA4BaJagCdAEDpYvIXPacAAD+o3R8+3J6bNAHekGccM8oHOg4GSJicS2p7cxJFnQHncJhgSu8DYPnwzYmiQiCU3lT4FBmpt6fY6ac5FW3/tWULhAAAAA="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-05",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0013.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af gestum sem spjalla í hópi við píanó nálægt inngangi salarins.",
+          "en": "Colour photograph of guests chatting in a group by a piano near the entrance to the room."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAABQAgCdASoQAAsAA4BaJYwCdAYwnv2AFrPPf6AA/qaXfXdSqUsfSLylbEpxZxRj1tHsww3U8ARhuAjCr9w4WZP1xu1qzCDyVVGd7pjyNisAxbXQRdkZdlXrnAbO2wqIQm2AWvXuFVlhJAAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-06",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0015.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af fiðluleikara í dökkum frakka sem leikur fyrir framan bláan vegg með teikningum, þar á meðal teikningu af rauðu tré á bleikum grunni.",
+          "en": "Colour photograph of a violinist in a dark coat playing in front of a blue wall hung with drawings, among them a drawing of a red tree on a pink ground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADwAQCdASoQAAsAA4BaJbACdAEPgn8doQAA/qxIRD2eNy+srSpnhCCpx2isvXFzmyjvQwpej6REO2nayMivG1A3O2OUy5da1CsozZWrgbMy93nMcGx0AYvwb7DGFMEZxBHF8PAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-07",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0016.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af fiðluleikaranum sem leikur með lokuð augu fyrir framan svarthvíta teikningu á bláum vegg.",
+          "en": "Colour photograph of the violinist playing with his eyes closed in front of a black-and-white drawing on a blue wall."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAQCdASoQAAsAA4BaJbACdEf/geMkS0AA+//xnzRtVg+sRf6I6myMo/Ir5P3HywO+MPX85qvrcSiJ8TRBZVJrPfF+BLUw3OD6JjgO5srf4AAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-08",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0018.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af fiðluleikaranum í dyragætt milli tveggja teikninga, svarthvítrar teikningar af barnshafandi konu og teikningar af rauðu tré, með höfuð gesta í forgrunni.",
+          "en": "Colour photograph of the violinist in a doorway between two drawings, a black-and-white drawing of a pregnant woman and a drawing of a red tree, with guests' heads in the foreground."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQAQCdASoQAAsAA4BaJbACdACQpkryAAD+7uHnMCQGXqRJLg963G4qfRxPFhd3IhpbV53c84QOifSOLtV6EisZTbtrH5xWanBuxFiH7JmBIkBawaGtLi2M9+k+kkZmPXwo6ve2FqkB5UJKGxCqQAAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-09",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0019.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Nærmynd í lit af fiðluleikaranum við dyragættina, á milli teikningarinnar af barnshafandi konu og teikningarinnar af rauðu tré.",
+          "en": "Close-up colour photograph of the violinist by the doorway, between the drawing of a pregnant woman and the drawing of a red tree."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwAgCdASoQAAsAA4BaJbACdEf/gcM1IA8uuAD+9FVUPZPnBsM+JM5eSneZdPrwMFPPYHEjS7Y9dywYI3bxuqhySNqfrFNk5xUL7o8B24L6UUSkiYGUuvRaA4KAAA=="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-10",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0020.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af fullum sal af gestum, sumum sitjandi og öðrum standandi, sem hlusta með sýningarskrá í hönd.",
+          "en": "Colour photograph of a full room of guests, some seated and some standing, listening with programmes in hand."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQAgCdASoQAAsAA4BaJbACdAYwTgachfqAAP6i/beF+PfVYSwXRxSsJB2HY9iFvzw6Cwvy1Cj00xV47tZ6XGas1DWJinelXMNK6UN1iONFtAXWKCxEWW/8HwjYAnpUb1gAAA=="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-11",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0022.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af gestum í þéttum hópi sem hlusta, sumir með glös og sýningarskrá.",
+          "en": "Colour photograph of a close crowd of guests listening, some holding glasses and programmes."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAwAgCdASoQAAsAA4BaJQBOgMYJ27K91+iwIAD+2ZDNATuxvno2hx9fLSRiJ2dX3lzPYJfVsCcRJ5eu4jYQ+3W827Wxj1/YZ4rkYs2HxAthi5vFFL1TXPGp82IfAGZK0rvVgSh3AAA="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-12",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0026.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af gestum sem sitja og standa og hlusta, undir skilti leikhússins.",
+          "en": "Colour photograph of guests sitting and standing as they listen, beneath the theatre's sign."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoQAAsAA4BaJQBOgMWCztkLxACugAD+zfrr/JeKEbLJTV7LXhFtY8qoWezHcBt6sSHRpWg8VWIy+sb381tEqMJKbDf1ofnpcZei01MHRq7keKeJAAA="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-13",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0028.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af þremur ungmennum sem brosa saman í sýningarsalnum: tveimur ungum mönnum með gleraugu og ungri konu með ljóst krullað hár.",
+          "en": "Colour photograph of three young people smiling together in the exhibition room: two young men in glasses and a young woman with fair curly hair."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAwAgCdASoQAAsAA4BaJZQCdAEPAlnoZxR5gAD+0OxEjBJ0xXrvxk8sLC19hhtNiwtRfIRH1Oay9bFJF0PCwtxxlf5LumRO+DNjOslc9Gx3cYuaCh2QAA=="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-14",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0031.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af gestum sem spjalla í löngum, mjóum sal þar sem teikningar hanga á báðum veggjum.",
+          "en": "Colour photograph of guests talking in a long, narrow room with drawings hung along both walls."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQAgCdASoQAAsAA4BaJZQCdIExGKKa7lMAAP7xU3U7HeX3daNNkb5BqicQarfEhOqg6gv16bX3Jsyy6qDkAt6AELAzOK3GD4u4WI/rCUoDMdP2sRgdMo9wcerIuAHAAAA="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-15",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0032.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af Brynju Árnadóttur með stutt dökkt hár, brosandi vanga við vanga við gráhærða konu með gleraugu, fyrir framan svarthvíta teikningu af kvenverum.",
+          "en": "Colour photograph of Brynja Árnadóttir with short dark hair, smiling cheek to cheek with a grey-haired woman in glasses, in front of a black-and-white drawing of female figures."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoQAAsAA4BaJZQCdADdKxE6gbNegAD+7Sj9tz7dkIe3Ei9WnDPzIkHYM9H4Udjh7+eDsCdUTY2O2+h8iLY9h55XUIe6aY3LSvU2FmWXtLpwjHYheZLDwAAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-16",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0033.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Nærmynd í lit af Brynju Árnadóttur og gráhærðri konu með gleraugu sem brosa saman í myndavélina.",
+          "en": "Close-up colour photograph of Brynja Árnadóttir and a grey-haired woman in glasses smiling together at the camera."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoQAAsAA4BaJZQCdAD6J9GUFdfqAP7qV2+e6l7tHyydjW2YvK+u+PKd04qurMmcXi7MLSu0l4HymbYRtuVqF09BULYkYirL0uqq2X6mQKAAAA=="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-17",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0036.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af Brynju Árnadóttur ásamt fjórum öðrum konum sem brosa saman fyrir framan svarthvíta teikningu; hún ber stórt hálsmen sem líkist sól.",
+          "en": "Colour photograph of Brynja Árnadóttir with four other women smiling together in front of a black-and-white drawing; she wears a large sun-shaped pendant."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAACQAgCdASoQAAsAA4BaJZQC7H8AgoDLw/GVDC1cAAD9uIt0j5gW03eXbuacuoOL5N5vujwVxfLICqnH6CC3TpDXlN8d/pHxUCb7uZagjsoRTiO0meu2OrPA2DJpD4P4KgppQAAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-18",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0037.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af gestum sem spjalla í salnum á meðan fiðluleikarinn leikur í fjarska.",
+          "en": "Colour photograph of guests talking in the room while the violinist plays in the distance."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAgCdASoQAAsAA4BaJQBOj+AC4MXyEoDhz/gAAP7pT78dsX/qoU9lh7HYGUcgyFR4cgKZVf87OrCN50chchLPiBwooAORU4FGcPb2eEjpVRPSdvm6GfeyH6QIRVOA1dU9JAkAAAA="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-19",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0038.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af ungri konu í svörtum jakka og ungum manni í Batman-bol sem standa við bláan vegg á milli tveggja teikninga.",
+          "en": "Colour photograph of a young woman in a black jacket and a young man in a Batman T-shirt standing by a blue wall between two drawings."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAQAgCdASoQAAsAA4BaJaACdGaAAjfcwqcoAP7ChbYEdHXbx9g6sUhVEYN+9ZZEKZjR1qnbrGYcdSQU8XUBoycgg+XkISYphGPlDDyrZ3NIGn6iOttqMUX0k997vhk2Zn84iOSAAAA="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-20",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0040.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af unga manninum í Batman-bolnum sem stendur einn við dyragætt með hendur spenntar.",
+          "en": "Colour photograph of the young man in the Batman T-shirt standing alone by a doorway, hands clasped."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAQAgCdASoQAAsAA4BaJaAC/OEJv9999m8AAP7vK6s+gyJupfGCGSPG2z6Ja/2qYMK6AeNvPjxeqYOZNUzQ6dMj/FVCAiMHrZxvoLCZMT7k4OAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-21",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0042.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af unga manninum í Batman-bolnum sem bendir út í salinn og skemmtir gestum.",
+          "en": "Colour photograph of the young man in the Batman T-shirt pointing into the room as he entertains the guests."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQAgCdASoQAAsAA4BaJaACdIExENkxgqZAAP7xVMC3V2LoK7V33GtB3UraiuYa0x2SaJo7xfjvRo0lErDc7VTVBGDKlEYleLv9CFtpvpYTUe9ndvH8ZwDVf8C0gAAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-22",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0043.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af unga manninum í Batman-bolnum sem brettir upp aðra buxnaskálmina fyrir framan áhorfendur, með fatahengi fullt af búningum í bakgrunni.",
+          "en": "Colour photograph of the young man in the Batman T-shirt rolling up one trouser leg in front of the audience, with a rack of costumes behind him."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoQAAsAA4BaJZACdAC6b44nqwAA/k8dzuTgWXbPArW7wBaIWvGoTxecTH1quuAW2/o5irB9aLheGFjfdETm6HyXYzPRJ53+t82DlJIDaGgvXCxRAAA="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-23",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0045.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af unga manninum í Batman-bolnum, brosandi með rauða blúndu um mittið og aðra buxnaskálmina uppbretta.",
+          "en": "Colour photograph of the young man in the Batman T-shirt, smiling, with red lace around his waist and one trouser leg rolled up."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADwAQCdASoQAAsAA4BaJZgCdACq20w7kwAA/uz1Qp6tSRyyCyXTx5kmoBdr7U2VSmNEPfW2cryaIJMfdn77cQzD9m2DjncWGXb8ip4PAOmqc9l40QWZbKRwCPz88rcNhnWhYAAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-24",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0046.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af unga manninum í Batman-bolnum í miðju dansspori fyrir framan áhorfendur, með annan fótinn útréttan.",
+          "en": "Colour photograph of the young man in the Batman T-shirt mid-dance in front of the audience, one leg kicked out."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwAgCdASoQAAsAA4BaJZgCsADdKbbqUm1SAAD+hq5Rf+WHUKSEQmbF6cgsoV+xO2XaIWlavUTMIf/fHMdpXr3VKlva41Gca0MbLM06hXSibMnLp9VPL2IXs2pgAA=="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-25",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0048.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af Brynju Árnadóttur með handlegginn utan um unga konu í rauðum og svörtum kjól, fyrir framan litríkar teikningar, meðal annars af stórum appelsínugulum blómum.",
+          "en": "Colour photograph of Brynja Árnadóttir with her arm around a young woman in a red and black dress, in front of colourful drawings, among them one of large orange flowers."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAACQAgCdASoQAAsAA4BaJYwC7IExgujFCSGJ1sh1TAD9xPCIdusL+zjxX+obPr3bTj5Se77j19QEufGjPUNeHhLI1uJMoyI3ibA1xriiqwSGATKalWIOAsynxdponCAnMjQAAA=="
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-26",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0049.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af Brynju Árnadóttur, unga manninum í Batman-bolnum og ungu konunni í rauða kjólnum sem standa saman og brosa.",
+          "en": "Colour photograph of Brynja Árnadóttir, the young man in the Batman T-shirt and the young woman in the red dress standing together and smiling."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAQCdASoQAAsAA4BaJZQAAuQDvCK8DOAAzVUamp0KmryDzsJEbtQ4zYmDA9zQsafQ1TJPtE5oSAEjtkCiAyhjNYcdmsjnUhAdHxF0l+CSFgAA"
+      },
+      {
+        "id": "2007-07-01-jadarleikhusid-27",
+        "src": "https://brynja.b-cdn.net/photo-albums/2007-07-01-jadarleikhusid/DSC_0054.jpg",
+        "width": 3008,
+        "height": 2000,
+        "alt": {
+          "is": "Litljósmynd af þremur gestum sem standa saman: ungri dökkhærðri konu, konu með axlartösku og gráhærðum manni í dökkum jakkafötum.",
+          "en": "Colour photograph of three guests standing together: a young dark-haired woman, a woman with a shoulder bag and a grey-haired man in a dark suit."
+        },
+        "blurDataURL": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQAgCdASoQAAsAA4BaJZQCdH8AFsrbMLujUzAA+wI0ADAO64I6yvInxu+UysrNbt8i1sU8RU64y+GhlhosLveu/792e4MkObS+NBWTUD2MzUC3faW0GfC7/RmzVGpgZFxdIAAA"
+      }
+    ]
+  },
+  {
     "id": "2008-05-29-hafnarfjordur-100-ara",
     "title": {
       "is": "Hafnarfjörður 100 ára",
