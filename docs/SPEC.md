@@ -32,7 +32,7 @@ A permanent, low-maintenance, bilingual digital archive of a deceased pen-and-in
 | Images | `next/image` (Vercel Image Optimization) + Bunny.net masters | Bunny Storage Zone → Pull Zone (`*.b-cdn.net`); Bunny Optimizer for email/OG thumbnails only |
 | Class utils | `clsx` + `tailwind-merge` v3 | |
 | Icons | `simple-icons` (Facebook only) | |
-| Analytics | `@vercel/analytics` **2.x** | `<Analytics />` from `@vercel/analytics/next`, last child of `<body>` in `[locale]/layout.tsx`. Cookieless; loads and reports via same-origin `/_vercel/insights/*` (already excluded by the `proxy.ts` matcher). Must be enabled per project in the Vercel dashboard |
+| Analytics | `@vercel/analytics` **2.x** | `<Analytics />` from `@vercel/analytics/next`, last child of `<body>` in `[locale]/layout.tsx`, rendered only when `process.env.VERCEL === '1'` (Vercel builds) so local and e2e runs don't request the non-existent `/_vercel/insights/script.js`. Cookieless; loads and reports via same-origin `/_vercel/insights/*` (already excluded by the `proxy.ts` matcher). Must be enabled per project in the Vercel dashboard |
 | Tooling | pnpm, ESLint (flat config), Prettier + `prettier-plugin-tailwindcss`, Vitest 5 + `vite` (required peer), `@playwright/test` (E2E, Chromium only), `tsx`, `sharp` (scripts only) | `next lint` is removed in Next 16; call `eslint` directly. pnpm blocks dependency build scripts: `pnpm-workspace.yaml` `allowBuilds` allows `esbuild` only |
 | Next.js flags | `cacheComponents`, `partialPrefetching` and `reactCompiler` are **off** | create-next-app 16.4 enables all three by default. This spec targets the classic static-generation model (`generateStaticParams`, Suspense fallbacks for `useSearchParams`) |
 

@@ -55,7 +55,9 @@ export default async function LocaleLayout({
           <Footer locale={locale} dict={dict} />
           {modal}
         </I18nProvider>
-        <Analytics />
+        {/* /_vercel/insights only exists on Vercel; elsewhere (local `next start`, e2e) the
+            script would 404 and log console errors. VERCEL=1 is set at build time there. */}
+        {process.env.VERCEL === '1' && <Analytics />}
       </body>
     </html>
   );

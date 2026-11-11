@@ -31,8 +31,9 @@ and Development. Example values are in [`.env.example`](.env.example).
 - `NEXT_PUBLIC_SITE_URL` is baked in at build time. Set it before the first deploy, and redeploy
   after changing it (for example, when you add a custom domain).
 - The Bunny Storage password is **not** an app variable. Never add it to Vercel.
-- Under **Analytics**, click **Enable**. The app already renders `<Analytics />`, but until Web
-  Analytics is enabled for the project, `/_vercel/insights/*` returns 404 and nothing is recorded.
+- Under **Analytics**, click **Enable**. The app already renders `<Analytics />` on Vercel builds
+  (not locally), but until Web Analytics is enabled for the project, `/_vercel/insights/*` returns
+  404 and nothing is recorded.
 - Missing Resend values don't break the build. They only make inquiry sends fail at runtime, so
   after deploying, work through [`docs/QA-CHECKLIST.md`](docs/QA-CHECKLIST.md), including the real-send check.
 
